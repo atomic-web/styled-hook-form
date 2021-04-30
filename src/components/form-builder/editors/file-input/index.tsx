@@ -6,7 +6,7 @@ import {
 } from "react-hook-form";
 import { FileInputProps } from "./types";
 import { FileInput as GrommetFileInput } from "grommet";
-import { FormField } from "components/form-builder/types";
+import { FormField } from "../../types";
 import useTranslation from "next-translate/useTranslation";
 
 const FileInput = forwardRef<HTMLInputElement, FormField<FileInputProps>>(

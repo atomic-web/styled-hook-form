@@ -6,7 +6,7 @@ import { EditorWrapProps } from "./types";
 import { CircleInformation } from "grommet-icons";
 import { deepMerge } from "grommet/utils";
 import { useContext } from "react";
-import { FormFieldOptions, FormFieldType } from "components/form-builder/types";
+import { FormFieldOptions, FormFieldType } from "../../../types";
 import { PropType } from "types/utils";
 
 export const StyledEditorWrap = styled.div`

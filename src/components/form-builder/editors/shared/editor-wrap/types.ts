@@ -1,4 +1,4 @@
-import { FormFieldOptions } from "components/form-builder/types";
+import { FormFieldOptions } from "../../../types";
 import React from "react";
 import { DeepMap, FieldError, FieldValues } from "react-hook-form";
 import { PropType } from "types/utils";

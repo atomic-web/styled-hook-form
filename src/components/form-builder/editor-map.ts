@@ -1,4 +1,4 @@
-import { FormFieldType } from 'components/form-builder/types';
+import { FormFieldType } from './types';
 import TextInput from './editors/text-input';
 import NumericInput from './editors/numeric-input';
 import DateInput from './editors/date-input';

@@ -2,7 +2,7 @@ import { forwardRef, useState } from "react";
 import { Controller } from "react-hook-form";
 import { PasswordInputProps } from "./types";
 import { TextInput as GrommetTextInput } from "grommet";
-import { FormField } from "components/form-builder/types";
+import { FormField } from "../../types";
 import useTranslation from "next-translate/useTranslation";
 import styled from "styled-components";
 import PasswordStrength from "./password-strength";

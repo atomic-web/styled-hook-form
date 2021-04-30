@@ -1,4 +1,4 @@
-import { FormEditorPropsBase } from "components/form-builder/types";
+import { FormEditorPropsBase } from "../../types";
 import {TextInputProps as GrommetTextInputProps} from 'grommet';
 
 export type TextInputProps = FormEditorPropsBase & {

@@ -2,9 +2,9 @@ import React from 'react';
 import { forwardRef } from "react";
 import { Controller } from "react-hook-form";
 import { TimeInputProps } from "./types";
-import { FormField } from "components/form-builder/types";
+import { FormField } from "../../types";
 import useTranslation from "next-translate/useTranslation";
-import { TimePicker } from "components/extension/ui/time-picker";
+import { TimePicker } from "../../../extension/ui/time-picker";
 
 const TimeInput = forwardRef<HTMLInputElement, FormField<TimeInputProps>>(
   (props) => {

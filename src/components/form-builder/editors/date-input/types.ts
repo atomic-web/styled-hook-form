@@ -1,4 +1,4 @@
-import { FormEditorPropsBase } from "components/form-builder/types";
+import { FormEditorPropsBase } from "../../types";
 
 export type DateInputProps = FormEditorPropsBase & {
     minDate?: string,

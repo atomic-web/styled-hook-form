@@ -1,9 +1,9 @@
 import { ChangeEvent, forwardRef } from "react";
 import { Controller } from "react-hook-form";
 import { NumericInputProps } from "./types";
-import { FormField } from "components/form-builder/types";
+import { FormField } from "../../types";
 import useTranslation from "next-translate/useTranslation";
-import { NumericBox } from "components/extension/ui/numeric-box";
+import { NumericBox } from "../../../extension/ui/numeric-box";
 
 const NumericInput = forwardRef<HTMLInputElement, FormField<NumericInputProps>>(
   (props, ref) => {

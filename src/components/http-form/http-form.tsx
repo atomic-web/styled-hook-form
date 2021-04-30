@@ -1,5 +1,5 @@
 import useAxios from 'axios-hooks';
-import { FormBuilder } from 'components/form-builder';
+import { FormBuilder } from '../form-builder';
 import React from 'react';
 import { HttpFormProps } from './types';
 
@@ -19,4 +19,4 @@ const HttpForm : React.FC<HttpFormProps> = (props)=>{
     </FormBuilder>
 }
 
-export default HttpForm;
+export {HttpForm};

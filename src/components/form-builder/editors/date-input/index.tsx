@@ -1,6 +1,6 @@
 import React from 'react';
 import { Controller } from "react-hook-form";
-import { FormField } from "components/form-builder/types";
+import { FormField } from "../../types";
 import { DateInputProps } from "./types";
 import { Box, DateInput as DatePicker } from "grommet";
 import useTranslation from "next-translate/useTranslation";

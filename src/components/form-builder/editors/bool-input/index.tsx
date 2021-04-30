@@ -3,7 +3,7 @@ import { forwardRef } from "react";
 import { Controller } from "react-hook-form";
 import { BoolInputProps } from "./types";
 import { CheckBox } from "grommet";
-import { FormField } from "components/form-builder/types";
+import { FormField } from "../../types";
 
 const BoolInput = forwardRef<HTMLInputElement, FormField<BoolInputProps>>(
   (props, ref) => {

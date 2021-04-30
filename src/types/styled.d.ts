@@ -1,6 +1,6 @@
 import "styled-components";
 import styledImport, { CSSProp, css as cssImport } from "styled-components";
-import { DirectionType } from "components/context";
+import { DirectionType } from "../context";
 import { ThemeType } from "grommet";
 import React from "react";
 

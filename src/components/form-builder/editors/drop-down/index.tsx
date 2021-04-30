@@ -7,7 +7,7 @@ import {
 } from "react-hook-form";
 import { DropDownProps, OptionProps, RemoteDataSource } from "./types";
 import { Box, CheckBox, Select } from "grommet";
-import { FormField } from "components/form-builder/types";
+import { FormField } from "../../types";
 import useTranslation from "next-translate/useTranslation";
 import { Spinner } from "grommet";
 import { usePagedData } from "../shared/paged-data-source";
