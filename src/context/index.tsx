@@ -21,7 +21,7 @@ const defaults: GHFContextProviderValue = {
     dispatch : ()=>{}
 };
 
-const GHFContext = createContext<GHFContextProviderValue>(defaults);
+export const GHFContext = createContext<GHFContextProviderValue>(defaults);
 
 const GHFContextProvider: React.FC<GHFContextProviderProps> = (props) => {
   const { children, options } = props;

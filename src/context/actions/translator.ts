@@ -15,6 +15,6 @@ export const translate = (str: string, values?: object & Record<any, any>) => {
   let interpolated = nativeStr.replaceAll(exp, (_: any, item: string) =>
     values[item].toString()
   );
-  alert(interpolated)
+ 
   return interpolated;
 };

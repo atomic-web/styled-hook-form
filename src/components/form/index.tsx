@@ -16,14 +16,15 @@ export interface AutoSubmitFormProps {
 const Form: React.FC<AutoSubmitFormProps> = (props) => {
 
     const methods = useForm({ defaultValues: props.defaultValues });
-    const { handleSubmit, setValue, watch, formState: { isValid } ,getValues } = methods;
+    const { handleSubmit, setValue, watch, formState: { isValid , errors } ,getValues } = methods;
     const { onSubmit, children, watchFor, submitTreshould, autoSubmit } = props;
     const formRef = useRef<HTMLFormElement>(null);    
 
-    const onFormSubmit = () => {        
-        if (!isValid) {
+    const onFormSubmit = () => {
+        debugger
+        if (!isValid && errors.length) {
             return;
-        }
+        }        
         onSubmit && onSubmit(getValues());
         return true;
     }

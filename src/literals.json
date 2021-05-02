@@ -19,5 +19,6 @@
     "file-input-msg-files": "files",
     "file-input-msg-remove": "remove",
     "file-input-msg-remove-all": "remove all",
-    "file-input-msg-file-required": "Please select some file(s) to continue"
+    "file-input-msg-file-required": "Please select some file(s) to continue",
+    "form.submit.label" : "Submit"
 }
