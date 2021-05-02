@@ -1,56 +1,42 @@
-import React, { createContext, ReactNode, useReducer } from "react";
-import { ThemeProvider, DefaultTheme } from 'styled-components';
-import { FormTheme } from '../themes/base-theme';
-import { Grommet } from 'grommet';
+import { createContext, Reducer, useContext, useReducer } from "react";
+import { GHFContextModel, GHFContextProviderProps, GHFContextProviderValue } from "./types";
+import { UIContextReducerAction } from "./actions/types";
+import InvokeAction from "./actions";
+import { GHFContextReducerAction } from "./actions/types";
 
-export interface WPTheme extends DefaultTheme { };
+const Defaults: GHFContextModel = {
+  translator: (str: string, values?: object) => str,
+};
 
-export interface GHFContextProps {
-    children?: ReactNode,
-    options?: WPOptions
-}
-export type DirectionType = "rtl" | "ltr" | undefined;
+export const UIContext = createContext<GHFContextProviderValue>({
+  model: Defaults,
+  translate : (str:string,values?:object)=>str
+});
 
-export interface WPOptions {
-    theme?: WPTheme
-}
+export const GHFContextProvider: React.FC<GHFContextProviderProps> = (props) => {
+  let { children ,translator } = props;
 
-export interface WPAction {
-    type: string,
-    payload: any
-}
+  const initializer = (state: GHFContextModel): GHFContextModel => {
+    return state;
+  };
 
-const GHFContext = createContext(null);
+  let [state, dispatch] = useReducer<
+    Reducer<GHFContextModel, GHFContextReducerAction>,
+    GHFContextModel
+  >(
+    (state: GHFContextModel, action: UIContextReducerAction) => {
+      return InvokeAction(state, action);
+    },
+    Defaults,
+    initializer
+  );
 
-const GHFContextProvider: React.FC<GHFContextProps> = (props) => {
+  let providerProps: GHFContextProviderValue = {
+    translate : 
+    model: state,
+  };
 
-    const { children, options } = props;
+  return <UIContext.Provider children={children} value={providerProps} />;
+};
 
-    const _options: WPOptions = {
-        ...options
-    }
-
-    const reducer = (state: WPOptions, action: WPAction) => {
-
-        return state;
-    };
-
-    const _value: any = useReducer(reducer, _options);
-
-    const theme = FormTheme;
-
-    return <GHFContext.Provider value={_value}>
-        <Grommet>             
-            <ThemeProvider theme={theme}>
-                {
-                    children
-                }
-            </ThemeProvider>
-        </Grommet>
-    </GHFContext.Provider>
-}
-
-
-export {
-    GHFContextProvider
-}
+export const useUIContext = () => useContext(UIContext);
