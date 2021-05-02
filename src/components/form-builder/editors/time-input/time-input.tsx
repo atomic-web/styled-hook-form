@@ -3,16 +3,16 @@ import { forwardRef } from "react";
 import { Controller } from "react-hook-form";
 import { TimeInputProps } from "./types";
 import { FormField } from "../../types";
-import useTranslation from "next-translate/useTranslation";
 import { TimePicker } from "../../../extension/ui/time-picker";
+import { useGHFContext } from 'context';
 
 const TimeInput = forwardRef<HTMLInputElement, FormField<TimeInputProps>>(
   (props) => {
     let vrules = props.validationRules || {};
 
-    const { t: T } = useTranslation("form");
+    const {translate : T } = useGHFContext();
 
-    let {
+    let {  
       name,
       label,
       defaultValue: initialValue,

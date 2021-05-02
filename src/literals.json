@@ -1,0 +1,23 @@
+{
+    "required-msg" : "{{name}}: is required",
+    "text-input-min-length-msg" : "{{name}}: min length can not be less than {{value}}",
+    "text-input-max-length-msg" : "{{name}}: max length can not be grather than {{value}}",
+    "numeric-input-min-msg" : "{{name}}: can not be less than {{value}}",
+    "numeric-input-max-msg" : "{{name}}: can not be greater than {{value}}",
+    "date-input-min-msg" : "{{name}}: can not be earlear than {{value}}",
+    "date-input-max-msg" : "{{name}}: can not be later than {{value}}",
+    "drop-down-search-empty-msg" : "No result found!",
+    "password-input-strength-label" : "Password Strength",
+    "password-input-strength-strong" : "Strong",
+    "password-input-strength-good" : "Good",
+    "password-input-strength-medium" : "Medium",
+    "password-input-strength-weak" : "Weak",
+    "password-input-weak-password": "Entered password is not strong enough.Plaese Enter more strong password.",
+    "file-input-msg-browse": "browse",
+    "file-input-msg-drop-prompt": "Drop file here or ",
+    "file-input-msg-drop-prompt-multiple": "Drop files here or ",
+    "file-input-msg-files": "files",
+    "file-input-msg-remove": "remove",
+    "file-input-msg-remove-all": "remove all",
+    "file-input-msg-file-required": "Please select some file(s) to continue"
+}

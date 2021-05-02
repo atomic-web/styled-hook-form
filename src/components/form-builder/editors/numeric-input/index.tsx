@@ -2,13 +2,13 @@ import { ChangeEvent, forwardRef } from "react";
 import { Controller } from "react-hook-form";
 import { NumericInputProps } from "./types";
 import { FormField } from "../../types";
-import useTranslation from "next-translate/useTranslation";
 import { NumericBox } from "../../../extension/ui/numeric-box";
+import { useGHFContext } from "context";
 
 const NumericInput = forwardRef<HTMLInputElement, FormField<NumericInputProps>>(
   (props, ref) => {
     let vrules = props.validationRules || {};
-    const { t: T } = useTranslation("form");
+    const {translate : T } = useGHFContext();
 
     let {
       name,

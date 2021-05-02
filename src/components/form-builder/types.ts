@@ -1,3 +1,4 @@
+import React from 'react';
 import { FileInputProps } from './editors/file-input/types';
 import { BoolInputProps } from "./editors/bool-input/types";
 import { RegisterOptions, UseFormReturn } from "react-hook-form";
@@ -6,7 +7,6 @@ import { NumericInputProps } from "./editors/numeric-input/types";
 import { TextInputProps } from "./editors/text-input/types";
 import { DropDownProps } from "./editors/drop-down/types";
 import { PasswordInputProps } from "./editors/password-input/types";
-import React from 'react';
 import { TimeInputProps } from './editors/time-input/types';
 
 export enum FormFieldType {
@@ -73,7 +73,8 @@ export type FormField<TProps extends {} = {}> = FormFieldBase &
 
 export interface FormBuilderProps extends Partial<Omit<HTMLDivElement,"children">> {
   fields: FormField[];
-  children: React.ReactNode;  
+  children: React.ReactNode;
+  model:any,
   onSubmit?: (values: any) => void;
 }
 

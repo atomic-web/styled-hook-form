@@ -1,30 +1,32 @@
 // export interface WPTheme extends DefaultTheme { };
 
+import { Dispatch } from "react";
 import { DeepMap } from "react-hook-form";
+import { GHFContextReducerAction } from "./actions/types";
 
-// export interface GHFContextProps {
-//     children?: ReactNode,
-//     options?: WPOptions
-// }
+export type GHFContextModel = GHFOptions & DeepMap<any, any> & {};
 
-// export interface WPOptions {
-//     translator : (str :string,value? : object)=>string
-// }
+export type TranslatorFunc = (
+  str: string,
+  values?: object & Record<any, any>
+) => string;
 
-// export interface WPAction {
-//     type: string,
-//     payload: any
-// }
-
-export interface GHFContextModel extends DeepMap<any, any> {
-  translator: (str: string, value?: object) => string;
+export interface GHFContextReducer {
+  (state: GHFContextModel, action: GHFContextReducerAction): GHFContextModel;
 }
 
 export interface GHFContextProviderValue {
   model: GHFContextModel;
-  translate: (str: string, value?: object) => string;
+  translate: TranslatorFunc;
+  dispatch: Dispatch<GHFContextReducerAction>;
+}
+
+export interface GHFOptions {
+  translator?: TranslatorFunc;
 }
 
 export interface GHFContextProviderProps {
-    translator?: (str: string, value?: object) => string;
+  children: React.ReactChild;
+  options?: GHFOptions;
 }
+ 

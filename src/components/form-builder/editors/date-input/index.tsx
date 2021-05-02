@@ -3,7 +3,7 @@ import { Controller } from "react-hook-form";
 import { FormField } from "../../types";
 import { DateInputProps } from "./types";
 import { Box, DateInput as DatePicker } from "grommet";
-import useTranslation from "next-translate/useTranslation";
+import { useGHFContext } from 'context';
 
 const DateInput: React.FC<FormField<DateInputProps>> = (props) => {
   let vrules = props.validationRules || {};
@@ -17,7 +17,7 @@ const DateInput: React.FC<FormField<DateInputProps>> = (props) => {
     methods,
   } = props;
 
-  const { t: T } = useTranslation("form");
+  const {translate : T } = useGHFContext();
 
   let control = methods?.control;
 

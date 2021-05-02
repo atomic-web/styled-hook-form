@@ -3,9 +3,9 @@ import { Controller } from "react-hook-form";
 import { PasswordInputProps } from "./types";
 import { TextInput as GrommetTextInput } from "grommet";
 import { FormField } from "../../types";
-import useTranslation from "next-translate/useTranslation";
 import styled from "styled-components";
 import PasswordStrength from "./password-strength";
+import { useGHFContext } from "context";
 
 const PasswordBoxWrap = styled.div`
   display: flex;
@@ -17,7 +17,8 @@ export const PasswordInput = forwardRef<
   FormField<PasswordInputProps>
 >((props, ref) => {
   let vrules = props.validationRules || {};
-  const { t: T } = useTranslation("form");
+  const {translate : T } = useGHFContext();
+  
   const [passStrength, setPassStrength] = useState<number>(0);
 
   let {

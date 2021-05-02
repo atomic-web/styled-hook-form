@@ -1,22 +1,39 @@
-import useAxios from 'axios-hooks';
-import { FormBuilder } from '../form-builder';
-import React from 'react';
-import { HttpFormProps } from './types';
+import useAxios from "axios-hooks";
+import { FormBuilder } from "../form-builder";
+import React, { useEffect } from "react";
+import { HttpFormProps } from "./types";
+import { Button, Spinner } from "grommet";
 
-const HttpForm : React.FC<HttpFormProps> = (props)=>{
-    
-    let {fields} = props;
-    
-    
-    const handleSubmit = ()=>{
-        
-    };
+const successCodes = [200,201,202];
 
-    useAxios
+const HttpForm: React.FC<HttpFormProps> = (props) => {
+  let { fields, request, onSuccess, onError ,model , loadingIndicator} = props;
 
-    return <FormBuilder fields={fields} onSubmit={handleSubmit}>
+  let [{ loading, data, error, response  }, {}] = useAxios(request, {
+    manual: true,
+  });
 
-    </FormBuilder>
-}
+  useEffect(() => {
+    if (response?.status && successCodes.indexOf(response?.status) != -1) {
+      onSuccess && onSuccess(data);
+    }
+  }, [data]);
 
-export {HttpForm};
+  useEffect(() => {
+    onError && onError(data);
+  }, [error]);
+
+  
+  const handleSubmit = (data : any)=>{
+       
+  }
+
+  return <FormBuilder fields={fields} onSubmit={handleSubmit} model={model}>
+
+        <Button type="submit" icon={!loadingIndicator ? <Spinner/> : <></>}>
+            
+        </Button>
+  </FormBuilder>;
+};
+
+export { HttpForm };
