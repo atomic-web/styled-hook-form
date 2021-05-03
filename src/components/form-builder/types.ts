@@ -71,11 +71,12 @@ export type FormField<TProps extends {} = {}> = FormFieldBase &
     methods?: UseFormReturn;
   };
 
-export interface FormBuilderProps extends Partial<Omit<HTMLDivElement,"children">> {
+export interface FormBuilderProps<TModel=any> extends Partial<Omit<HTMLDivElement,"children">> {
   fields: FormField[];
   children: React.ReactNode;
-  model:any,
+  model:TModel,
   onSubmit?: (values: any) => void;
+  beforeSubmit?:(values:TModel)=>boolean
 }
 
 export type FormEditorPropsBase = Pick<FormFieldBase, "validationRules"> & {};
