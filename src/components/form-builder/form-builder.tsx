@@ -22,7 +22,7 @@ const renderField = (field: FormField, methods: UseFormReturn<any>) => {
   return (
     <WidthEditorWrap {...(field as any)} editorType={field.type}>
       <>
-        {field.render !== undefined && field.render(component)}
+        {field.render !== undefined && field.render(component,methods)}
         {field.render === undefined && component}
       </>
     </WidthEditorWrap>

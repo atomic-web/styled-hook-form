@@ -1,4 +1,5 @@
 import { AxiosRequestConfig } from 'axios';
+import MockAdapter from 'axios-mock-adapter/types';
 import React from 'react';
 import { FormBuilderProps } from './../form-builder/types';
 
@@ -13,5 +14,6 @@ export type HttpFormProps<TModel=any,TServerResult=any,TResult=TServerResult,TEr
    loadingIndicator?:()=>React.ReactNode,
    model? : TModel,
    submitButton? : boolean | React.ReactNode
-   resetButton? : boolean | React.ReactNode
+   resetButton? : boolean | React.ReactNode,
+   mockResponse? : (req : MockAdapter)=>void
 }

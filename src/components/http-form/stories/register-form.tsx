@@ -1,7 +1,15 @@
 import { FormField, FormFieldType } from "components/form-builder";
 import { GHFContextProvider } from "context";
 import { Box, Text } from "grommet";
+import { resolve } from "node:path";
+import React from "react";
 import { HttpForm } from "../http-form";
+interface MyModel {
+  username: string;
+  email: string;
+  password: string;
+  agree: boolean;
+}
 
 export const Default = () => {
   let fields: FormField[] = [
@@ -10,7 +18,10 @@ export const Default = () => {
       name: "username",
       label: "User Name",
       required: true,
-      tip:"The unique name you will be using throught the system"
+      tip: "The unique name you will be using throught the system",
+      render: (base: React.ReactNode, { watch }) => {
+        return <div>{base}</div>;
+      },
     },
     {
       type: FormFieldType.Text,
@@ -31,6 +42,13 @@ export const Default = () => {
         autoComplete: "Off",
       },
     },
+    {
+      type: FormFieldType.Boolean,
+      name: "agree",
+      label: "Agree With Terms",
+      required: true,
+      controlType: "checkbox",
+    },
   ];
 
   return (
@@ -44,12 +62,30 @@ export const Default = () => {
           border="all"
         >
           <HttpForm
+            fields={fields}
+            beforeSubmit={(data: MyModel) => data.agree}
+            submitButton={<Text> Register </Text>}
+            onSuccess={(data) => {
+              alert(JSON.stringify(data));
+            }}
+            mockResponse={(mock) => {
+              mock.onPost("/api/user/signup").reply(() => {
+                return new Promise((res, rej) => {
+                  setTimeout(() => {
+                    res([
+                      200,
+                      {
+                        success: true,
+                      },
+                    ]);
+                  }, 1000);
+                });
+              });
+            }}
             request={{
               url: "api/user/signup",
+              method: "POST",
             }}
-            fields={fields}
-            model={{}}
-            submitButton={<Text> Register </Text>}
           ></HttpForm>
         </Box>
       </Box>
@@ -58,5 +94,5 @@ export const Default = () => {
 };
 
 export default {
-  title: "Default",
+  title: "Register From",
 };

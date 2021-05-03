@@ -55,7 +55,7 @@ export interface FormFieldBase {
   label: string;
   labelPosition?: "top" | "side";
   renderLabel? : boolean,
-  render?: (editor : React.ReactNode)=>React.ReactNode, 
+  render?: (editor : React.ReactNode,formMethods : UseFormReturn<any> )=>React.ReactNode, 
   validationRules?: Exclude<
     RegisterOptions,
     "valueAsNumber" | "valueAsDate" | "setValueAs"

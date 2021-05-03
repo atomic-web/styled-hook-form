@@ -4,6 +4,8 @@ import React, { useEffect } from "react";
 import { HttpFormProps } from "./types";
 import { Box, Button, Spinner } from "grommet";
 import { useGHFContext } from "context";
+import staticAxios from "axios";
+import MockAdapter from "axios-mock-adapter";
 
 const successCodes = [200, 201, 202];
 
@@ -17,6 +19,7 @@ const HttpForm: React.FC<HttpFormProps> = (props) => {
     loadingIndicator,
     submitButton,
     resetButton,
+    mockResponse,
     ...rest
   } = props;
 
@@ -36,24 +39,37 @@ const HttpForm: React.FC<HttpFormProps> = (props) => {
   }, [error]);
 
   const handleSubmit = (data: any) => {
-    submitToServer({
-      data
-    });
+    if (mockResponse) {
+      let mockAdapter = new MockAdapter(staticAxios);
+      mockResponse(mockAdapter);
+      submitToServer({
+        data,
+      });
+    } else {
+      submitToServer({
+        data,
+      });
+    }
   };
 
   return (
-    <FormBuilder {...rest} fields={fields} onSubmit={handleSubmit} model={model}>
+    <FormBuilder
+      {...rest}
+      fields={fields}
+      onSubmit={handleSubmit}
+      model={model}
+    >
       {submitButton && (
         <Button
           type="submit"
           primary
-          icon={(loading && !loadingIndicator) ? <Spinner /> :<div/>}
+          icon={loading && !loadingIndicator ? <Spinner /> : <div />}
           label={
             <Box>
-            {typeof submitButton === "boolean"
-              ? T("form.submit.label")
-              : submitButton}
-          </Box>
+              {typeof submitButton === "boolean"
+                ? T("form.submit.label")
+                : submitButton}
+            </Box>
           }
         />
       )}
