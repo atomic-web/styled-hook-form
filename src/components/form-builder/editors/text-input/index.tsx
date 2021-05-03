@@ -58,7 +58,7 @@ const TextInput = forwardRef<HTMLInputElement, FormField<TextInputProps>>(
           <GrommetTextInput
             ref={ref}            
             onChange={(e) => field.onChange(e)}
-            defaultValue={field.value}
+            value={field.value}
             {...inputProps}
           />
         )}
