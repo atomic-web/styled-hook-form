@@ -17,6 +17,7 @@ const HttpForm: React.FC<HttpFormProps> = (props) => {
     loadingIndicator,
     submitButton,
     resetButton,
+    ...rest
   } = props;
 
   let { translate: T } = useGHFContext();
@@ -41,7 +42,7 @@ const HttpForm: React.FC<HttpFormProps> = (props) => {
   };
 
   return (
-    <FormBuilder fields={fields} onSubmit={handleSubmit} model={model}>
+    <FormBuilder {...rest} fields={fields} onSubmit={handleSubmit} model={model}>
       {submitButton && (
         <Button
           type="submit"

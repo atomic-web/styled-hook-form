@@ -2,11 +2,13 @@ import { AxiosRequestConfig } from 'axios';
 import React from 'react';
 import { FormBuilderProps } from './../form-builder/types';
 
-export type HttpFormProps<TModel=any,TParams=TModel[],TServerData=any,TData=TServerData,TError=any> = Pick<FormBuilderProps,'fields'> & {
-   onRequest? : (params:TParams)=>any,
-   onResponse? : (data:TServerData)=>TData,
+export type HttpFormProps<TModel=any,TServerResult=any,TResult=TServerResult,TError=any> =
+ Partial<FormBuilderProps> &
+ Pick<FormBuilderProps,'fields'> & {
+   onRequest? : (model:TModel)=>any,
+   onResponse? : (data:TServerResult)=>TResult,
    onError? : (error:TError)=>void,
-   onSuccess? : (data:TData)=>void,
+   onSuccess? : (data:TResult)=>void,
    request: AxiosRequestConfig | string,
    loadingIndicator?:()=>React.ReactNode,
    model? : TModel,
