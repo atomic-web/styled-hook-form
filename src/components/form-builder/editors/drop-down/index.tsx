@@ -9,7 +9,7 @@ import { DropDownProps, OptionProps, RemoteDataSource } from "./types";
 import { Box, CheckBox, Select } from "grommet";
 import { FormField } from "../../types";
 import { Spinner } from "grommet";
-import { usePagedData } from "../shared/paged-data-source";
+import { usePagedData } from "../../../utils/paged-data-source";
 import { useGHFContext } from 'context';
 
 const Option = memo((props: OptionProps) => {
