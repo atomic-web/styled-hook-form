@@ -15,8 +15,10 @@ export interface WPTheme extends DefaultTheme {}
 export type DirectionType = "rtl" | "ltr" | undefined;
 
 
-const defaults: GHFContextProviderValue = {
-    model :{},
+const defaults: GHFContextProviderValue = {  
+    config:{
+      ssr: true
+    },
     translate : FallbackTranslate,
     dispatch : ()=>{}
 };
@@ -27,20 +29,20 @@ const GHFContextProvider: React.FC<GHFContextProviderProps> = (props) => {
   const { children, options } = props;
 
   const _model: GHFContextModel = {
-    
+      ...defaults.config
   };
 
   const reducer : Reducer<GHFContextModel,GHFContextReducerAction> = (state: GHFContextModel, action: GHFContextReducerAction) => {
     return state;
   };
 
-  const [model , dispatch] = useReducer<Reducer<GHFContextModel,GHFContextReducerAction>>(reducer, _model);
+  const [config , dispatch] = useReducer<Reducer<GHFContextModel,GHFContextReducerAction>>(reducer, _model);
 
   const theme = FormTheme;
 
   return (
     <GHFContext.Provider value={{
-        model,
+        config,
         translate : options?.translator ?? FallbackTranslate ,
         dispatch
     }}>

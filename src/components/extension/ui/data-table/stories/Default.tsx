@@ -4,7 +4,7 @@ import { Box, ColumnConfig, Image } from "grommet";
 import { GHFContextProvider } from "context";
 import { useEffect, useState } from "react";
 
-const columns: ColumnConfig<any>[] = [  
+const columns: ColumnConfig<any>[] = [
   {
     property: "name",
     header: "Name",
@@ -16,30 +16,43 @@ const columns: ColumnConfig<any>[] = [
   {
     property: "image",
     header: "Image",
-    render : ({image})=>(
-        <Image src={image} width={100} height={100}/>
-    )
+    render: ({ image }) => <Image src={image} width={100} height={100} />,
   },
 ];
 
 export const Default = () => {
-  let [data, setData] = useState<any[]>([]);
-  useEffect(() => {
-    let _data = new Array(10000).fill(0).map((_) => ({
-      name: name.firstName(),
-      family: name.lastName(),
-      image: image.animals(200, 200),
-    }));
-    debugger;
-    setData(_data);
-  }, []);
-
   return (
     <GHFContextProvider>
       <Box>
-        <DataTable data={data} columns={columns}  pin paginate={{
-            numberMiddlePages:10
-        }} />
+        <DataTable
+          pin
+          request={{
+            url: "/api/employee/list",
+          }}
+          mockResponse={(m) => {
+            m.onGet("/api/employee/list").reply(() => {
+              return new Promise((res) => {
+                setTimeout(() => {
+                  res([
+                    200,
+                    new Array(10000).fill(0).map((_) => ({
+                      name: name.firstName(),
+                      family: name.lastName(),
+                      image: image.animals(200, 200),
+                    })),
+                  ]);
+                }, 1000);
+              });
+            });
+          }}
+          onError={(e) => { 
+          }}
+          data={[]}
+          columns={columns}
+          paginate={{
+            numberMiddlePages: 10,
+          }}
+        />
       </Box>
     </GHFContextProvider>
   );

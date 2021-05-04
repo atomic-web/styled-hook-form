@@ -4,7 +4,9 @@ import { Dispatch } from "react";
 import { DeepMap } from "react-hook-form";
 import { GHFContextReducerAction } from "./actions/types";
 
-export type GHFContextModel = GHFOptions & DeepMap<any, any> & {};
+export type GHFContextModel = GHFOptions & DeepMap<any, any> & {
+  ssr:boolean
+};
 
 export type TranslatorFunc = (
   str: string,
@@ -16,7 +18,7 @@ export interface GHFContextReducer {
 }
 
 export interface GHFContextProviderValue {
-  model: GHFContextModel;
+  config: GHFContextModel;
   translate: TranslatorFunc;
   dispatch: Dispatch<GHFContextReducerAction>;
 }

@@ -41,15 +41,11 @@ const HttpForm: React.FC<HttpFormProps> = (props) => {
   const handleSubmit = (data: any) => {
     if (mockResponse) {
       let mockAdapter = new MockAdapter(staticAxios);
-      mockResponse(mockAdapter);
-      submitToServer({
-        data,
-      });
-    } else {
-      submitToServer({
-        data,
-      });
+      mockResponse(mockAdapter);      
     }
+    submitToServer({
+      data,
+    });
   };
 
   return (
