@@ -51,6 +51,7 @@ export const Default = () => {
     },
   ];
 
+  
   return (
     <GHFContextProvider>
       <Box align="center">
@@ -65,11 +66,16 @@ export const Default = () => {
             fields={fields}
             beforeSubmit={(data: MyModel) => data.agree}
             submitButton={<Text> Register </Text>}
+            onError={(err)=>{
+              alert(JSON.stringify(err));
+            }}
             onSuccess={(data) => {
-              alert(JSON.stringify(data));
+             alert(JSON.stringify(data));
             }}
             mockResponse={(mock) => {
-              mock.onPost("/api/user/signup").reply(() => {
+              mock
+              .onPost("/api/user/signup").networkErrorOnce()
+              .onPost("/api/user/signup").reply(() => {
                 return new Promise((res, rej) => {
                   setTimeout(() => {
                     res([

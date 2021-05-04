@@ -35,7 +35,7 @@ const HttpForm: React.FC<HttpFormProps> = (props) => {
   }, [data]);
 
   useEffect(() => {
-    onError && onError(data);
+    (onError && error) && onError(error);
   }, [error]);
 
   const handleSubmit = (data: any) => {
