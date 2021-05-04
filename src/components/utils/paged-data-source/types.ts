@@ -1,11 +1,12 @@
-import { AxiosError } from "axios";
+import { AxiosError, AxiosRequestConfig } from "axios";
+import MockAdapter from "axios-mock-adapter";
 
 export interface PageDataProps<  
   TData,
   TServerData,
   TError = any
 > {
-  url: string;
+  request: string | AxiosRequestConfig;
   lazy?: boolean;
   params?: object;
   searchParam?: string;
@@ -16,13 +17,10 @@ export interface PageDataProps<
   pageSizeParamName?: string;
   listPropName?: string;
   totalPropName?: string;
-  resolve?: (data: TServerData,page : number) => TData;
-  mock?: {
-    data?: TData;
-    error?: TError;
-    loading?: boolean;
-    response?: Response;
-  };
+  onError?:(err:TError)=>void,
+  onResponse?: (data: TServerData,page : number,headers:any) => TData;
+  onRequest?:(params: any,headers : any)=>any,
+  mockResponse?: (mock :MockAdapter)=>void;
 }
 
 export interface PageDataResult<  
@@ -50,4 +48,5 @@ export interface DataFetchInfo<TServerData, TError> {
   status: DataFecthStatus;
   data?: TServerData;
   error?: TError;
+  headers?:any
 }

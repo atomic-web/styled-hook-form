@@ -1,5 +1,5 @@
 import { AxiosRequestConfig } from 'axios';
-import MockAdapter from 'axios-mock-adapter/types';
+import MockAdapter from 'axios-mock-adapter';
 import React from 'react';
 import { FormBuilderProps } from './../form-builder/types';
 

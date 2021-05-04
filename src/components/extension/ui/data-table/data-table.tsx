@@ -11,6 +11,7 @@ import {
 import useAxios from "axios-hooks";
 import MockAdapter from "axios-mock-adapter";
 import StaticAxios from "axios";
+import { usePagedData } from "components/utils/paged-data-source";
 
 const DataTable: React.FC<DataTableProps> = (props) => {
   let { data, ...rest } = props;
@@ -45,37 +46,17 @@ const DataTableImpl: React.FC<DataTableProps> = (props) => {
 
   let ssrEnabled = perSsr !== undefined ? perSsr : globalSSR;
 
-  if (typeof request === "string") {
-    request = {
-      url: request,
-    };
-  }
-
-  request.transformRequest = useCallback(
-    (data: any, headers: any) => {
-      if (onRequest) return onRequest(data, headers);
-      return data;
+  let { error } = usePagedData({
+    request,
+    onRequest: (data: any, headers: any) => {
+      return onRequest ? onRequest(data, headers) : data;
     },
-    [onRequest]
-  );
-
-  request.transformResponse = useCallback(
-    (data: any, headers: any) => {
-      let _data = onResponse ? onResponse(data, headers) : data;
-      dispatch({ type: "add", payload: _data });
+    onResponse: (_data, page, headers) => {
+      let cdata = onResponse ? onResponse(data, headers) : _data;
+      dispatch({ type: "add", payload: cdata });
+      return cdata;
     },
-    [onResponse]
-  );
-
-  let [{ loading, error }] = useAxios(request, {
-    ssr: ssrEnabled,
-    manual: !ssrEnabled,
   });
-
-  if (mockResponse) {
-    let mock = new MockAdapter(StaticAxios);
-    mockResponse(mock);
-  }
 
   useEffect(() => {
     if (error && onError) {
@@ -86,11 +67,13 @@ const DataTableImpl: React.FC<DataTableProps> = (props) => {
   return (
     <DataTableContext.Consumer>
       {({ state: { data } }) => (
-        <Box> 
+        <Box>
           {ssrEnabled && data && (
             <GrommetDataTable
               data={data}
               columns={columns}
+              {...rest}
+              paginate={{ numberItems: 100 }}
             ></GrommetDataTable>
           )}
           {(!ssrEnabled || !data) && <DataTableLoader />}

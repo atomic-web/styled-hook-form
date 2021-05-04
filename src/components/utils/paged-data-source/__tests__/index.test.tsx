@@ -9,16 +9,18 @@ describe("remote data source", () => {
     let [searchParam, setSearchParam] = useState("");
 
     let { page: activePage, data, loading } = usePagedData<string>({
-      url: "/api/test",
+      request: "/api/test",
       page,
       pageSize: 5,
       searchParam,
-      resolve: (d) => {
+      onResponse: (d) => {
         return d;
       },
-      mock: {
-        data: ["1", "2", "3", "4", "5"],
-      },
+      mockResponse:(mock)=> {
+          mock.onGet("/api/test").reply(()=>{
+              return [200,{data: ["1", "2", "3", "4", "5"]}];
+          })          
+      }
     });
 
     const loadMore = () => {

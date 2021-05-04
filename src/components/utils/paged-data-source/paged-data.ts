@@ -1,5 +1,8 @@
 import useAxios from "axios-hooks";
+import MockAdapter from "axios-mock-adapter";
 import { useCallback, useEffect, useState } from "react";
+import StaticAxios from "axios";
+
 import {
   DataFecthStatus,
   DataFetchInfo,
@@ -16,11 +19,12 @@ const usePagedData = <
   props: PageDataProps<TData, TServerData, TError>
 ): PageDataResult<TData, TError> => {
   let {
-    url,
+    request,
     lazy,
     params,
-    resolve,
-    mock,
+    onResponse,
+    onRequest,
+    mockResponse,
     listPropName = "list",
     totalPropName = "total",
     searchParam,
@@ -33,6 +37,12 @@ const usePagedData = <
 
   if (lazy === undefined || lazy === null) {
     lazy = false;
+  }
+
+  if (typeof request === "string") {
+    request = {
+      url: request,
+    };
   }
 
   let [page, setPage] = useState<number>(0);
@@ -58,27 +68,44 @@ const usePagedData = <
 
   // let loading  = false,error = "", refetch = ()=>{};
 
-  
-  const [{ loading, error},refetch] = useAxios({
-    url:url,   
-    transformResponse: useCallback(function(data:TServerData){      
-      data = JSON.parse(data as any);
-      setCurrentFetch((f: DataFetchInfo<TServerData, TError> | null) => ({
-        page: f!?.page,
-        data,
-        status: DataFecthStatus.Done,
-      }));
+  const [{ loading, error }, refetch] = useAxios(
+    {
+      ...request
+      ,
+      transformRequest: useCallback(
+        (data: any, headers: any) => {
+          return onRequest ? onRequest(data, headers) : data;
+        },
+        [onRequest]
+      ),
+      transformResponse: useCallback(
+        function (data: TServerData, headers: any) {
+          data = JSON.parse(data as any);
+          setCurrentFetch((f: DataFetchInfo<TServerData, TError> | null) => ({
+            page: f!?.page,
+            data,
+            status: DataFecthStatus.Done,
+            headers,
+          }));
 
-      return (data as unknown) as TData;
-    },[])
-  },{manual:true})
+          return (data as unknown) as TData;
+        },
+        [onResponse]
+      ),
+    },
+    { manual: true }
+  );
 
-  const handleServerData = (data: TServerData,page:number): boolean => {
+  const handleServerData = (
+    data: TServerData,
+    page: number,
+    headers: any
+  ): boolean => {
     let result: TData;
     let list: any[];
 
-    if (resolve) {
-      result = resolve(data,page);
+    if (onResponse) {
+      result = onResponse(data, page, headers);
     } else {
       result = (data as unknown) as TData;
     }
@@ -127,18 +154,10 @@ const usePagedData = <
   }, [_page]);
 
   const loadPage = (pNum: number) => {
-    if (mock) {
-      setCurrentFetch({
-        page: pNum,
-        status: DataFecthStatus.Done,
-        data: (mock.data as unknown) as TServerData,
-      });
-    } else {
-      setCurrentFetch({
-        page: pNum,
-        status: DataFecthStatus.Pending,
-      });
-    }
+    setCurrentFetch({
+      page: pNum,
+      status: DataFecthStatus.Pending,
+    });
   };
 
   useEffect(() => {
@@ -148,15 +167,21 @@ const usePagedData = <
           return;
         }
         refetch({
-            params:{
-              ...getParams(),
-              [pageParamName]: currentFetch.page,
-            }
+          params: {
+            ...getParams(),
+            [pageParamName]: currentFetch.page,
+          },
         });
       }
 
       if (currentFetch.status === DataFecthStatus.Done) {
-        if (handleServerData(currentFetch.data!,currentFetch.page)) {
+        if (
+          handleServerData(
+            currentFetch.data!,
+            currentFetch.page,
+            currentFetch.headers
+          )
+        ) {
           setPage(currentFetch.page);
         }
       }
@@ -166,7 +191,7 @@ const usePagedData = <
   useEffect(() => {
     reset();
   }, [
-    url,
+    request,
     pageSize,
     params,
     searchParam,
@@ -175,7 +200,12 @@ const usePagedData = <
     pageSizeParamName,
   ]);
 
-  return { data, loading, error, page, total, hasMore, nextPage, reset };
-}
+  if (mockResponse) {
+    let mock = new MockAdapter(StaticAxios);
+    mockResponse(mock);
+  }
 
-export {usePagedData}
+  return { data, loading, error, page, total, hasMore, nextPage, reset };
+};
+
+export { usePagedData };
