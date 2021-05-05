@@ -68,6 +68,11 @@ const usePagedData = <
 
   // let loading  = false,error = "", refetch = ()=>{};
 
+  if (mockResponse) {
+    let mock = new MockAdapter(StaticAxios);
+    mockResponse(mock);
+  }
+
   const [{ loading, error }, refetch] = useAxios(
     {
       ...request
@@ -79,8 +84,8 @@ const usePagedData = <
         [onRequest]
       ),
       transformResponse: useCallback(
-        function (data: TServerData, headers: any) {
-          data = JSON.parse(data as any);
+        function (_data: TServerData, headers: any) {        
+          let data = typeof(_data) === "string" ? JSON.parse(_data as any) : _data;
           setCurrentFetch((f: DataFetchInfo<TServerData, TError> | null) => ({
             page: f!?.page,
             data,
@@ -88,7 +93,7 @@ const usePagedData = <
             headers,
           }));
 
-          return (data as unknown) as TData;
+          return (_data as unknown) as TData;
         },
         [onResponse]
       ),
@@ -103,7 +108,7 @@ const usePagedData = <
   ): boolean => {
     let result: TData;
     let list: any[];
-
+    
     if (onResponse) {
       result = onResponse(data, page, headers);
     } else {
@@ -127,7 +132,6 @@ const usePagedData = <
     let totalRecords = (result as any)[totalPropName];
     setTotal(totalRecords);
     setHasMore(list.length === pageSize);
-
     setData(result);
     return true;
   };
@@ -198,12 +202,7 @@ const usePagedData = <
     searchParamName,
     pageParamName,
     pageSizeParamName,
-  ]);
-
-  if (mockResponse) {
-    let mock = new MockAdapter(StaticAxios);
-    mockResponse(mock);
-  }
+  ]); 
 
   return { data, loading, error, page, total, hasMore, nextPage, reset };
 };

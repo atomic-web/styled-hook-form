@@ -8,7 +8,7 @@ export type DataTableProps<
 > = GrommetDataTableProps & {
   onRequest?: (params: any, headers: any) => any;
   onResponse?: (data: TServerData, headers: any) => TData;
-  onError?:(err:any)=>void,
+  onRequestError?:(err:any)=>void,
   request: AxiosRequestConfig | string;
   mockResponse?: (req: MockAdapter) => void;
   ssr?: boolean;

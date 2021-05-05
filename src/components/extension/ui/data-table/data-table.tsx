@@ -1,16 +1,19 @@
 import { useGHFContext } from "context";
-import { Box, DataTable as GrommetDataTable, Spinner, Text } from "grommet";
+import {
+  Box,
+  DataTable as GrommetDataTable,
+  Pagination,
+  Spinner,
+  Text,
+} from "grommet";
 import { DataTableProps } from "./types";
 import DataTableLoader from "./loader";
-import React, { useCallback, useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import {
   DataTableContext,
   DataTableContextProvider,
   useDataTableContext,
 } from "./data-context";
-import useAxios from "axios-hooks";
-import MockAdapter from "axios-mock-adapter";
-import StaticAxios from "axios";
 import { usePagedData } from "components/utils/paged-data-source";
 
 const DataTable: React.FC<DataTableProps> = (props) => {
@@ -34,9 +37,12 @@ const DataTableImpl: React.FC<DataTableProps> = (props) => {
     columns,
     onRequest,
     onResponse,
-    onError,
+    onRequestError,
+    paginate,
     ...rest
   } = props;
+
+  let [currentPage, setCurrentPage] = useState<number>(0);
 
   let {
     config: { ssr: globalSSR },
@@ -46,35 +52,50 @@ const DataTableImpl: React.FC<DataTableProps> = (props) => {
 
   let ssrEnabled = perSsr !== undefined ? perSsr : globalSSR;
 
-  let { error } = usePagedData({
+  let { error, data: ServerData } = usePagedData({
     request,
     onRequest: (data: any, headers: any) => {
       return onRequest ? onRequest(data, headers) : data;
     },
-    onResponse: (_data, page, headers) => {
+    onResponse: (_data, _, headers) => {
       let cdata = onResponse ? onResponse(data, headers) : _data;
-      dispatch({ type: "add", payload: cdata });
       return cdata;
     },
+    mockResponse,
+    page: currentPage,
   });
 
   useEffect(() => {
-    if (error && onError) {
-      onError(error);
+    if (error && onRequestError) {
+      onRequestError(error);
     }
   }, [error]);
+
+  useEffect(() => {
+    if (ServerData) {
+      dispatch({ type: "set", payload: ServerData.list });
+    }
+  }, [ServerData]);
 
   return (
     <DataTableContext.Consumer>
       {({ state: { data } }) => (
         <Box>
           {ssrEnabled && data && (
-            <GrommetDataTable
-              data={data}
-              columns={columns}
-              {...rest}
-              paginate={{ numberItems: 100 }}
-            ></GrommetDataTable>
+            <Box>
+              <GrommetDataTable
+                {...rest}
+                columns={columns}
+                data={data}
+                paginate={false}
+              ></GrommetDataTable>
+              <Pagination                
+                onChange={(e) => {
+                  setCurrentPage(e.page);
+                }}
+                {...paginate}
+              />
+            </Box>
           )}
           {(!ssrEnabled || !data) && <DataTableLoader />}
         </Box>

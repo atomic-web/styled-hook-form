@@ -42,10 +42,21 @@ const add = (state: DataTableContextModel, payload: any | any[]) => {
   };
 };
 
+
+const set = (state: DataTableContextModel, payload: any | any[]) => {
+  let items = Array.isArray(payload) ? payload : [payload];
+  return {
+    ...state,
+    data: items,
+  };
+};
+
+
 const actionsMap: Record<any, any> = {
   remove,
   update,
   add,
+  set
 };
 
 export const actionImpl = ((actions) => (

@@ -12,6 +12,10 @@ export interface DataTableContextProviderProps {
 
 export type DataTableContextReducerAction =
   | {
+      type: "set";
+      payload: any | any[];
+    }
+  | {
       type: "add";
       payload: any | any[];
     }
