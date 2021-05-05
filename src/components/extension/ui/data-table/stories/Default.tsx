@@ -57,6 +57,7 @@ export const Default = () => {
           }}
           mockResponse={(m) => {
             m.onGet("/api/employee/list").reply((req) => {
+              alert(JSON.stringify(req.params));
               return new Promise((resolve) => {
                 resolve([
                   200,

@@ -10,6 +10,9 @@ export type DataTableProps<
   onResponse?: (data: TServerData, headers: any) => TData;
   onRequestError?:(err:any)=>void,
   request: AxiosRequestConfig | string;
+  requestParams?:any,
   mockResponse?: (req: MockAdapter) => void;
   ssr?: boolean;
+  orderPropParamName?:string;
+  orderDirParamName?:string;  
 };

@@ -11,6 +11,10 @@ export interface PageDataProps<
   params?: object;
   searchParam?: string;
   searchParamName?: string;
+  orderPropParamName?:string;
+  orderDirParamName?:string;
+  orderProp?:string;
+  orderDir?:string;
   page?: number;
   pageSize?: number;
   pageParamName?: string;

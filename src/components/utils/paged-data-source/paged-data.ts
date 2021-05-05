@@ -1,6 +1,6 @@
 import useAxios from "axios-hooks";
 import MockAdapter from "axios-mock-adapter";
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import StaticAxios from "axios";
 
 import {
@@ -33,6 +33,10 @@ const usePagedData = <
     pageSize = 20,
     pageParamName = "page",
     pageSizeParamName = "pageSize",
+    orderPropParamName = "order-by",
+    orderDirParamName = "order-dir",
+    orderProp,
+    orderDir = "asc",
   } = props;
 
   if (lazy === undefined || lazy === null) {
@@ -54,17 +58,31 @@ const usePagedData = <
     TError
   > | null>(null);
 
-  const getParams = (): object => {
+  const requestParams = useMemo((): object => {
     let _params: Record<string, any> = {
-      [pageSizeParamName ?? "pageSize"]: pageSize,
+      [pageSizeParamName]: pageSize,
     };
 
     if (searchParam) {
-      _params[searchParamName ?? "searchKey"] = searchParam;
+      _params[searchParamName] = searchParam;
     }
 
+    if (orderProp) {
+      _params[orderPropParamName] = orderProp;
+      _params[orderDirParamName] = orderDir;
+    }
     return _params;
-  };
+  }, [
+    pageSizeParamName,
+    pageSize,
+    searchParamName,
+    searchParam,
+    orderPropParamName,
+    orderDirParamName,
+    orderProp,
+    orderDir,
+    params,
+  ]);
 
   // let loading  = false,error = "", refetch = ()=>{};
 
@@ -75,8 +93,7 @@ const usePagedData = <
 
   const [{ loading, error }, refetch] = useAxios(
     {
-      ...request
-      ,
+      ...request,
       transformRequest: useCallback(
         (data: any, headers: any) => {
           return onRequest ? onRequest(data, headers) : data;
@@ -84,8 +101,9 @@ const usePagedData = <
         [onRequest]
       ),
       transformResponse: useCallback(
-        function (_data: TServerData, headers: any) {        
-          let data = typeof(_data) === "string" ? JSON.parse(_data as any) : _data;
+        function (_data: TServerData, headers: any) {
+          let data =
+            typeof _data === "string" ? JSON.parse(_data as any) : _data;
           setCurrentFetch((f: DataFetchInfo<TServerData, TError> | null) => ({
             page: f!?.page,
             data,
@@ -108,7 +126,7 @@ const usePagedData = <
   ): boolean => {
     let result: TData;
     let list: any[];
-    
+
     if (onResponse) {
       result = onResponse(data, page, headers);
     } else {
@@ -172,7 +190,7 @@ const usePagedData = <
         }
         refetch({
           params: {
-            ...getParams(),
+            ...requestParams,
             [pageParamName]: currentFetch.page,
           },
         });
@@ -202,7 +220,9 @@ const usePagedData = <
     searchParamName,
     pageParamName,
     pageSizeParamName,
-  ]); 
+    orderDir,
+    orderProp,
+  ]);
 
   return { data, loading, error, page, total, hasMore, nextPage, reset };
 };

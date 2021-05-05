@@ -8,13 +8,14 @@ import {
 } from "grommet";
 import { DataTableProps } from "./types";
 import DataTableLoader from "./loader";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import {
   DataTableContext,
   DataTableContextProvider,
   useDataTableContext,
 } from "./data-context";
 import { usePagedData } from "components/utils/paged-data-source";
+import { PropType } from "../../../../types/utils";
 
 const DataTable: React.FC<DataTableProps> = (props) => {
   let { data, ...rest } = props;
@@ -31,6 +32,7 @@ const DataTable: React.FC<DataTableProps> = (props) => {
 const DataTableImpl: React.FC<DataTableProps> = (props) => {
   let {
     request,
+    requestParams,
     mockResponse,
     ssr: perSsr,
     data,
@@ -38,11 +40,16 @@ const DataTableImpl: React.FC<DataTableProps> = (props) => {
     onRequest,
     onResponse,
     onRequestError,
+    orderPropParamName = "order-by",
+    orderDirParamName = "order-dir",
     paginate,
     ...rest
   } = props;
 
   let [currentPage, setCurrentPage] = useState<number>(0);
+  let [sort, setSort] = useState<
+    PropType<DataTableProps, "sort"> | undefined
+  >(undefined);  
 
   let {
     config: { ssr: globalSSR },
@@ -52,8 +59,18 @@ const DataTableImpl: React.FC<DataTableProps> = (props) => {
 
   let ssrEnabled = perSsr !== undefined ? perSsr : globalSSR;
 
+  let internalReqParams = useMemo(()=>{
+      return {
+        ...requestParams,
+      }
+  },[requestParams]);
+
   let { error, data: ServerData } = usePagedData({
     request,
+        
+    params:internalReqParams,
+    orderDir:sort?.direction,
+    orderProp:sort?.property,
     onRequest: (data: any, headers: any) => {
       return onRequest ? onRequest(data, headers) : data;
     },
@@ -88,8 +105,10 @@ const DataTableImpl: React.FC<DataTableProps> = (props) => {
                 columns={columns}
                 data={data}
                 paginate={false}
+                sort={sort}
+                onSort={(_sort) => setSort(_sort)}
               ></GrommetDataTable>
-              <Pagination                
+              <Pagination
                 onChange={(e) => {
                   setCurrentPage(e.page);
                 }}
