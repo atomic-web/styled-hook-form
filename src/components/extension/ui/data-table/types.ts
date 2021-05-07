@@ -1,11 +1,12 @@
 import { AxiosRequestConfig } from "axios";
 import MockAdapter from "axios-mock-adapter";
-import { DataTableProps as GrommetDataTableProps } from "grommet";
+import { DataTableProps as GrommetDataTableProps, PaginationProps } from "grommet";
 
 export type DataTableProps<
   TServerData = any,
   TData = TServerData
-> = GrommetDataTableProps & {
+> = Omit<GrommetDataTableProps,'paginate'|'primaryKey'> & {
+  primaryKey:string,
   onRequest?: (params: any, headers: any) => any;
   onResponse?: (data: TServerData, headers: any) => TData;
   onRequestError?:(err:any)=>void,
@@ -13,6 +14,19 @@ export type DataTableProps<
   requestParams?:any,
   mockResponse?: (req: MockAdapter) => void;
   ssr?: boolean;
-  orderPropParamName?:string;
-  orderDirParamName?:string;  
+  requestParamsConfig?:{
+    orderPropParamName?:string;
+    orderDirParamName?:string;
+    pageSizeParamName?:string
+    pageNumParamName?:string,
+    totalPropName?:string,
+  },
+  paginate:{
+    type?:"button-based" | "infinite-scroll",
+    enabled:boolean,
+    pageSize?:number,
+    currentPage : number,
+    pageSizeOptions? : number[],
+    pagerOptions?:Omit<PaginationProps,'numberItems'>
+  }
 };

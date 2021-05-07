@@ -5,6 +5,14 @@ import { GHFContextProvider } from "context";
 
 const columns: ColumnConfig<any>[] = [
   {
+    property: "id",
+    header: "Row",
+  },
+  {
+    property: "row",
+    header: "Row",
+  },
+  {
     property: "avatar",
     header: "Avatar",
     render: ({ avatar }) => <Avatar src={avatar} />,
@@ -46,29 +54,52 @@ const columns: ColumnConfig<any>[] = [
   },
 ];
 
+const getId = () => {
+  let id = 0;
+  return () => {
+    let dd = id++;
+    if (dd == 2) {
+      dd++;
+      id++;
+    }
+    return dd;
+  };
+};
+
+const ID = getId();
+
 export const Default = () => {
   return (
     <GHFContextProvider>
       <Box>
         <DataTable
+          primaryKey="id"
           pin
           request={{
             url: "/api/employee/list",
           }}
           mockResponse={(m) => {
             m.onGet("/api/employee/list").reply((req) => {
-              alert(JSON.stringify(req.params));
+              let page = req.params.page;
               return new Promise((resolve) => {
                 resolve([
                   200,
                   {
-                    list: new Array(10).fill(0).map((_) => ({
-                      name: `${name.firstName()} ${name.lastName()}`,
-                      rem: datatype.number(100),
-                      avatar: image.avatar(),
-                      phone: phone.phoneNumber(),
-                      address: address.streetAddress(),
-                    })),
+                    total: 95,
+                    list: new Array(page === 10 ? 5 : 10)
+                      .fill(0)
+                      .map((_, i) => ({
+                        id: ID() + 1,
+                        row: datatype.number({
+                          min: (page - 1) * 10 + 1,
+                          max: page * 10,
+                        }),
+                        name: `${name.firstName()} ${name.lastName()}`,
+                        rem: datatype.number(100),
+                        avatar: image.avatar(),
+                        phone: phone.phoneNumber(),
+                        address: address.streetAddress(),
+                      })),
                   },
                 ]);
               });
@@ -78,10 +109,12 @@ export const Default = () => {
           data={[]}
           columns={columns}
           paginate={{
-            numberItems: 100,
-            step: 10,
-            page: 5,
-            numberMiddlePages: 8,
+            enabled: true,
+            currentPage: 1,
+            pageSize: 10,
+            pagerOptions: {
+              numberMiddlePages: 8
+            },
           }}
         />
       </Box>

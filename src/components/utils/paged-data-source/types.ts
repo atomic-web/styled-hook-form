@@ -38,7 +38,8 @@ export interface PageDataResult<
   total: number,
   hasMore:boolean,
   reset: ()=>void,
-  nextPage : ()=>void
+  nextPage : ()=>void,
+  refresh : ()=>void
 }
 
 export enum DataFecthStatus {

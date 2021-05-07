@@ -1,4 +1,4 @@
-import React from 'react';
+import React from "react";
 import { forwardRef, useCallback, useEffect, useState, memo } from "react";
 import {
   Controller,
@@ -10,7 +10,7 @@ import { Box, CheckBox, Select } from "grommet";
 import { FormField } from "../../types";
 import { Spinner } from "grommet";
 import { usePagedData } from "../../../utils/paged-data-source";
-import { useGHFContext } from 'context';
+import { useGHFContext } from "context";
 
 const Option = memo((props: OptionProps) => {
   let { label, selected } = props;
@@ -29,7 +29,7 @@ const DefaultOptionLabel = ({ content }: { content: string }) => (
 const DropDown = forwardRef<HTMLButtonElement, FormField<DropDownProps>>(
   (props, ref) => {
     let vrules = props.validationRules || {};
-    const {translate : T } = useGHFContext();
+    const { translate: T } = useGHFContext();
 
     let {
       name,
@@ -66,12 +66,12 @@ const DropDown = forwardRef<HTMLButtonElement, FormField<DropDownProps>>(
     } = !dataSourceOptions
       ? {}
       : usePagedData({
-          url: dataSourceOptions.url ?? "",
+          request: dataSourceOptions.url ?? "",
           pageParamName: dataSourceOptions.pageKey,
           pageSizeParamName: dataSourceOptions.pageSizeKey,
           searchParamName: dataSourceOptions.searchKey,
           searchParam: remoteSearchKey,
-          resolve: (data: any[], page: number) => {
+          onResponse: (data: any[], page: number) => {
             setRemoteOptions((oldOptions) => {
               let newOptions = [...(page > 1 ? oldOptions : []), ...data];
 
@@ -190,30 +190,30 @@ const DropDown = forwardRef<HTMLButtonElement, FormField<DropDownProps>>(
       : null;
 
     return (
-        <Controller
-          name={name}
-          defaultValue={initialValue}
-          rules={vrules}
-          control={control}
-          render={({ field }) => (
-            <Select
-              placeholder={placeholder}
-              closeOnChange={!multiple}
-              ref={ref as any}
-              multiple={multiple}
-              options={dataSourceOptions ? remoteOptions ?? [] : localOptions}
-              labelKey={itemLabelKey}
-              valueKey={itemValueKey}
-              onSearch={handleSearch}
-              onMore={handleMore}
-              onChange={handleChange(field)}
-              value={localValue ?? []}
-              emptySearchMessage={T("drop-down-search-empty-msg")}
-              {...selectDynamicProps}
-              children={selectContent}
-            />
-          )}
-        ></Controller>
+      <Controller
+        name={name}
+        defaultValue={initialValue}
+        rules={vrules}
+        control={control}
+        render={({ field }) => (
+          <Select
+            placeholder={placeholder}
+            closeOnChange={!multiple}
+            ref={ref as any}
+            multiple={multiple}
+            options={dataSourceOptions ? remoteOptions ?? [] : localOptions}
+            labelKey={itemLabelKey}
+            valueKey={itemValueKey}
+            onSearch={handleSearch}
+            onMore={handleMore}
+            onChange={handleChange(field)}
+            value={localValue ?? []}
+            emptySearchMessage={T("drop-down-search-empty-msg")}
+            {...selectDynamicProps}
+            children={selectContent}
+          />
+        )}
+      ></Controller>
     );
   }
 );

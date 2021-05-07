@@ -4,32 +4,34 @@ import {
   DataTableContextModel,
   DataTableContextProviderProps,
   DataTableContextReducerAction,
-  DataTableContextProviderValue
+  DataTableContextProviderValue,
 } from "./types";
 
 const defaults: DataTableContextModel = {
   primaryKey: "",
+  totalRecords: 0,
+  syncKey: 0,
 };
 
 const DataTableContext = createContext<DataTableContextProviderValue>({
-  state : defaults,
-  dispatch : ()=>{}
+  state: defaults,
+  dispatch: () => {},
 });
+
+let reducer = (
+  state: DataTableContextModel,
+  action: DataTableContextReducerAction
+) => actionImpl(state, action);
 
 const DataTableContextProvider: React.FC<DataTableContextProviderProps> = (
   props: DataTableContextProviderProps
 ) => {
-  let { children } = props;
+  let { children, options } = props;
 
-  let reducer = (
-    state: DataTableContextModel,
-    action: DataTableContextReducerAction
-  ) => actionImpl(state, action);
-
-  let [state , dispatch] = useReducer<
+  let [state, dispatch] = useReducer<
     Reducer<DataTableContextModel, DataTableContextReducerAction>,
     DataTableContextModel
-  >(reducer, defaults, (s) => s);
+  >(reducer, { ...defaults, ...options }, (s) => s);
   return (
     <DataTableContext.Provider
       children={children}
@@ -41,6 +43,6 @@ const DataTableContextProvider: React.FC<DataTableContextProviderProps> = (
   );
 };
 
-const useDataTableContext = ()=> useContext(DataTableContext);
+const useDataTableContext = () => useContext(DataTableContext);
 
-export {DataTableContext , DataTableContextProvider , useDataTableContext}
+export { DataTableContext, DataTableContextProvider, useDataTableContext };

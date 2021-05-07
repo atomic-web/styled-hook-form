@@ -164,6 +164,13 @@ const usePagedData = <
     loadPage(1);
   };
 
+  const refresh = () => {
+    setPage((p) => {
+      loadPage(p);
+      return p;
+    });
+  };
+
   useEffect(() => {
     if (!page && lazy) {
       return;
@@ -224,7 +231,7 @@ const usePagedData = <
     orderProp,
   ]);
 
-  return { data, loading, error, page, total, hasMore, nextPage, reset };
+  return { data, loading, error, page, total, hasMore, nextPage, reset,refresh };
 };
 
 export { usePagedData };

@@ -1,11 +1,5 @@
 import { useGHFContext } from "context";
-import {
-  Box,
-  DataTable as GrommetDataTable,
-  Pagination,
-  Spinner,
-  Text,
-} from "grommet";
+import { Box, DataTable as GrommetDataTable, Pagination } from "grommet";
 import { DataTableProps } from "./types";
 import DataTableLoader from "./loader";
 import React, { useEffect, useMemo, useState } from "react";
@@ -18,12 +12,24 @@ import { usePagedData } from "components/utils/paged-data-source";
 import { PropType } from "../../../../types/utils";
 
 const DataTable: React.FC<DataTableProps> = (props) => {
-  let { data, ...rest } = props;
+  let {
+    data,
+    paginate: { pageSize },
+    primaryKey,
+  } = props;
 
   return (
     <Box>
-      <DataTableContextProvider data={data}>
-        <DataTableImpl data={data} {...rest} />
+      <DataTableContextProvider
+        options={{
+          data,
+          pageSize: pageSize!,
+          primaryKey: primaryKey,
+          orderDir:"desc",
+          orderParam:primaryKey
+        }}
+      >
+        <DataTableImpl {...props} data={data} />
       </DataTableContextProvider>
     </Box>
   );
@@ -40,41 +46,64 @@ const DataTableImpl: React.FC<DataTableProps> = (props) => {
     onRequest,
     onResponse,
     onRequestError,
-    orderPropParamName = "order-by",
-    orderDirParamName = "order-dir",
+    requestParamsConfig: reqParams,
     paginate,
     ...rest
   } = props;
 
-  let [currentPage, setCurrentPage] = useState<number>(0);
-  let [sort, setSort] = useState<
-    PropType<DataTableProps, "sort"> | undefined
-  >(undefined);  
+  //let [currentPage, setCurrentPage] = useState<number>(0);
+  //let [totalRecords, settotalRecords] = useState<number>(0);
+  let [sort, setSort] = useState<PropType<DataTableProps, "sort">>(
+     {
+       direction :"desc",
+       property:props.primaryKey
+     }
+  );
+
+  let defaultPaging = {
+    enabled: false,
+    pageSize: 50,
+    currentPage: 0,
+  };
+
+  let requestParamsConfig = {
+    ...DataTable.defaultProps,
+    ...reqParams,
+  };
 
   let {
     config: { ssr: globalSSR },
   } = useGHFContext();
 
-  let { dispatch } = useDataTableContext();
+  let {
+    state: { currentPage, totalRecords: globalTotalRecords , data: globalData, syncKey },
+    dispatch,
+  } = useDataTableContext();
 
   let ssrEnabled = perSsr !== undefined ? perSsr : globalSSR;
 
-  let internalReqParams = useMemo(()=>{
-      return {
-        ...requestParams,
-      }
-  },[requestParams]);
+  let internalReqParams = useMemo(() => {
+    return {
+      ...requestParams,
+    };
+  }, [requestParams]);
 
-  let { error, data: ServerData } = usePagedData({
+  let { error, data: ServerData,refresh : refreshCurrentPage ,loading } = usePagedData({
     request,
-        
-    params:internalReqParams,
-    orderDir:sort?.direction,
-    orderProp:sort?.property,
+    params: internalReqParams,
+    orderDir: sort?.direction,
+    orderProp: sort?.property,
+    orderDirParamName: requestParamsConfig!.orderDirParamName,
+    orderPropParamName: requestParamsConfig!.orderPropParamName,
     onRequest: (data: any, headers: any) => {
       return onRequest ? onRequest(data, headers) : data;
     },
-    onResponse: (_data, _, headers) => {
+    onResponse: (_data: any, _, headers: any) => {
+      dispatch({
+        type: "merge-value",
+        payload: { totalRecords: _data[requestParamsConfig.totalPropName!] },
+      });
+
       let cdata = onResponse ? onResponse(data, headers) : _data;
       return cdata;
     },
@@ -90,37 +119,91 @@ const DataTableImpl: React.FC<DataTableProps> = (props) => {
 
   useEffect(() => {
     if (ServerData) {
-      dispatch({ type: "set", payload: ServerData.list });
+      dispatch({ type: "set-data", payload: ServerData.list });
     }
   }, [ServerData]);
 
+  useEffect(() => {
+    if (paginate.currentPage) {
+      dispatch({
+        type: "merge-value",
+        payload: { currentPage: paginate.currentPage },
+      });
+    }
+  }, [paginate.currentPage]);
+
+  useEffect(() => {
+    if (!sort) {
+      setSort({
+        direction: "desc",
+        property: props.primaryKey,
+      });
+    }
+  }, [props.primaryKey]);
+
+  const handleSort = (_sort: any) => {
+    _sort.external = true;
+    setSort(_sort);
+    dispatch({
+      type: "merge-value",
+      payload: { orderParam: _sort.property, orderDir: _sort.direction },
+    });
+  };
+
+  let [totalRecords, setTotalRecords] = useState(50);
+
+  useEffect(() => {
+    setTotalRecords(globalTotalRecords);
+  }, [globalTotalRecords]);
+ 
+  useEffect(()=>{
+    refreshCurrentPage();
+  },[syncKey]);
+
   return (
-    <DataTableContext.Consumer>
-      {({ state: { data } }) => (
+    <Box>
+      {globalData && (
         <Box>
-          {ssrEnabled && data && (
-            <Box>
-              <GrommetDataTable
-                {...rest}
-                columns={columns}
-                data={data}
-                paginate={false}
-                sort={sort}
-                onSort={(_sort) => setSort(_sort)}
-              ></GrommetDataTable>
-              <Pagination
-                onChange={(e) => {
-                  setCurrentPage(e.page);
-                }}
-                {...paginate}
-              />
-            </Box>
+          <GrommetDataTable
+            {...rest}
+            columns={columns}
+            data={globalData}
+            paginate={false}
+            sort={sort}
+            onSort={handleSort}
+            step={paginate.pageSize}
+          ></GrommetDataTable>
+          {paginate && (paginate.type === "button-based" || !paginate.type) && (
+            <Pagination
+              onChange={(e) => {
+                dispatch({
+                  type: "merge-value",
+                  payload: { currentPage: e.page },
+                });
+              }}
+              {...defaultPaging}
+              {...paginate.pagerOptions}
+              step={paginate.pageSize}
+              numberItems={totalRecords}
+              page={currentPage}
+              key={currentPage}
+            />
           )}
-          {(!ssrEnabled || !data) && <DataTableLoader />}
         </Box>
       )}
-    </DataTableContext.Consumer>
+      {(!ssrEnabled || !data) && <DataTableLoader />}
+    </Box>
   );
+};
+
+DataTable.defaultProps = {
+  requestParamsConfig: {
+    pageSizeParamName: "pageSize",
+    pageNumParamName: "page",
+    orderDirParamName: "orderDir",
+    orderPropParamName: "orderBy",
+    totalPropName: "total",
+  },
 };
 
 export { DataTable };
