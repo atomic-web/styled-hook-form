@@ -8,6 +8,8 @@ import { TextInputProps } from "./editors/text-input/types";
 import { DropDownProps } from "./editors/drop-down/types";
 import { PasswordInputProps } from "./editors/password-input/types";
 import { TimeInputProps } from './editors/time-input/types';
+import { PropType } from 'types/utils';
+import { GridProps } from 'grommet';
 
 export enum FormFieldType {
   Text = 1,
@@ -62,7 +64,9 @@ export interface FormFieldBase {
   >;
   required?: boolean;
   submitTrigger?: boolean;
-  onChange? : (value : any)=>void
+  onChange? : (value : any)=>void,
+  gridArea?:string,
+  order?:number
 }
 
 export type FormField<TProps extends {} = {}> = FormFieldBase &
@@ -76,7 +80,10 @@ export interface FormBuilderProps<TModel=any> extends Partial<Omit<HTMLDivElemen
   children: React.ReactNode;
   model:TModel,
   onSubmit?: (values: any) => void;
-  beforeSubmit?:(values:TModel)=>boolean
+  beforeSubmit?:(values:TModel)=>boolean,
+  rows? : PropType<GridProps,"rows">,
+  columns? : PropType<GridProps,"columns">,
+  areas : PropType<GridProps,"areas">
 }
 
 export type FormEditorPropsBase = Pick<FormFieldBase, "validationRules"> & {};

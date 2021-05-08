@@ -5,6 +5,7 @@ import { FormBuilderProps, FormField } from "./types";
 import { EditorMap } from "./editor-map";
 import { UseFormReturn } from "react-hook-form";
 import WidthEditorWrap from "./editors/shared/editor-wrap";
+import { Box, Grid } from "grommet";
 
 const StyledFormBuilder = styled.div``;
 
@@ -20,9 +21,13 @@ const renderField = (field: FormField, methods: UseFormReturn<any>) => {
   }
 
   return (
-    <WidthEditorWrap key={field.name} {...(field as any)} editorType={field.type}>
+    <WidthEditorWrap
+      key={field.name}
+      {...(field as any)}
+      editorType={field.type}
+    >
       <>
-        {field.render !== undefined && field.render(component,methods)}
+        {field.render !== undefined && field.render(component, methods)}
         {field.render === undefined && component}
       </>
     </WidthEditorWrap>
@@ -30,9 +35,19 @@ const renderField = (field: FormField, methods: UseFormReturn<any>) => {
 };
 
 const FormBuilder: React.FC<FormBuilderProps> = (props) => {
-  let { fields, children, onSubmit, className, beforeSubmit, model } = props;
+  let {
+    fields,
+    children,
+    onSubmit,
+    className,
+    beforeSubmit,
+    model,
+    rows,
+    columns,
+    areas,
+  } = props;
 
-  const getAggValues = ()=>({
+  const getAggValues = () => ({
     ...fields.reduce((p: any, c: FormField) => {
       p[c.name] = c.defaultValue;
       return p;
@@ -44,7 +59,7 @@ const FormBuilder: React.FC<FormBuilderProps> = (props) => {
 
   useEffect(() => {
     setDefautValues(getAggValues());
-  }, [model,fields]);
+  }, [model, fields]);
 
   const handleSubmit = (values: any) => {
     let shoudlSubmit = beforeSubmit ? beforeSubmit(values) : true;
@@ -55,6 +70,69 @@ const FormBuilder: React.FC<FormBuilderProps> = (props) => {
 
   let submitTriggers = fields.filter((f) => f.submitTrigger).map((f) => f.name);
 
+  const renderFieldEditors = (items: FormField[], methods: any) => {
+    let groupedEditors: Record<string, any[]> = {};
+
+    items = items.map((item, index) => ({
+      ...item,
+      order: item.order ?? index,
+    }));
+
+    items
+      .sort((a, b) => a.order! - b.order!)
+      .forEach((field) => {
+        let fieldEditor = renderField(field, methods);
+        if (field.gridArea) {
+          let existingArea = groupedEditors[field.gridArea];
+          groupedEditors[field.gridArea] = existingArea
+            ? [...existingArea, fieldEditor]
+            : [fieldEditor];
+        } else {
+          groupedEditors["no-area"] = groupedEditors["no-area"]
+            ? [...groupedEditors["no-area"], fieldEditor]
+            : [fieldEditor];
+        }
+      });
+
+    return Object.keys(groupedEditors).map((k) => (
+      <Box gridArea={k} key={k} pad="small">
+        {groupedEditors[k].map((field) => (
+          <Box key={field.key}>{field}</Box>
+        ))}
+      </Box>
+    ));
+  };
+
+  if (
+    (rows && (!columns || !areas)) ||
+    (columns && (!rows || !areas)) ||
+    (areas && (!columns || !rows))
+  ) {
+    throw new Error(
+      "`columns` , `rows` and `areas` should be defined defined together!"
+    );
+  }
+
+  let gridDefined: boolean = true;
+
+  if (!rows) {
+    gridDefined = false;
+    rows = ["flex", "xsmall"];
+    columns = ["flex"];
+    areas = [
+      {
+        name: "body",
+        start: [0, 0],
+        end: [0, 0],
+      },
+      {
+        name: "actions",
+        start: [0, 1],
+        end: [0, 1],
+      },
+    ];
+  }
+
   return (
     <StyledFormBuilder className={className}>
       <Form
@@ -64,10 +142,14 @@ const FormBuilder: React.FC<FormBuilderProps> = (props) => {
         watchFor={submitTriggers || []}
       >
         {({ ...methods }) => (
-          <>
-            {fields.map((field) => renderField(field, methods))}
-            {children}
-          </>
+          <Grid rows={rows} columns={columns} areas={areas} fill>
+            {gridDefined ? (
+              renderFieldEditors(fields, methods)
+            ) : (
+              <Box gridArea="body">{renderFieldEditors(fields, methods)}</Box>
+            )}
+            {gridDefined ? children : <Box gridArea="actions">{children}</Box>}
+          </Grid>
         )}
       </Form>
     </StyledFormBuilder>

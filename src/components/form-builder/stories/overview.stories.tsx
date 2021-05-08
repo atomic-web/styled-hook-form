@@ -3,7 +3,7 @@ import { FormBuilder } from "../form-builder";
 import { GHFContextProvider } from "context/index";
 import { FormBuilderProps, FormField, FormFieldType } from "../types";
 import styled from "styled-components";
-import { Button } from "grommet";
+import { Box, Button } from "grommet";
 
 const meta: Meta = {
   title: "Overview",
@@ -23,16 +23,16 @@ const fields: FormField[] = [
     minLength: 10,
     required: true,
     tip: "First Name",
+    gridArea: "right",
   },
   {
     label: "Age:",
     name: "age",
     defaultValue: 0,
-    type: FormFieldType.Number,
-    max: 100,
-    min: 5,
+    type: FormFieldType.Text,
     required: true,
     tip: "Your age",
+    gridArea: "right",
   },
   {
     label: "Appointment Date:",
@@ -43,6 +43,7 @@ const fields: FormField[] = [
     minDate: "2021/04/10",
     maxDate: "2021/04/15",
     tip: "Enter your birtdate",
+    gridArea: "left",
   },
   {
     label: "Appointment Time:",
@@ -51,6 +52,7 @@ const fields: FormField[] = [
     type: FormFieldType.Time,
     required: true,
     tip: "Enter time of appointment",
+    gridArea: "right",
   },
   {
     label: "Programming Language :",
@@ -74,6 +76,7 @@ const fields: FormField[] = [
     itemLabelKey: "name",
     itemValueKey: "value",
     tip: "You'r prefered programming language",
+    gridArea: "left",
   },
   {
     label: "Password",
@@ -84,6 +87,7 @@ const fields: FormField[] = [
     showPasswordStrength: true,
     minPasswordStrength: 50,
     required: true,
+    gridArea: "left",
   },
 
   {
@@ -94,6 +98,7 @@ const fields: FormField[] = [
     tip: "Upload you'r RESUME",
     required: true,
     controlType: "checkbox",
+    gridArea: "left",
   },
 ];
 
@@ -107,8 +112,37 @@ const StyledFormBuilder = styled(FormBuilder)`
 
 const Template: Story<FormBuilderProps> = (args) => (
   <GHFContextProvider>
-    <StyledFormBuilder {...args} onSubmit={(data)=>alert(JSON.stringify(data))}>
-      <Button type="submit">Submit</Button>
+    <StyledFormBuilder
+      {...args}
+      onSubmit={(data) => alert(JSON.stringify(data))}
+      rows={["flex", "flex", "5em"]}
+      columns={["50%", "50%"]}
+      areas={[
+        {
+          name: "right",
+          start: [0, 0],
+          end: [0, 1],
+        },
+        {
+          name: "left",
+          start: [1, 0],
+          end: [1, 1],
+        },
+        {
+          name: "foot",
+          start: [0, 2],
+          end: [0, 2],
+        },
+      ]}      
+    >
+      <Button
+        gridArea="foot"
+        type="submit"
+        primary
+        size="small"
+        label="Submit"
+        alignSelf="start"
+      />
     </StyledFormBuilder>
   </GHFContextProvider>
 );
