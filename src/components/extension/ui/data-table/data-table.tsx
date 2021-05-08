@@ -1,13 +1,17 @@
 import { useGHFContext } from "context";
-import { Box, DataTable as GrommetDataTable, Pagination } from "grommet";
+import {
+  Box,
+  DataTable as GrommetDataTable,
+  Drop,
+  Layer,
+  Pagination,
+  Spinner,
+  Text,
+} from "grommet";
 import { DataTableProps } from "./types";
 import DataTableLoader from "./loader";
-import React, { useEffect, useMemo, useState } from "react";
-import {
-  DataTableContext,
-  DataTableContextProvider,
-  useDataTableContext,
-} from "./data-context";
+import React, { useEffect, useMemo, useRef, useState } from "react";
+import { DataTableContextProvider, useDataTableContext } from "./data-context";
 import { usePagedData } from "components/utils/paged-data-source";
 import { PropType } from "../../../../types/utils";
 
@@ -25,8 +29,8 @@ const DataTable: React.FC<DataTableProps> = (props) => {
           data,
           pageSize: pageSize!,
           primaryKey: primaryKey,
-          orderDir:"desc",
-          orderParam:primaryKey
+          orderDir: "desc",
+          orderParam: primaryKey,
         }}
       >
         <DataTableImpl {...props} data={data} />
@@ -48,17 +52,14 @@ const DataTableImpl: React.FC<DataTableProps> = (props) => {
     onRequestError,
     requestParamsConfig: reqParams,
     paginate,
+    toolbar,
     ...rest
   } = props;
 
-  //let [currentPage, setCurrentPage] = useState<number>(0);
-  //let [totalRecords, settotalRecords] = useState<number>(0);
-  let [sort, setSort] = useState<PropType<DataTableProps, "sort">>(
-     {
-       direction :"desc",
-       property:props.primaryKey
-     }
-  );
+  let [sort, setSort] = useState<PropType<DataTableProps, "sort">>({
+    direction: "desc",
+    property: props.primaryKey,
+  });
 
   let defaultPaging = {
     enabled: false,
@@ -76,7 +77,12 @@ const DataTableImpl: React.FC<DataTableProps> = (props) => {
   } = useGHFContext();
 
   let {
-    state: { currentPage, totalRecords: globalTotalRecords , data: globalData, syncKey },
+    state: {
+      currentPage,
+      totalRecords: globalTotalRecords,
+      data: globalData,
+      syncKey,
+    },
     dispatch,
   } = useDataTableContext();
 
@@ -88,7 +94,12 @@ const DataTableImpl: React.FC<DataTableProps> = (props) => {
     };
   }, [requestParams]);
 
-  let { error, data: ServerData,refresh : refreshCurrentPage ,loading } = usePagedData({
+  let {
+    error,
+    data: ServerData,
+    refresh: refreshCurrentPage,
+    loading,
+  } = usePagedData({
     request,
     params: internalReqParams,
     orderDir: sort?.direction,
@@ -155,43 +166,53 @@ const DataTableImpl: React.FC<DataTableProps> = (props) => {
   useEffect(() => {
     setTotalRecords(globalTotalRecords);
   }, [globalTotalRecords]);
- 
-  useEffect(()=>{
+
+  useEffect(() => {
     refreshCurrentPage();
-  },[syncKey]);
+  }, [syncKey]);
 
   return (
     <Box>
-      {globalData && (
-        <Box>
-          <GrommetDataTable
-            {...rest}
-            columns={columns}
-            data={globalData}
-            paginate={false}
-            sort={sort}
-            onSort={handleSort}
-            step={paginate.pageSize}
-          ></GrommetDataTable>
-          {paginate && (paginate.type === "button-based" || !paginate.type) && (
-            <Pagination
-              onChange={(e) => {
-                dispatch({
-                  type: "merge-value",
-                  payload: { currentPage: e.page },
-                });
-              }}
-              {...defaultPaging}
-              {...paginate.pagerOptions}
+      {toolbar && <Box>{toolbar}</Box>}
+      <Box>
+        {globalData && (
+          <Box>
+            {loading && (
+              <Layer position="center" modal={false}>
+                <Box pad="large" round="small" background="light-3">
+                  <Spinner size="medium" />
+                </Box>
+              </Layer>
+            )}
+            <GrommetDataTable
+              {...rest}
+              columns={columns}
+              data={globalData}
+              paginate={false}
+              sort={sort}
+              onSort={handleSort}
               step={paginate.pageSize}
-              numberItems={totalRecords}
-              page={currentPage}
-              key={currentPage}
-            />
-          )}
-        </Box>
-      )}
-      {(!ssrEnabled || !data) && <DataTableLoader />}
+            ></GrommetDataTable>
+            {paginate && (paginate.type === "button-based" || !paginate.type) && (
+              <Pagination
+                onChange={(e) => {
+                  dispatch({
+                    type: "merge-value",
+                    payload: { currentPage: e.page },
+                  });
+                }}
+                {...defaultPaging}
+                {...paginate.pagerOptions}
+                step={paginate.pageSize}
+                numberItems={totalRecords}
+                page={currentPage}
+                key={currentPage}
+              />
+            )}
+          </Box>
+        )}
+        {(!ssrEnabled || !globalData) && <DataTableLoader />}
+      </Box>
     </Box>
   );
 };

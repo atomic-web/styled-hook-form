@@ -5,14 +5,6 @@ import { GHFContextProvider } from "context";
 
 const columns: ColumnConfig<any>[] = [
   {
-    property: "id",
-    header: "Row",
-  },
-  {
-    property: "row",
-    header: "Row",
-  },
-  {
     property: "avatar",
     header: "Avatar",
     render: ({ avatar }) => <Avatar src={avatar} />,
@@ -57,12 +49,7 @@ const columns: ColumnConfig<any>[] = [
 const getId = () => {
   let id = 0;
   return () => {
-    let dd = id++;
-    if (dd == 2) {
-      dd++;
-      id++;
-    }
-    return dd;
+    return ++id;
   };
 };
 
@@ -82,38 +69,37 @@ export const Default = () => {
             m.onGet("/api/employee/list").reply((req) => {
               let page = req.params.page;
               return new Promise((resolve) => {
+                let data = new Array(page === 10 ? 5 : 10)
+                  .fill(0)
+                  .map((_, i) => ({
+                    id: ID() + 1,
+                    name: `${name.firstName()} ${name.lastName()}`,
+                    rem: datatype.number(100),
+                    avatar: image.avatar(),
+                    phone: phone.phoneNumber(),
+                    address: address.streetAddress(),
+                  }));
+
+                //setTimeout(() => {
                 resolve([
                   200,
                   {
                     total: 95,
-                    list: new Array(page === 10 ? 5 : 10)
-                      .fill(0)
-                      .map((_, i) => ({
-                        id: ID() + 1,
-                        row: datatype.number({
-                          min: (page - 1) * 10 + 1,
-                          max: page * 10,
-                        }),
-                        name: `${name.firstName()} ${name.lastName()}`,
-                        rem: datatype.number(100),
-                        avatar: image.avatar(),
-                        phone: phone.phoneNumber(),
-                        address: address.streetAddress(),
-                      })),
+                    list: data,
                   },
                 ]);
+                //}, 1000);
               });
             });
           }}
           onRequestError={(e) => {}}
-          data={[]}
           columns={columns}
           paginate={{
             enabled: true,
             currentPage: 1,
             pageSize: 10,
             pagerOptions: {
-              numberMiddlePages: 8
+              numberMiddlePages: 8,
             },
           }}
         />
@@ -123,5 +109,5 @@ export const Default = () => {
 };
 
 export default {
-  title: "Extensions/DataTable",
+  title: "Extensions/DataTable/Default",
 };

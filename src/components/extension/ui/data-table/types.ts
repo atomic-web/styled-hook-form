@@ -1,6 +1,7 @@
 import { AxiosRequestConfig } from "axios";
 import MockAdapter from "axios-mock-adapter";
 import { DataTableProps as GrommetDataTableProps, PaginationProps } from "grommet";
+import React from "react";
 
 export type DataTableProps<
   TServerData = any,
@@ -28,5 +29,6 @@ export type DataTableProps<
     currentPage : number,
     pageSizeOptions? : number[],
     pagerOptions?:Omit<PaginationProps,'numberItems'>
-  }
+  },
+  toolbar? : React.ReactNode
 };
