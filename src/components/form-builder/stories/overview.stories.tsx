@@ -3,7 +3,7 @@ import { FormBuilder } from "../form-builder";
 import { GHFContextProvider } from "context/index";
 import { FormBuilderProps, FormField, FormFieldType } from "../types";
 import styled from "styled-components";
-import { Box, Button } from "grommet";
+import { Box, Button, Text, TextInput } from "grommet";
 
 const meta: Meta = {
   title: "Overview",
@@ -11,7 +11,7 @@ const meta: Meta = {
   component: FormBuilder,
 };
 
-export default meta;
+export default meta; 
 
 const fields: FormField[] = [
   {
@@ -40,8 +40,6 @@ const fields: FormField[] = [
     defaultValue: "",
     type: FormFieldType.Date,
     required: true,
-    minDate: "2021/04/10",
-    maxDate: "2021/04/15",
     tip: "Enter your birtdate",
     gridArea: "left",
   },

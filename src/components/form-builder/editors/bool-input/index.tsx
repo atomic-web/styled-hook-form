@@ -11,7 +11,7 @@ const BoolInput = forwardRef<HTMLInputElement, FormField<BoolInputProps>>(
 
     let {
       name,
-      defaultValue: initialValue,    
+      defaultValue: initialValue,
       controlType,
       methods,
       label

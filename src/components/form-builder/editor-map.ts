@@ -7,6 +7,7 @@ import DropDown from './editors/drop-down';
 import { PasswordInput } from './editors/password-input';
 import FileInput from './editors/file-input';
 import { TimeInput } from './editors/time-input';
+import { CustomEditor } from './editors/custom-editor';
 
 
 export const EditorMap : Partial<{[K in keyof typeof FormFieldType] : any}> = {
@@ -19,5 +20,6 @@ export const EditorMap : Partial<{[K in keyof typeof FormFieldType] : any}> = {
     [FormFieldType.DropDown] : DropDown,
     [FormFieldType.Password] : PasswordInput,
     [FormFieldType.File] : FileInput,
-    [FormFieldType.Time] : TimeInput
+    [FormFieldType.Time] : TimeInput,
+    [FormFieldType.Custom] : CustomEditor
 }

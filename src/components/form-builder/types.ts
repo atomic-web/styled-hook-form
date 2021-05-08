@@ -10,6 +10,7 @@ import { PasswordInputProps } from "./editors/password-input/types";
 import { TimeInputProps } from './editors/time-input/types';
 import { PropType } from 'types/utils';
 import { GridProps } from 'grommet';
+import { CustomEditorProps } from './editors/custom-editor/types';
 
 export enum FormFieldType {
   Text = 1,
@@ -21,7 +22,8 @@ export enum FormFieldType {
   List = 7,
   Password = 8,
   File = 9,
-  Time = 10
+  Time = 10,
+  Custom = 11
 }
 
 export type FormFieldOptions =
@@ -48,7 +50,10 @@ export type FormFieldOptions =
   } & FileInputProps
   | {
     type: FormFieldType.Time;
-  } & TimeInputProps ;
+  } & TimeInputProps 
+  | {
+    type: FormFieldType.Custom;
+  } & CustomEditorProps ;
 
 export interface FormFieldBase {
   name: string;
