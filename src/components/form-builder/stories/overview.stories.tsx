@@ -103,8 +103,7 @@ const fields: FormField[] = [
     gridArea: "right",
     required: true,
     render: (
-      base: (children: React.ReactNode, props?: any) => React.ReactNode,
-      methods
+      base: (children: React.ReactNode, props?: any) => React.ReactNode
     ) => {
       let [showSub, setShowSub] = useState(false);
 
