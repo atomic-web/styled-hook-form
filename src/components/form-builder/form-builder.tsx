@@ -20,6 +20,11 @@ const renderField = (field: FormField, methods: UseFormReturn<any>) => {
     field.renderLabel = true;
   }
 
+  const wrapWithComponent = (component : React.ReactElement)=>(children : React.ReactNode,props? :any)=>{
+    let clone = React.cloneElement(component,props ?? {},children); 
+    return clone;
+  };
+
   return (
     <WidthEditorWrap
       key={field.name}
@@ -27,7 +32,7 @@ const renderField = (field: FormField, methods: UseFormReturn<any>) => {
       editorType={field.type}
     >
       <>
-        {field.render !== undefined && field.render(component, methods)}
+        {field.render !== undefined && field.render(wrapWithComponent(component), methods)}
         {field.render === undefined && component}
       </>
     </WidthEditorWrap>

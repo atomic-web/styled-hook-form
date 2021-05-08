@@ -11,6 +11,7 @@ import { TimeInputProps } from './editors/time-input/types';
 import { PropType } from 'types/utils';
 import { GridProps } from 'grommet';
 import { CustomEditorProps } from './editors/custom-editor/types';
+import { SubFormEditorProps } from './editors/subform-editor';
 
 export enum FormFieldType {
   Text = 1,
@@ -23,7 +24,8 @@ export enum FormFieldType {
   Password = 8,
   File = 9,
   Time = 10,
-  Custom = 11
+  Custom = 11,
+  SubForm = 11
 }
 
 export type FormFieldOptions =
@@ -53,7 +55,10 @@ export type FormFieldOptions =
   } & TimeInputProps 
   | {
     type: FormFieldType.Custom;
-  } & CustomEditorProps ;
+  } & CustomEditorProps
+  | {
+    type: FormFieldType.SubForm;
+  } & SubFormEditorProps;
 
 export interface FormFieldBase {
   name: string;
@@ -62,7 +67,7 @@ export interface FormFieldBase {
   label: string;
   labelPosition?: "top" | "side";
   renderLabel? : boolean,
-  render?: (editor : React.ReactNode,formMethods : UseFormReturn<any> )=>React.ReactNode, 
+  render?: (renderFunc :(children:React.ReactNode,props?:any)=> React.ReactNode,formMethods : UseFormReturn<any> )=>React.ReactNode, 
   validationRules?: Exclude<
     RegisterOptions,
     "valueAsNumber" | "valueAsDate" | "setValueAs"
@@ -82,13 +87,13 @@ export type FormField<TProps extends {} = {}> = FormFieldBase &
 
 export interface FormBuilderProps<TModel=any> extends Partial<Omit<HTMLDivElement,"children">> {
   fields: FormField[];
-  children: React.ReactNode;
-  model:TModel,
+  children?: React.ReactNode;
+  model?:TModel,
   onSubmit?: (values: any) => void;
   beforeSubmit?:(values:TModel)=>boolean,
   rows? : PropType<GridProps,"rows">,
   columns? : PropType<GridProps,"columns">,
-  areas : PropType<GridProps,"areas">
+  areas? : PropType<GridProps,"areas">
 }
 
 export type FormEditorPropsBase = Pick<FormFieldBase, "validationRules"> & {};

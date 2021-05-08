@@ -3,7 +3,9 @@ import { FormBuilder } from "../form-builder";
 import { GHFContextProvider } from "context/index";
 import { FormBuilderProps, FormField, FormFieldType } from "../types";
 import styled from "styled-components";
-import { Box, Button, Text, TextInput } from "grommet";
+import { Box, Button, Layer } from "grommet";
+import React, { useState } from "react";
+import { useForm, UseFormReturn, useFormState } from "react-hook-form";
 
 const meta: Meta = {
   title: "Overview",
@@ -11,7 +13,7 @@ const meta: Meta = {
   component: FormBuilder,
 };
 
-export default meta; 
+export default meta;
 
 const fields: FormField[] = [
   {
@@ -21,25 +23,22 @@ const fields: FormField[] = [
     type: FormFieldType.Text,
     maxLength: 20,
     minLength: 10,
-    required: true,
     tip: "First Name",
-    gridArea: "right",
+    gridArea: "left",
   },
   {
     label: "Age:",
     name: "age",
     defaultValue: 0,
-    type: FormFieldType.Text,
-    required: true,
+    type: FormFieldType.Number,
     tip: "Your age",
-    gridArea: "right",
+    gridArea: "left",
   },
   {
     label: "Appointment Date:",
     name: "app_date",
     defaultValue: "",
     type: FormFieldType.Date,
-    required: true,
     tip: "Enter your birtdate",
     gridArea: "left",
   },
@@ -48,9 +47,8 @@ const fields: FormField[] = [
     name: "app_time",
     defaultValue: new Date(),
     type: FormFieldType.Time,
-    required: true,
     tip: "Enter time of appointment",
-    gridArea: "right",
+    gridArea: "left",
   },
   {
     label: "Programming Language :",
@@ -74,7 +72,7 @@ const fields: FormField[] = [
     itemLabelKey: "name",
     itemValueKey: "value",
     tip: "You'r prefered programming language",
-    gridArea: "left",
+    gridArea: "right",
   },
   {
     label: "Password",
@@ -85,7 +83,7 @@ const fields: FormField[] = [
     showPasswordStrength: true,
     minPasswordStrength: 50,
     required: true,
-    gridArea: "left",
+    gridArea: "right",
   },
 
   {
@@ -96,7 +94,55 @@ const fields: FormField[] = [
     tip: "Upload you'r RESUME",
     required: true,
     controlType: "checkbox",
-    gridArea: "left",
+    gridArea: "right",
+  },
+  {
+    name: "sub",
+    label: "Detail",
+    type: FormFieldType.SubForm,
+    gridArea: "right",
+    required: true,
+    render: (
+      base: (children: React.ReactNode, props?: any) => React.ReactNode,
+      methods
+    ) => {
+      let [showSub, setShowSub] = useState(false);
+
+      return (
+        <Box>
+          {showSub && (
+            <Layer onEsc={() => setShowSub(false)} position="center">
+              {base(
+                <Box>
+                  {
+                    <Box direction="row">
+                      <Button label="Save" type="submit" />
+                      <Button
+                        label="cancel"
+                        onClick={() => setShowSub(false)}
+                      />
+                    </Box>
+                  }
+                </Box>,
+                {
+                  onSubmit: () => setShowSub(false),
+                }
+              )}
+            </Layer>
+          )}
+          <Button label="Show Sub Info" onClick={() => setShowSub(true)} />
+        </Box>
+      );
+    },
+    formProps: {
+      fields: [
+        {
+          name: "sub-info",
+          label: "Sub Info",
+          type: FormFieldType.Text,
+        },
+      ],
+    },
   },
 ];
 
@@ -118,20 +164,20 @@ const Template: Story<FormBuilderProps> = (args) => (
       areas={[
         {
           name: "right",
-          start: [0, 0],
-          end: [0, 1],
+          start: [1, 0],
+          end: [1, 1],
         },
         {
           name: "left",
-          start: [1, 0],
-          end: [1, 1],
+          start: [0, 0],
+          end: [0, 1],
         },
         {
           name: "foot",
           start: [0, 2],
           end: [0, 2],
         },
-      ]}      
+      ]}
     >
       <Button
         gridArea="foot"

@@ -8,6 +8,7 @@ import { PasswordInput } from './editors/password-input';
 import FileInput from './editors/file-input';
 import { TimeInput } from './editors/time-input';
 import { CustomEditor } from './editors/custom-editor';
+import { SubFormEditor } from './editors/subform-editor';
 
 
 export const EditorMap : Partial<{[K in keyof typeof FormFieldType] : any}> = {
@@ -21,5 +22,6 @@ export const EditorMap : Partial<{[K in keyof typeof FormFieldType] : any}> = {
     [FormFieldType.Password] : PasswordInput,
     [FormFieldType.File] : FileInput,
     [FormFieldType.Time] : TimeInput,
-    [FormFieldType.Custom] : CustomEditor
+    [FormFieldType.Custom] : CustomEditor,
+    [FormFieldType.SubForm] : SubFormEditor
 }

@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from "react";
+import React, { FormEvent, useEffect, useRef } from "react";
 import {
   Controller,
   FormProvider,
@@ -67,8 +67,13 @@ const Form: React.FC<AutoSubmitFormProps> = (props) => {
     }
   }, [props.defaultValues]);
 
+  const handleFormSubmit = (e: FormEvent) => {
+    e.stopPropagation();
+    handleSubmit(onFormSubmit)(e);
+  };
+
   return (
-    <form ref={formRef} onSubmit={handleSubmit(onFormSubmit)}>
+    <form ref={formRef} onSubmit={handleFormSubmit}>
       <FormProvider {...methods}>
         {children && children({ ...methods })}
       </FormProvider>
