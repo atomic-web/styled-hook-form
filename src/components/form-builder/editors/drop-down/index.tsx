@@ -102,7 +102,7 @@ const DropDown = forwardRef<HTMLButtonElement, FormField<DropDownProps>>(
 
     useEffect(() => {
       setLocalOptions((o) => {
-        let option = getOptionsByValue(o, initialValue);
+        let option = getOptionsByValue(o, methods!.getValues([name])[0] ?? initialValue);
         setLocalValue(option);
         return o;
       });
@@ -111,7 +111,7 @@ const DropDown = forwardRef<HTMLButtonElement, FormField<DropDownProps>>(
     const getOptionsByValue = (options: any[], value: any[] | any): any[] => {
       return options.filter((o) =>
         Array.isArray(value)
-          ? value.some((v) => v[itemValueKey] === o[itemValueKey])
+          ? value.some((v) => v === o[itemValueKey] || v[itemValueKey] === o[itemValueKey])
           : value === o[itemValueKey]
       );
     };
@@ -196,22 +196,24 @@ const DropDown = forwardRef<HTMLButtonElement, FormField<DropDownProps>>(
         rules={vrules}
         control={control}
         render={({ field }) => (
-          <Select
-            placeholder={placeholder}
-            closeOnChange={!multiple}
-            ref={ref as any}
-            multiple={multiple}
-            options={dataSourceOptions ? remoteOptions ?? [] : localOptions}
-            labelKey={itemLabelKey}
-            valueKey={itemValueKey}
-            onSearch={handleSearch}
-            onMore={handleMore}
-            onChange={handleChange(field)}
-            value={localValue ?? field.value ?? []}
-            emptySearchMessage={T("drop-down-search-empty-msg")}
-            {...selectDynamicProps}
-            children={selectContent}
-          />
+          <>
+            <Select
+              placeholder={placeholder}
+              closeOnChange={!multiple}
+              ref={ref as any}
+              multiple={multiple}
+              options={dataSourceOptions ? remoteOptions ?? [] : localOptions}
+              labelKey={itemLabelKey}
+              valueKey={itemValueKey}
+              onSearch={handleSearch}
+              onMore={handleMore}
+              onChange={handleChange(field)}
+              value={localValue ?? field.value ?? []}
+              emptySearchMessage={T("drop-down-search-empty-msg")}
+              {...selectDynamicProps}
+              children={selectContent}
+            />
+          </>
         )}
       ></Controller>
     );
