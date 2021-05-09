@@ -1,4 +1,4 @@
-import { FormField, FormFieldType } from "components/form-builder";
+import { FormField, FormFieldType } from "../../form-builder";
 import { GHFContextProvider } from "context";
 import { Box, Text } from "grommet";
 import { resolve } from "node:path";

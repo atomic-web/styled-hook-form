@@ -1,5 +1,5 @@
 import React from 'react';
-import { FormField } from "components/form-builder/types";
+import { FormField } from "../../../form-builder/types";
 import { useGHFContext } from "context";
 import { Controller } from "react-hook-form";
 import { CustomEditorProps } from "./types";

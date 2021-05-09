@@ -1,4 +1,4 @@
-import { FormEditorPropsBase } from "components/form-builder/types";
+import { FormEditorPropsBase } from "../../../form-builder/types";
 import React from "react";
 
 export type CustomEditorProps = FormEditorPropsBase &{
