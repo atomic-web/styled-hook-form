@@ -184,7 +184,7 @@ const DataTableImpl: React.FC<DataTableProps> = (props) => {
   }, [dataProp]);
 
   return (
-    <Box>
+    <>
       {toolbar && <Box>{toolbar}</Box>}
       <Box>
         {globalData && (
@@ -227,7 +227,7 @@ const DataTableImpl: React.FC<DataTableProps> = (props) => {
         )}
         {(!ssrEnabled || !globalData) && <DataTableLoader />}
       </Box>
-    </Box>
+    </>
   );
 };
 
