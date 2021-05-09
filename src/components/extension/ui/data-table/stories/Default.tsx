@@ -94,14 +94,7 @@ export const Default = () => {
           }}
           onRequestError={(e) => {}}
           columns={columns}
-          paginate={{
-            enabled: true,
-            currentPage: 1,
-            pageSize: 10,
-            pagerOptions: {
-              numberMiddlePages: 8,
-            },
-          }}
+        
         />
       </Box>
     </GHFContextProvider>

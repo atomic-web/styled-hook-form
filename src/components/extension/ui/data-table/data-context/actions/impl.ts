@@ -105,7 +105,7 @@ debugger
   return result;
 };
 
-const setData = (state: DataTableContextModel, payload: any | any[]) => {
+const setData = (state: DataTableContextModel, payload: any | any[]) => {  
   let items = Array.isArray(payload) ? payload : [payload];
   return {
     ...state,

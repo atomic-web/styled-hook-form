@@ -1,39 +1,33 @@
-import { useGHFContext } from "context";
+import { useGHFContext } from "../../../../context/";
 import {
   Box,
   DataTable as GrommetDataTable,
-  Drop,
   Layer,
   Pagination,
   Spinner,
-  Text,
 } from "grommet";
 import { DataTableProps } from "./types";
 import DataTableLoader from "./loader";
 import React, { useEffect, useMemo, useRef, useState } from "react";
 import { DataTableContextProvider, useDataTableContext } from "./data-context";
-import { usePagedData } from "components/utils/paged-data-source";
+import { usePagedData } from "../../../utils/paged-data-source";
 import { PropType } from "../../../../types/utils";
 
 const DataTable: React.FC<DataTableProps> = (props) => {
-  let {
-    data,
-    paginate: { pageSize },
-    primaryKey,
-  } = props;
+  let { data, paginate, primaryKey } = props;
 
   return (
     <Box>
       <DataTableContextProvider
         options={{
           data,
-          pageSize: pageSize!,
+          pageSize: paginate?.pageSize ?? Number.MAX_VALUE,
           primaryKey: primaryKey,
           orderDir: "desc",
           orderParam: primaryKey,
         }}
       >
-        <DataTableImpl {...props} data={data} />
+        <DataTableImpl {...props} />
       </DataTableContextProvider>
     </Box>
   );
@@ -45,7 +39,7 @@ const DataTableImpl: React.FC<DataTableProps> = (props) => {
     requestParams,
     mockResponse,
     ssr: perSsr,
-    data,
+    data: dataProp,
     columns,
     onRequest,
     onResponse,
@@ -99,28 +93,40 @@ const DataTableImpl: React.FC<DataTableProps> = (props) => {
     data: ServerData,
     refresh: refreshCurrentPage,
     loading,
-  } = usePagedData({
-    request,
-    params: internalReqParams,
-    orderDir: sort?.direction,
-    orderProp: sort?.property,
-    orderDirParamName: requestParamsConfig!.orderDirParamName,
-    orderPropParamName: requestParamsConfig!.orderPropParamName,
-    onRequest: (data: any, headers: any) => {
-      return onRequest ? onRequest(data, headers) : data;
-    },
-    onResponse: (_data: any, _, headers: any) => {
-      dispatch({
-        type: "merge-value",
-        payload: { totalRecords: _data[requestParamsConfig.totalPropName!] },
-      });
+  } = request
+    ? usePagedData({
+        request,
+        params: internalReqParams,
+        orderDir: sort?.direction,
+        orderProp: sort?.property,
+        orderDirParamName: requestParamsConfig!.orderDirParamName,
+        orderPropParamName: requestParamsConfig!.orderPropParamName,
+        onRequest: (data: any, headers: any) => {
+          return onRequest ? onRequest(data, headers) : data;
+        },
+        onResponse: (_data: any, _, headers: any) => {
+          dispatch({
+            type: "merge-value",
+            payload: {
+              totalRecords: _data[requestParamsConfig.totalPropName!],
+            },
+          });
 
-      let cdata = onResponse ? onResponse(data, headers) : _data;
-      return cdata;
-    },
-    mockResponse,
-    page: currentPage,
-  });
+          let cdata = onResponse ? onResponse(_data, headers) : _data;
+          return cdata;
+        },
+        mockResponse,
+        page: currentPage,
+      })
+    : useMemo(
+        () => ({
+          error: null,
+          data: [],
+          refresh: () => 0,
+          loading: false,
+        }),
+        []
+      );
 
   useEffect(() => {
     if (error && onRequestError) {
@@ -135,13 +141,11 @@ const DataTableImpl: React.FC<DataTableProps> = (props) => {
   }, [ServerData]);
 
   useEffect(() => {
-    if (paginate.currentPage) {
-      dispatch({
-        type: "merge-value",
-        payload: { currentPage: paginate.currentPage },
-      });
-    }
-  }, [paginate.currentPage]);
+    dispatch({
+      type: "merge-value",
+      payload: { currentPage: paginate?.currentPage ?? 1 },
+    });
+  }, [paginate?.currentPage]);
 
   useEffect(() => {
     if (!sort) {
@@ -171,6 +175,12 @@ const DataTableImpl: React.FC<DataTableProps> = (props) => {
     refreshCurrentPage();
   }, [syncKey]);
 
+  useEffect(() => {
+    if (dataProp) {
+      dispatch({ type: "set-data", payload: dataProp });
+    }
+  }, [dataProp]);
+
   return (
     <Box>
       {toolbar && <Box>{toolbar}</Box>}
@@ -184,15 +194,17 @@ const DataTableImpl: React.FC<DataTableProps> = (props) => {
                 </Box>
               </Layer>
             )}
-            <GrommetDataTable
-              {...rest}
-              columns={columns}
-              data={globalData}
-              paginate={false}
-              sort={sort}
-              onSort={handleSort}
-              step={paginate.pageSize}
-            ></GrommetDataTable>
+            {
+              <GrommetDataTable
+                {...rest}
+                columns={columns}
+                data={globalData}
+                paginate={false}
+                sort={sort}
+                onSort={handleSort}
+                step={paginate?.pageSize ?? props.step ?? Number.MAX_VALUE}
+              ></GrommetDataTable>
+            }
             {paginate && (paginate.type === "button-based" || !paginate.type) && (
               <Pagination
                 onChange={(e) => {

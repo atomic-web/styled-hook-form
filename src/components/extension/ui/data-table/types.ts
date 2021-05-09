@@ -22,7 +22,7 @@ export type DataTableProps<
     pageNumParamName?:string,
     totalPropName?:string,
   },
-  paginate:{
+  paginate?:{
     type?:"button-based" | "infinite-scroll",
     enabled:boolean,
     pageSize?:number,

@@ -1,12 +1,12 @@
 {
   "name": "gromet-hook-form",
-  "version": "0.0.5",
+  "version": "0.0.15",
   "description": "React library to craft smart forms leveraging grommet and react-hook-form",
   "main": "lib/index.js",
   "sideEffects": false,
   "scripts": {
     "build": "npm run build:js && npm run build:ts",
-    "build:js": "npm run pre-build:js && babel --out-dir lib src --extensions \".ts,.tsx\" ",
+    "build:js": "npm run pre-build:js && babel --out-dir lib src --copy-files --extensions \".ts,.tsx\" ",
     "pre-build:js": "rimraf lib",
     "build:ts": "tsc",
     "dev": "start-storybook -p 6006",
@@ -44,6 +44,7 @@
     "@types/react": "17.0.4",
     "@types/styled-components": "5.1.9",
     "babel-loader": "8.2.2",
+    "babel-plugin-inline-json-import": "^0.3.2",
     "babel-plugin-styled-components": "1.12.0",
     "rimraf": "3.0.2",
     "storybook": "6.2.9",

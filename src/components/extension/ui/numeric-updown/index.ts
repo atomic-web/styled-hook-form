@@ -1,1 +1,2 @@
-export {NumericUpDown} from './numeric-updown'
+export {NumericUpDown} from './numeric-updown';
+export * from './types';
