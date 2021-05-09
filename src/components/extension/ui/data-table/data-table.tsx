@@ -186,7 +186,7 @@ const DataTableImpl: React.FC<DataTableProps> = (props) => {
   return (
     <>
       {toolbar && <Box>{toolbar}</Box>}
-      <Box>
+      <Box fill>
         {globalData && (
           <Box>
             {loading && (
