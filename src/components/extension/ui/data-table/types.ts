@@ -11,7 +11,7 @@ export type DataTableProps<
   onRequest?: (params: any, headers: any) => any;
   onResponse?: (data: TServerData, headers: any) => TData;
   onRequestError?:(err:any)=>void,
-  request: AxiosRequestConfig | string;
+  request?: AxiosRequestConfig | string;
   requestParams?:any,
   mockResponse?: (req: MockAdapter) => void;
   ssr?: boolean;
