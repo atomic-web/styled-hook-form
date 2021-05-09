@@ -7,7 +7,7 @@ In daily programming life, we developers always suffer from a very annoying phen
 # Status
 This library is still in the early days of development and is not production-ready. But of course, you can install and use it at your own risk.
 
-# Installation and usage
+# Installation
 Cancel changes
 To start using this library issuing the following in you'r preferred terminal would be enough:
 
