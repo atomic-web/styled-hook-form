@@ -207,7 +207,7 @@ const DropDown = forwardRef<HTMLButtonElement, FormField<DropDownProps>>(
             onSearch={handleSearch}
             onMore={handleMore}
             onChange={handleChange(field)}
-            value={localValue ?? []}
+            value={localValue ?? field.value ?? []}
             emptySearchMessage={T("drop-down-search-empty-msg")}
             {...selectDynamicProps}
             children={selectContent}
