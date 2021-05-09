@@ -10,7 +10,7 @@ import { Box, CheckBox, Select } from "grommet";
 import { FormField } from "../../types";
 import { Spinner } from "grommet";
 import { usePagedData } from "../../../utils/paged-data-source";
-import { useGHFContext } from "context";
+import { useGHFContext } from "../../../../context";
 
 const Option = memo((props: OptionProps) => {
   let { label, selected } = props;

@@ -3,7 +3,7 @@ import { Controller } from "react-hook-form";
 import { NumericInputProps } from "./types";
 import { FormField } from "../../types";
 import { NumericBox } from "../../../extension/ui/numeric-box";
-import { useGHFContext } from "context";
+import { useGHFContext } from "../../../../context";
 
 const NumericInput = forwardRef<HTMLInputElement, FormField<NumericInputProps>>(
   (props, ref) => {

@@ -1,4 +1,4 @@
-import { useGHFContext } from "context";
+import { useGHFContext } from "../../../../context";
 import { useState, useEffect } from "react";
 import styled from "styled-components";
 import { PasswordStrengthProps } from "./types";

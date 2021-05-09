@@ -3,7 +3,7 @@ import { Controller } from "react-hook-form";
 import { TextInputProps } from "./types";
 import { TextInput as GrommetTextInput } from "grommet";
 import { FormField } from "../../types";
-import { useGHFContext } from "context";
+import { useGHFContext } from "../../../../context";
 
 const TextInput = forwardRef<HTMLInputElement, FormField<TextInputProps>>(
   (props, ref) => {

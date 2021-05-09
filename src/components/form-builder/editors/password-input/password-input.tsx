@@ -5,7 +5,7 @@ import { TextInput as GrommetTextInput } from "grommet";
 import { FormField } from "../../types";
 import styled from "styled-components";
 import PasswordStrength from "./password-strength";
-import { useGHFContext } from "context";
+import { useGHFContext } from "../../../../context";
 
 const PasswordBoxWrap = styled.div`
   display: flex;
