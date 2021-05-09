@@ -27,7 +27,7 @@ const DataTable: React.FC<DataTableProps> = (props) => {
       }}
     >
       {React.cloneElement(
-        wrap ?? <React.Fragment />,
+        wrap ?? <Box />,
         {},
         <DataTableImpl {...props} />
       )}
