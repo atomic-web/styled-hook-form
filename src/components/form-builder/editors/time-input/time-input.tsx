@@ -4,7 +4,7 @@ import { Controller } from "react-hook-form";
 import { TimeInputProps } from "./types";
 import { FormField } from "../../types";
 import { TimePicker } from "../../../extension/ui/time-picker";
-import { useGHFContext } from 'context';
+import { useGHFContext } from '../../../../context';
 
 const TimeInput = forwardRef<HTMLInputElement, FormField<TimeInputProps>>(
   (props) => {

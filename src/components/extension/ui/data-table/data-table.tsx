@@ -14,22 +14,24 @@ import { usePagedData } from "../../../utils/paged-data-source";
 import { PropType } from "../../../../types/utils";
 
 const DataTable: React.FC<DataTableProps> = (props) => {
-  let { data, paginate, primaryKey } = props;
+  let { data, paginate, primaryKey, wrap } = props;
 
   return (
-    <Box>
-      <DataTableContextProvider
-        options={{
-          data,
-          pageSize: paginate?.pageSize ?? Number.MAX_VALUE,
-          primaryKey: primaryKey,
-          orderDir: "desc",
-          orderParam: primaryKey,
-        }}
-      >
+    <DataTableContextProvider
+      options={{
+        data,
+        pageSize: paginate?.pageSize ?? Number.MAX_VALUE,
+        primaryKey: primaryKey,
+        orderDir: "desc",
+        orderParam: primaryKey,
+      }}
+    >
+      {React.cloneElement(
+        wrap ?? <React.Fragment />,
+        {},
         <DataTableImpl {...props} />
-      </DataTableContextProvider>
-    </Box>
+      )}
+    </DataTableContextProvider>
   );
 };
 
@@ -157,7 +159,7 @@ const DataTableImpl: React.FC<DataTableProps> = (props) => {
   }, [props.primaryKey]);
 
   const handleSort = (_sort: any) => {
-    _sort.external = true;
+    _sort.external = request ? true : false;
     setSort(_sort);
     dispatch({
       type: "merge-value",

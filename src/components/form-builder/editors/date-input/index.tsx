@@ -3,7 +3,7 @@ import { Controller } from "react-hook-form";
 import { FormField } from "../../types";
 import { DateInputProps } from "./types";
 import { Box, DateInput as DatePicker } from "grommet";
-import { useGHFContext } from 'context';
+import { useGHFContext } from '../../../../context';
 
 const DateInput: React.FC<FormField<DateInputProps>> = (props) => {
   let vrules = props.validationRules || {};

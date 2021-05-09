@@ -1,6 +1,6 @@
 {
   "name": "gromet-hook-form",
-  "version": "0.0.19",
+  "version": "0.1.2",
   "description": "React library to craft smart forms leveraging grommet and react-hook-form",
   "main": "lib/index.js",
   "sideEffects": false,
