@@ -1,6 +1,6 @@
 import { Story, Meta } from "@storybook/react/types-6-0";
 import { FormBuilder } from "../form-builder";
-import { GHFContextProvider } from "context/index";
+import { GHFContextProvider } from "../../../index";
 import { FormBuilderProps, FormField, FormFieldType } from "../types";
 import styled from "styled-components";
 import { Box, Button, Layer } from "grommet";

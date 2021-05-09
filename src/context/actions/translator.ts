@@ -1,4 +1,4 @@
-import { TranslatorFunc } from "context/types";
+import { TranslatorFunc } from "../types";
 import literals from "../../literals.json";
 
 export const translate = (str: string, values?: object & Record<any, any>) => {
