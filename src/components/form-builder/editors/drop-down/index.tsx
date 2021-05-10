@@ -4,6 +4,7 @@ import {
   Controller,
   ControllerRenderProps,
   FieldValues,
+  useWatch,
 } from "react-hook-form";
 import { DropDownProps, OptionProps, RemoteDataSource } from "./types";
 import { Box, CheckBox, Select } from "grommet";
@@ -106,7 +107,7 @@ const DropDown = forwardRef<HTMLButtonElement, FormField<DropDownProps>>(
         setLocalValue(option);
         return o;
       });
-    }, [initialValue]);
+    }, [initialValue , useWatch({name , control , defaultValue : initialValue})]);
 
     const getOptionsByValue = (options: any[], value: any[] | any): any[] => {
       return options.filter((o) =>
