@@ -31,7 +31,7 @@ const BoolInput = forwardRef<HTMLInputElement, FormField<BoolInputProps>>(
               label={label}
               checked={field.value}
               onChange={(e) => field.onChange(e)}
-              defaultValue={field.value}
+              value={field.value}
               toggle={controlType == "switch"}
             />
           )}
