@@ -205,7 +205,6 @@ const DropDown = forwardRef<HTMLButtonElement, FormField<DropDownProps>>(
         control={control}
         render={({ field }) => (
           <>
-          {JSON.stringify(localValue)}
             <Select
               placeholder={placeholder}
               closeOnChange={!multiple}
