@@ -4,6 +4,7 @@ import {
   Controller,
   ControllerRenderProps,
   FieldValues,
+  useWatch,
 } from "react-hook-form";
 import { DropDownProps, OptionProps, RemoteDataSource } from "./types";
 import { Box, CheckBox, Select } from "grommet";
@@ -80,7 +81,6 @@ const DropDown = forwardRef<HTMLButtonElement, FormField<DropDownProps>>(
                 hasSelection ? localValue : initialValue
               );
               setLocalValue(option);
-
               return newOptions;
             });
             return data;
@@ -100,13 +100,21 @@ const DropDown = forwardRef<HTMLButtonElement, FormField<DropDownProps>>(
       setLocalOptions(options instanceof Array ? options : []);
     }, [options]);
 
+    let liveValue = useWatch({
+      name : name ,
+      control:methods!.control,
+      defaultValue : initialValue
+    });
+
     useEffect(() => {
       setLocalOptions((o) => {
-        let option = getOptionsByValue(o, methods!.getValues([name])[0] ?? initialValue);
-        setLocalValue(option);
+        let option = getOptionsByValue(o,liveValue);
+        if (option && option.length){
+           setLocalValue(option);
+        }
         return o;
       });
-    }, [initialValue]);
+    }, [initialValue , liveValue]);
 
     const getOptionsByValue = (options: any[], value: any[] | any): any[] => {
       return options.filter((o) =>
@@ -197,6 +205,7 @@ const DropDown = forwardRef<HTMLButtonElement, FormField<DropDownProps>>(
         control={control}
         render={({ field }) => (
           <>
+          {JSON.stringify(localValue)}
             <Select
               placeholder={placeholder}
               closeOnChange={!multiple}
@@ -208,7 +217,7 @@ const DropDown = forwardRef<HTMLButtonElement, FormField<DropDownProps>>(
               onSearch={handleSearch}
               onMore={handleMore}
               onChange={handleChange(field)}
-              value={localValue ?? field.value ?? []}
+              value={localValue ?? []}
               emptySearchMessage={T("drop-down-search-empty-msg")}
               {...selectDynamicProps}
               children={selectContent}
