@@ -109,9 +109,7 @@ const DropDown = forwardRef<HTMLButtonElement, FormField<DropDownProps>>(
     useEffect(() => {
       setLocalOptions((o) => {
         let option = getOptionsByValue(o,liveValue);
-        if (option && option.length){
-           setLocalValue(option);
-        }
+        setLocalValue(option);
         return o;
       });
     }, [initialValue , liveValue]);
