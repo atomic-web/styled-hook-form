@@ -8,31 +8,43 @@ import {
 } from "grommet";
 import { DataTableProps } from "./types";
 import DataTableLoader from "./loader";
-import React, { useEffect, useMemo, useRef, useState } from "react";
+import React, { Fragment, useEffect, useMemo, useRef, useState } from "react";
 import { DataTableContextProvider, useDataTableContext } from "./data-context";
 import { usePagedData } from "../../../utils/paged-data-source";
 import { PropType } from "../../../../types/utils";
 
 const DataTable: React.FC<DataTableProps> = (props) => {
   let { data, paginate, primaryKey, wrap } = props;
+  let tableContext = useDataTableContext();
+  let contextOptions: any = {
+    data,
+    pageSize: paginate?.pageSize ?? Number.MAX_VALUE,
+    primaryKey: primaryKey,
+    orderDir: "desc",
+    orderParam: primaryKey,
+  };
 
-  return (
-    <DataTableContextProvider
-      options={{
-        data,
-        pageSize: paginate?.pageSize ?? Number.MAX_VALUE,
-        primaryKey: primaryKey,
-        orderDir: "desc",
-        orderParam: primaryKey,
-      }}
-    >
-      {React.cloneElement(
-        wrap ?? <Box />,
-        {},
-        <DataTableImpl {...props} />
-      )}
-    </DataTableContextProvider>
+  let alreadyContextDefined = tableContext.state.syncKey !== 0;
+
+  const childrenWrap = React.cloneElement(
+    wrap ?? <Box />,
+    {},
+    <DataTableImpl {...props} />
   );
+
+  const children = React.createElement(
+    !alreadyContextDefined ? DataTableContextProvider : Fragment,
+    !alreadyContextDefined ? contextOptions : {},
+    childrenWrap
+  );
+
+  if (!alreadyContextDefined) {
+    useEffect(() => {
+      tableContext.dispatch({type :"merge-value" , payload :contextOptions})
+    }, []);
+  }
+
+  return <>{children}</>;
 };
 
 const DataTableImpl: React.FC<DataTableProps> = (props) => {

@@ -1,7 +1,7 @@
 import { DataTableContextModel, DataTableContextReducerAction } from "../types";
 import { Map } from "immutable";
 
-const getSyncKey = ()=> (new Date()).getTime();
+export const getSyncKey = ()=> (new Date()).getTime();
 
 const findOrderedIndex = (
   list: any[],
