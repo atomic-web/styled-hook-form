@@ -81,7 +81,6 @@ const DropDown = forwardRef<HTMLButtonElement, FormField<DropDownProps>>(
                 hasSelection ? localValue : initialValue
               );
               setLocalValue(option);
-
               return newOptions;
             });
             return data;
@@ -101,13 +100,19 @@ const DropDown = forwardRef<HTMLButtonElement, FormField<DropDownProps>>(
       setLocalOptions(options instanceof Array ? options : []);
     }, [options]);
 
+    let liveValue = useWatch({
+      name : name ,
+      control:methods!.control,
+      defaultValue : initialValue
+    });
+
     useEffect(() => {
       setLocalOptions((o) => {
-        let option = getOptionsByValue(o, methods!.getValues([name])[0] ?? initialValue);
+        let option = getOptionsByValue(o,liveValue);
         setLocalValue(option);
         return o;
       });
-    }, [initialValue , useWatch({name , control , defaultValue : initialValue})]);
+    }, [initialValue , liveValue]);
 
     const getOptionsByValue = (options: any[], value: any[] | any): any[] => {
       return options.filter((o) =>
@@ -209,7 +214,7 @@ const DropDown = forwardRef<HTMLButtonElement, FormField<DropDownProps>>(
               onSearch={handleSearch}
               onMore={handleMore}
               onChange={handleChange(field)}
-              value={localValue ?? field.value ?? []}
+              value={localValue ?? []}
               emptySearchMessage={T("drop-down-search-empty-msg")}
               {...selectDynamicProps}
               children={selectContent}

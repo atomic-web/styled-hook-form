@@ -20,8 +20,11 @@ const renderField = (field: FormField, methods: UseFormReturn<any>) => {
     field.renderLabel = true;
   }
 
-  const wrapWithComponent = (component : React.ReactElement)=>(children : React.ReactNode,props? :any)=>{
-    let clone = React.cloneElement(component,props ?? {},children); 
+  const wrapWithComponent = (component: React.ReactElement) => (
+    children: React.ReactNode,
+    props?: any
+  ) => {
+    let clone = React.cloneElement(component, props ?? {}, children);
     return clone;
   };
 
@@ -32,7 +35,8 @@ const renderField = (field: FormField, methods: UseFormReturn<any>) => {
       editorType={field.type}
     >
       <>
-        {field.render !== undefined && field.render(wrapWithComponent(component), methods)}
+        {field.render !== undefined &&
+          field.render(wrapWithComponent(component), methods)}
         {field.render === undefined && component}
       </>
     </WidthEditorWrap>
@@ -138,6 +142,11 @@ const FormBuilder: React.FC<FormBuilderProps> = (props) => {
     ];
   }
 
+  const renderChildren = (
+    children: React.ReactChild | ((methods: UseFormReturn) => React.ReactNode),
+    methods: UseFormReturn
+  ) => (typeof children === "function" ? children(methods) : children);
+
   return (
     <StyledFormBuilder className={className}>
       <Form
@@ -153,7 +162,14 @@ const FormBuilder: React.FC<FormBuilderProps> = (props) => {
             ) : (
               <Box gridArea="body">{renderFieldEditors(fields, methods)}</Box>
             )}
-            {gridDefined ? children : <Box gridArea="actions">{children}</Box>}
+            {children &&
+              (gridDefined ? (
+                renderChildren(children as any, methods)
+              ) : (
+                <Box gridArea="actions">
+                  {renderChildren(children as any, methods)}
+                </Box>
+              ))}
           </Grid>
         )}
       </Form>

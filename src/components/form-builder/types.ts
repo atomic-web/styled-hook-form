@@ -87,7 +87,7 @@ export type FormField<TProps extends {} = {}> = FormFieldBase &
 
 export interface FormBuilderProps<TModel=any> extends Partial<Omit<HTMLDivElement,"children">> {
   fields: FormField[];
-  children?: React.ReactNode;
+  children?: React.ReactNode | ((methods: UseFormReturn)=>React.ReactNode);
   model?:TModel,
   onSubmit?: (values: any) => void;
   beforeSubmit?:(values:TModel)=>boolean,
