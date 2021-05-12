@@ -1,3 +1,3 @@
-export * from './components/extension/ui'
+export * from './components/extension'
 export * from './components'
 export * from './context'

@@ -2,7 +2,7 @@ import { ChangeEvent, forwardRef } from "react";
 import { Controller } from "react-hook-form";
 import { NumericInputProps } from "./types";
 import { FormField } from "../../types";
-import { NumericBox } from "../../../../../extensions";
+import { NumericBox } from "../../../../components/extension";
 import { useGHFContext } from "../../../../context";
 
 const NumericInput = forwardRef<HTMLInputElement, FormField<NumericInputProps>>(

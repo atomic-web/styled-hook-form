@@ -13,7 +13,7 @@ export interface DataTableContextModel {
 }
 
 export interface DataTableContextProviderProps {
-  options: Pick<
+  options?: Pick<
     DataTableContextModel,
     | "data"
     | "primaryKey"
