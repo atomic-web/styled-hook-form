@@ -2,6 +2,7 @@ import { DataTable } from "..";
 import { name, address, phone, image, datatype } from "faker";
 import { Avatar, Box, ColumnConfig, Meter, Stack, Text } from "grommet";
 import { GHFContextProvider } from "../../../../context";
+import { DataTableContextProvider } from "../data-context";
 
 const columns: ColumnConfig<any>[] = [
   {
@@ -58,7 +59,8 @@ const ID = getId();
 export const Default = () => {
   return (
     <GHFContextProvider>
-      <Box>
+      <DataTableContextProvider>
+        {"Outer Context"}
         <DataTable
           primaryKey="id"
           pin
@@ -96,7 +98,7 @@ export const Default = () => {
           columns={columns}
         
         />
-      </Box>
+      </DataTableContextProvider>
     </GHFContextProvider>
   );
 };

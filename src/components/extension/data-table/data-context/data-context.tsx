@@ -6,6 +6,7 @@ import {
   DataTableContextReducerAction,
   DataTableContextProviderValue,
 } from "./types";
+import {getSyncKey} from './actions/impl'
 
 const defaults: DataTableContextModel = {
   primaryKey: "",
@@ -32,6 +33,11 @@ const DataTableContextProvider: React.FC<DataTableContextProviderProps> = (
     Reducer<DataTableContextModel, DataTableContextReducerAction>,
     DataTableContextModel
   >(reducer, { ...defaults, ...options }, (s) => s);
+  debugger
+  if (!state.syncKey){
+     state.syncKey = getSyncKey();
+  }
+
   return (
     <DataTableContext.Provider
       children={children}
