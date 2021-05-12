@@ -1,4 +1,4 @@
-import { useGHFContext } from "../../../../context/";
+import { useGHFContext } from "../../../context";
 import {
   Box,
   DataTable as GrommetDataTable,
@@ -10,8 +10,8 @@ import { DataTableProps } from "./types";
 import DataTableLoader from "./loader";
 import React, { useEffect, useMemo, useRef, useState } from "react";
 import { DataTableContextProvider, useDataTableContext } from "./data-context";
-import { usePagedData } from "../../../utils/paged-data-source";
-import { PropType } from "../../../../types/utils";
+import { usePagedData } from "../../utils/paged-data-source";
+import { PropType } from "../../../types/utils";
 
 const DataTable: React.FC<DataTableProps> = (props) => {
   let { data, paginate, primaryKey, wrap } = props;

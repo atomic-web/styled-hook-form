@@ -1,7 +1,7 @@
-import { DataTable } from "../";
+import { DataTable } from "..";
 import { name, address, phone, image, datatype } from "faker";
 import { Avatar, Box, ColumnConfig, Meter, Stack, Text } from "grommet";
-import { GHFContextProvider } from "../../../../../context";
+import { GHFContextProvider } from "../../../../context";
 
 const columns: ColumnConfig<any>[] = [
   {
