@@ -15,6 +15,9 @@
     "build:sb": "build-storybook",
     "test": "jest --runInBand"
   },
+  "engines": {
+    "node": ">= 10"
+  },
   "keywords": [
     "react",
     "web",
