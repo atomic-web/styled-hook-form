@@ -24,10 +24,13 @@ jobs:
        node-version: ${{ matrix.node-version }}
     - uses: borales/actions-yarn@v2.0.0
       with:
+        node-version: ${{ matrix.node-version }}
         cmd: install # will run `yarn install` command
     - uses: borales/actions-yarn@v2.0.0
       with:
+        node-version: ${{ matrix.node-version }}
         cmd: build # will run `yarn build` command
     - uses: borales/actions-yarn@v2.0.0
       with:
+        node-version: ${{ matrix.node-version }}
         cmd: test # will run `yarn test` command
