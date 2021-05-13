@@ -1,0 +1,1 @@
+export {usePagedData} from './paged-data';
