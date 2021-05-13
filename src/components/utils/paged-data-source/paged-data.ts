@@ -1,4 +1,4 @@
-import useAxios from "axios-hooks";
+import useAxios, { makeUseAxios } from "axios-hooks";
 import MockAdapter from "axios-mock-adapter";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import StaticAxios from "axios";
@@ -52,6 +52,7 @@ const usePagedData = <
   let [page, setPage] = useState<number>(0);
   let [total, setTotal] = useState<number>(0);
   let [hasMore, setHasMore] = useState<boolean>(false);
+  let [isFirstLoad , setIsFirstLoad] = useState(true);
 
   let [currentFetch, setCurrentFetch] = useState<DataFetchInfo<
     TServerData,
@@ -91,30 +92,33 @@ const usePagedData = <
     mockResponse(mock);
   }
 
-  const [{ loading, error }, refetch] = useAxios(
+  let actualUseAxios = mockResponse
+    ? makeUseAxios({
+        axios: StaticAxios,
+      })
+    : useAxios;
+
+  const [{ loading, error }, refetch] = actualUseAxios(
     {
       ...request,
-      transformRequest: useCallback(
-        (data: any, headers: any) => {
-          return onRequest ? onRequest(data, headers) : data;
-        },
-        [onRequest]
-      ),
-      transformResponse: useCallback(
-        function (_data: TServerData, headers: any) {
-          let data =
-            typeof _data === "string" ? JSON.parse(_data as any) : _data;
-          setCurrentFetch((f: DataFetchInfo<TServerData, TError> | null) => ({
-            page: f!?.page,
-            data,
-            status: DataFecthStatus.Done,
-            headers,
-          }));
+      transformRequest: useCallback((data: any, headers: any) => {
+        return onRequest ? onRequest(data, headers) : data;
+      }, []),
+      transformResponse: useCallback(function (
+        _data: TServerData,
+        headers: any
+      ) {
+        let data = typeof _data === "string" ? JSON.parse(_data as any) : _data;
+        setCurrentFetch((f: DataFetchInfo<TServerData, TError> | null) => ({
+          page: f!?.page,
+          data,
+          status: DataFecthStatus.Done,
+          headers,
+        }));
 
-          return (_data as unknown) as TData;
-        },
-        [onResponse]
-      ),
+        return (_data as unknown) as TData;
+      },
+      []),
     },
     { manual: true }
   );
@@ -155,7 +159,10 @@ const usePagedData = <
   };
 
   const nextPage = () => {
-    loadPage(page + 1);
+    setPage((p) => {
+      loadPage((lazy && isFirstLoad) ? p : p + 1);
+      return p;
+    });
   };
 
   const [data, setData] = useState<TData | null>(null);
@@ -171,17 +178,6 @@ const usePagedData = <
     });
   };
 
-  useEffect(() => {
-    if (!page && lazy) {
-      return;
-    }
-    if (!_page) {
-      _page = 1;
-    }
-
-    loadPage(_page);
-  }, [_page]);
-
   const loadPage = (pNum: number) => {
     setCurrentFetch({
       page: pNum,
@@ -190,9 +186,21 @@ const usePagedData = <
   };
 
   useEffect(() => {
+    if (lazy) {
+      return;
+    }
+
+    if (!_page) {
+      _page = 1;
+    }
+
+    loadPage(_page);
+  }, [_page]);
+
+  useEffect(() => {
     if (currentFetch) {
       if (currentFetch.status === DataFecthStatus.Pending) {
-        if (loading) {
+        if (loading && !mockResponse) {
           return;
         }
         refetch({
@@ -211,6 +219,7 @@ const usePagedData = <
             currentFetch.headers
           )
         ) {
+          setIsFirstLoad(false);
           setPage(currentFetch.page);
         }
       }
@@ -218,9 +227,10 @@ const usePagedData = <
   }, [currentFetch]);
 
   useEffect(() => {
-    reset();
+    if (page > 1) {
+      reset();
+    }
   }, [
-    request,
     pageSize,
     params,
     searchParam,
@@ -228,10 +238,20 @@ const usePagedData = <
     pageParamName,
     pageSizeParamName,
     orderDir,
-    orderProp,
+    orderProp
   ]);
 
-  return { data, loading, error, page, total, hasMore, nextPage, reset,refresh };
+  return {
+    data,
+    loading,
+    error,
+    page,
+    total,
+    hasMore,
+    nextPage,
+    reset,
+    refresh,
+  };
 };
 
 export { usePagedData };
