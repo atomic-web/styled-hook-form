@@ -1,35 +1,24 @@
 # This workflow will do a clean install of node dependencies, build the source code and run tests across different versions of node
 # For more information see: https://help.github.com/actions/language-and-framework-guides/using-nodejs-with-github-actions
 
-name: Node.js CI
-
+name: CI
 on:
   push:
     branches: [ main ]
   pull_request:
-    branches: [ main ]
-
+    branches: [ main ] 
 jobs:
   build:
-
+    name: Test
     runs-on: ubuntu-latest
-
-    strategy:
-      matrix:
-        os:
-          - ubuntu-18.04
-        node-version:
-          - 12.x
     steps:
-      - name: Checkout
-        uses: actions/checkout@master
-      - name: setup node ${{matrix.node-version}}
-        uses: actions/setup-node@v1.4.1
+      - uses: actions/checkout@v2
+      - uses: borales/actions-yarn@v2.0.0
         with:
-          node-version: ${{matrix.node-version}}
-      - name: install packages
-        run: yarn install --ignore-engines
-      - name: build 
-        run: yarn build --ignore-engines
-      - name: test
-        run: yarn test --ignore-engines
+          cmd: install # will run `yarn install` command
+      - uses: borales/actions-yarn@v2.0.0
+        with:
+          cmd: build # will run `yarn build` command
+      - uses: borales/actions-yarn@v2.0.0
+        with:
+          cmd: test # will run `yarn test` command
