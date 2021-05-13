@@ -16,21 +16,20 @@ jobs:
 
     strategy:
       matrix:
-        node-version: [12.x]
+        os:
+          - ubuntu-18.04
+        node-version:
+          - 12.x
     steps:
-    - uses: actions/checkout@v2
-    - uses: actions/setup-node@v1
-      with:
-       node-version: ${{ matrix.node-version }}
-    - uses: borales/actions-yarn@v2.0.0
-      with:
-        node-version: ${{ matrix.node-version }}
-        cmd: install # will run `yarn install` command
-    - uses: borales/actions-yarn@v2.0.0
-      with:
-        node-version: ${{ matrix.node-version }}
-        cmd: build # will run `yarn build` command
-    - uses: borales/actions-yarn@v2.0.0
-      with:
-        node-version: ${{ matrix.node-version }}
-        cmd: test # will run `yarn test` command
+      - name: Checkout
+        uses: actions/checkout@master
+      - name: setup node ${{matrix.node-version}}
+        uses: actions/setup-node@v1.4.1
+        with:
+          node-version: ${{matrix.node-version}}
+      - name: install packages
+        run: yarn install
+      - name: check linting
+        run: yarn lint
+      - name: test
+        run: yarn test
