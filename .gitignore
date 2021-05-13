@@ -1,6 +1,0 @@
-node_modules
-yarn.lock
-lib
-yarn-error.log
-sb-out
-build-storybook.log
