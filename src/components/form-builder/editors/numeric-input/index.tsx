@@ -42,9 +42,7 @@ const NumericInput = forwardRef<HTMLInputElement, FormField<NumericInputProps>>(
         message: T("numeric-input-max-msg", { name: label, value: max }),
       };
     }
-
-  
-
+    
     return (
       <Controller
         name={name}
