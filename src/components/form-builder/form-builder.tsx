@@ -1,13 +1,28 @@
 import React, { useEffect, useState } from "react";
 import Form from "../form";
 import styled from "styled-components";
-import { FormBuilderProps, FormField } from "./types";
+import { FormBuilderProps, FormField, ValidateWithMethods } from "./types";
 import { EditorMap } from "./editor-map";
-import { UseFormReturn } from "react-hook-form";
+import { UseFormReturn, Validate, ValidateResult } from "react-hook-form";
 import WidthEditorWrap from "./editors/shared/editor-wrap";
 import { Box, Grid } from "grommet";
 
 const StyledFormBuilder = styled.div``;
+
+const getValidateFuncWithMethods = (
+  validateFunc: ValidateWithMethods<any>,
+  values: any,
+  methods: UseFormReturn
+): ValidateResult | Promise<any> => {
+  let result = validateFunc(values, methods);
+  if (result instanceof Promise) {
+    return new Promise(async (res, rej) => {
+      (result as Promise<any>).then((v) => res(v)).catch((e) => rej(e));
+    });
+  } else {
+    return result;
+  }
+};
 
 const renderField = (field: FormField, methods: UseFormReturn<any>) => {
   field.methods = methods;
@@ -18,6 +33,30 @@ const renderField = (field: FormField, methods: UseFormReturn<any>) => {
 
   if (field.renderLabel === undefined) {
     field.renderLabel = true;
+  }
+
+  if (field.validationRules && field.validationRules.validate) {
+    if (typeof field.validationRules.validate === "function") {
+      field.validationRules.validate = (values: any) =>
+        getValidateFuncWithMethods(
+          field.validationRules!.validate as ValidateWithMethods<any>,
+          values,
+          methods
+        );
+    } else {
+      let rules = field.validationRules.validate as Record<string, any>;
+      field.validationRules.validate = Object.keys(field.validationRules.validate!)
+        .map((k) => [
+          k,
+          (values: any) =>
+            getValidateFuncWithMethods(
+              rules[k] as ValidateWithMethods<any>,
+              values,
+              methods
+            ),
+        ])
+        .reduce((p: any, c: any) => ((p[c[0]] = c[1]), p), {});
+    }
   }
 
   const wrapWithComponent = (component: React.ReactElement) => (
@@ -176,5 +215,7 @@ const FormBuilder: React.FC<FormBuilderProps> = (props) => {
     </StyledFormBuilder>
   );
 };
+
+const formAdapter = () => {};
 
 export { FormBuilder };

@@ -1,17 +1,22 @@
-import React from 'react';
-import { FileInputProps } from './editors/file-input/types';
+import React from "react";
+import { FileInputProps } from "./editors/file-input/types";
 import { BoolInputProps } from "./editors/bool-input/types";
-import { RegisterOptions, UseFormReturn } from "react-hook-form";
+import {
+  FieldPathValue,
+  RegisterOptions,
+  UseFormReturn,
+  ValidateResult,
+} from "react-hook-form";
 import { DateInputProps } from "./editors/date-input/types";
 import { NumericInputProps } from "./editors/numeric-input/types";
 import { TextInputProps } from "./editors/text-input/types";
 import { DropDownProps } from "./editors/drop-down/types";
 import { PasswordInputProps } from "./editors/password-input/types";
-import { TimeInputProps } from './editors/time-input/types';
-import { PropType } from 'types/utils';
-import { GridProps } from 'grommet';
-import { CustomEditorProps } from './editors/custom-editor/types';
-import { SubFormEditorProps } from './editors/subform-editor';
+import { TimeInputProps } from "./editors/time-input/types";
+import { PropType } from "types/utils";
+import { GridProps } from "grommet";
+import { CustomEditorProps } from "./editors/custom-editor/types";
+import { SubFormEditorProps } from "./editors/subform-editor";
 
 export enum FormFieldType {
   Text = 1,
@@ -25,40 +30,51 @@ export enum FormFieldType {
   File = 9,
   Time = 10,
   Custom = 11,
-  SubForm = 11
+  SubForm = 12,
 }
 
 export type FormFieldOptions =
-  | {
+  | ({
       type: FormFieldType.Text;
-    } & TextInputProps
-  | {
+    } & TextInputProps)
+  | ({
       type: FormFieldType.Number;
-    } & NumericInputProps
-  | {
+    } & NumericInputProps)
+  | ({
       type: FormFieldType.Date;
-    } & DateInputProps
-  | {
+    } & DateInputProps)
+  | ({
       type: FormFieldType.Boolean;
-    } & BoolInputProps
-  | {
+    } & BoolInputProps)
+  | ({
       type: FormFieldType.DropDown;
-    } & DropDownProps
-  | {
-    type: FormFieldType.Password;
-  } & PasswordInputProps 
-  | {
-    type: FormFieldType.File;
-  } & FileInputProps
-  | {
-    type: FormFieldType.Time;
-  } & TimeInputProps 
-  | {
-    type: FormFieldType.Custom;
-  } & CustomEditorProps
-  | {
-    type: FormFieldType.SubForm;
-  } & SubFormEditorProps;
+    } & DropDownProps)
+  | ({
+      type: FormFieldType.Password;
+    } & PasswordInputProps)
+  | ({
+      type: FormFieldType.File;
+    } & FileInputProps)
+  | ({
+      type: FormFieldType.Time;
+    } & TimeInputProps)
+  | ({
+      type: FormFieldType.Custom;
+    } & CustomEditorProps)
+  | ({
+      type: FormFieldType.SubForm;
+    } & SubFormEditorProps);
+
+export declare type ValidateWithMethods<TFieldValue> = (
+  value: TFieldValue,
+  methods: UseFormReturn
+) => ValidateResult | Promise<ValidateResult>;
+
+export interface FieldValidationRules extends RegisterOptions {
+  validateWithMethods?:
+    | ValidateWithMethods<FieldPathValue<any, any>>
+    | Record<string, ValidateWithMethods<FieldPathValue<any, any>>>;
+};
 
 export interface FormFieldBase {
   name: string;
@@ -66,17 +82,17 @@ export interface FormFieldBase {
   defaultValue?: any;
   label: string;
   labelPosition?: "top" | "side";
-  renderLabel? : boolean,
-  render?: (renderFunc :(children:React.ReactNode,props?:any)=> React.ReactNode,formMethods : UseFormReturn<any> )=>React.ReactNode, 
-  validationRules?: Exclude<
-    RegisterOptions,
-    "valueAsNumber" | "valueAsDate" | "setValueAs"
-  >;
+  renderLabel?: boolean;
+  render?: (
+    renderFunc: (children: React.ReactNode, props?: any) => React.ReactNode,
+    formMethods: UseFormReturn<any>
+  ) => React.ReactNode;
+  validationRules?: FieldValidationRules;
   required?: boolean;
   submitTrigger?: boolean;
-  onChange? : (value : any)=>void,
-  gridArea?:string,
-  order?:number
+  onChange?: (value: any) => void;
+  gridArea?: string;
+  order?: number;
 }
 
 export type FormField<TProps extends {} = {}> = FormFieldBase &
@@ -85,15 +101,16 @@ export type FormField<TProps extends {} = {}> = FormFieldBase &
     methods?: UseFormReturn;
   };
 
-export interface FormBuilderProps<TModel=any> extends Partial<Omit<HTMLDivElement,"children">> {
+export interface FormBuilderProps<TModel = any>
+  extends Partial<Omit<HTMLDivElement, "children">> {
   fields: FormField[];
-  children?: React.ReactNode | ((methods: UseFormReturn)=>React.ReactNode);
-  model?:TModel,
+  children?: React.ReactNode | ((methods: UseFormReturn) => React.ReactNode);
+  model?: TModel;
   onSubmit?: (values: any) => void;
-  beforeSubmit?:(values:TModel)=>boolean,
-  rows? : PropType<GridProps,"rows">,
-  columns? : PropType<GridProps,"columns">,
-  areas? : PropType<GridProps,"areas">
+  beforeSubmit?: (values: TModel) => boolean;
+  rows?: PropType<GridProps, "rows">;
+  columns?: PropType<GridProps, "columns">;
+  areas?: PropType<GridProps, "areas">;
 }
 
 export type FormEditorPropsBase = Pick<FormFieldBase, "validationRules"> & {};
