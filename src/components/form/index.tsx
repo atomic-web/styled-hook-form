@@ -19,7 +19,7 @@ export interface AutoSubmitFormProps {
 }
 
 const Form: React.FC<AutoSubmitFormProps> = (props) => {
-  const methods = useForm({ defaultValues: props.defaultValues });
+  const methods = useForm({ defaultValues: props.defaultValues , mode:"onTouched" });
   const {
     handleSubmit,
     watch,

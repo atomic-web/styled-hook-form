@@ -74,7 +74,6 @@ export const Default = () => {
             }}
             mockResponse={(mock) => {
               mock
-              .onPost("/api/user/signup").networkErrorOnce()
               .onPost("/api/user/signup").reply(() => {
                 return new Promise((res) => {
                   setTimeout(() => {
@@ -100,5 +99,5 @@ export const Default = () => {
 };
 
 export default {
-  title: "Register From",
+  title: "HTTP Form/Login Form",
 };
