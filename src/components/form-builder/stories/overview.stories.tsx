@@ -17,8 +17,8 @@ export default meta;
 
 const fields: FormField[] = [
   {
-    label: "First Name:",
-    name: "firstname",
+    label: "Full Name:",
+    name: "fullName",
     defaultValue: "",
     type: FormFieldType.Text,
     maxLength: 20,
@@ -27,7 +27,7 @@ const fields: FormField[] = [
     gridArea: "left",
   },
   {
-    label: "Age:",
+    label: "Zip Code:",
     name: "age",
     defaultValue: 0,
     type: FormFieldType.Number,

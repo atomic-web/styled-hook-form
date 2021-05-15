@@ -12,8 +12,6 @@ export const Default = () => {
     alert(JSON.stringify(values));
   };
 
-  const [checking, setChecking] = useState<boolean | undefined>(undefined);
-
   const playersFormFields: FormField[] = [
     {
       name: "numeric_value",
@@ -28,44 +26,6 @@ export const Default = () => {
       min: 10,
       max: 50,
       defaultValue: 9,
-    },
-    {
-      name: "with_custom_validation",
-      label: "With Custom Validation",
-      type: FormFieldType.Number,
-      defaultValue: 9,
-      validationRules: {
-        validate: () => {
-          return new Promise((res) => {
-            setChecking(true);
-            setTimeout(() => {
-              res(true);
-              setChecking(false);
-            }, 2000);
-          });
-        },
-      },
-      render: (
-        base,
-        methods: UseFormReturn
-      ) => {
-        return (
-          <Box>
-            {base({
-              inputProps: {
-                icon:
-                  checking === undefined ? null : checking ? (
-                    <Spinner />
-                  ) : methods.formState.errors["with_custom_validation"] ? (
-                    <Close />
-                  ) : (
-                    <Checkmark />
-                  ),
-              },
-            })}
-          </Box>
-        );
-      },
     },
   ];
 
