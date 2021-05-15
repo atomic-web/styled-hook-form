@@ -8,7 +8,7 @@ import React, { useState } from "react";
 import { useForm, UseFormReturn, useFormState } from "react-hook-form";
 
 const meta: Meta = {
-  title: "Overview",
+  title: "Form Builder/Overview",
   args: {},
   component: FormBuilder,
 };
