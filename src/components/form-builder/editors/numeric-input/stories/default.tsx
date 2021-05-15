@@ -1,15 +1,18 @@
 import { FormBuilder } from "../../../../form-builder/form-builder";
-import { Box, Button } from "grommet";
+import { Box, Button, Spinner } from "grommet";
 import { FormField, FormFieldType } from "components/form-builder/types";
 import { Save } from "grommet-icons";
 import { useState } from "react";
 import { GHFContextProvider } from "context";
 import { UseFormReturn } from "react-hook-form";
+import { Checkmark, Close } from "grommet-icons";
 
 export const Default = () => {
   const handleSubmit = (values: any) => {
     alert(JSON.stringify(values));
-  }; 
+  };
+
+  const [checking, setChecking] = useState<boolean | undefined>(undefined);
 
   const playersFormFields: FormField[] = [
     {
@@ -32,11 +35,36 @@ export const Default = () => {
       type: FormFieldType.Number,
       defaultValue: 9,
       validationRules: {
-        validate: (a : any,methods : UseFormReturn) => {
-          let x = methods.watch("numeric_value");
-          debugger;
-          return false;
+        validate: () => {
+          return new Promise((res) => {
+            setChecking(true);
+            setTimeout(() => {
+              res(true);
+              setChecking(false);
+            }, 2000);
+          });
         },
+      },
+      render: (
+        base,
+        methods: UseFormReturn
+      ) => {
+        return (
+          <Box>
+            {base({
+              inputProps: {
+                icon:
+                  checking === undefined ? null : checking ? (
+                    <Spinner />
+                  ) : methods.formState.errors["with_custom_validation"] ? (
+                    <Close />
+                  ) : (
+                    <Checkmark />
+                  ),
+              },
+            })}
+          </Box>
+        );
       },
     },
   ];

@@ -70,11 +70,15 @@ export declare type ValidateWithMethods<TFieldValue> = (
   methods: UseFormReturn
 ) => ValidateResult | Promise<ValidateResult>;
 
-export interface FieldValidationRules extends RegisterOptions {
-  validateWithMethods?:
+export interface FieldValidationRules
+  extends Omit<
+    RegisterOptions,
+    "validate" | "valueAsNumber" | "valueAsDate" | "setValueAs"
+  > {
+  validate?:
     | ValidateWithMethods<FieldPathValue<any, any>>
     | Record<string, ValidateWithMethods<FieldPathValue<any, any>>>;
-};
+}
 
 export interface FormFieldBase {
   name: string;
@@ -84,7 +88,10 @@ export interface FormFieldBase {
   labelPosition?: "top" | "side";
   renderLabel?: boolean;
   render?: (
-    renderFunc: (children: React.ReactNode, props?: any) => React.ReactNode,
+    base:
+       (() => React.ReactNode)
+      | ((props?: any) => React.ReactNode)
+      | ((children?: React.ReactNode, props?: any) => React.ReactNode),
     formMethods: UseFormReturn<any>
   ) => React.ReactNode;
   validationRules?: FieldValidationRules;

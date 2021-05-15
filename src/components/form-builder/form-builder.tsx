@@ -37,15 +37,16 @@ const renderField = (field: FormField, methods: UseFormReturn<any>) => {
 
   if (field.validationRules && field.validationRules.validate) {
     if (typeof field.validationRules.validate === "function") {
-      field.validationRules.validate = (values: any) =>
-        getValidateFuncWithMethods(
-          field.validationRules!.validate as ValidateWithMethods<any>,
-          values,
-          methods
-        );
+      let userDefFunc = field.validationRules!
+        .validate as ValidateWithMethods<any>;
+      field.validationRules.validate = (values: any) => {
+        return getValidateFuncWithMethods(userDefFunc, values, methods);
+      };
     } else {
       let rules = field.validationRules.validate as Record<string, any>;
-      field.validationRules.validate = Object.keys(field.validationRules.validate!)
+      field.validationRules.validate = Object.keys(
+        field.validationRules.validate!
+      )
         .map((k) => [
           k,
           (values: any) =>
@@ -60,9 +61,30 @@ const renderField = (field: FormField, methods: UseFormReturn<any>) => {
   }
 
   const wrapWithComponent = (component: React.ReactElement) => (
-    children: React.ReactNode,
-    props?: any
+    p1?: any,
+    p2?: any
   ) => {
+    let children : React.ReactNode , props : any;
+
+    // if (!p2 && p1){
+    //   children = p1 as React.ReactNode;
+    //   props = null;
+    // }
+
+    if (!p2 && p1){
+      props = p1 as any;
+      children = null;
+    }
+
+    if (p2){
+      props = p2 as any;
+      children = p1 as React.ReactNode;
+    }
+
+    if (!children && !props) {
+      return component;
+    }
+    
     let clone = React.cloneElement(component, props ?? {}, children);
     return clone;
   };

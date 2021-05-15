@@ -31,7 +31,7 @@ const CustomEditor: React.FC<FormField<CustomEditorProps>> = (props) => {
         <Controller
           name={name}
           defaultValue={initialValue}
-          rules={vrules}
+          rules={vrules  as any}
           control={control}
           render={({ field }) => {
             let editorElement = React.cloneElement(editorComponent,{

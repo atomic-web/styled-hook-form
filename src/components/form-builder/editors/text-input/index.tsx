@@ -52,7 +52,7 @@ const TextInput = forwardRef<HTMLInputElement, FormField<TextInputProps>>(
       <Controller
         name={name}
         defaultValue={initialValue}
-        rules={vrules}
+        rules={vrules as any}
         control={control}
         render={({ field }) => (
           <GrommetTextInput
