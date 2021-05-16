@@ -1,8 +1,6 @@
-import { getByTestId, render, screen, waitFor } from "@testing-library/react";
 import { renderHook, act } from "@testing-library/react-hooks";
 
 import "jest-fix-undefined";
-import { useEffect, useState } from "react";
 import { usePagedData } from "../paged-data";
 describe("remote data source", () => {
   it("paging works currectly", async () => {
