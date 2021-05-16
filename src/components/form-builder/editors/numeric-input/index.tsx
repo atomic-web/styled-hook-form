@@ -18,6 +18,7 @@ const NumericInput = forwardRef<HTMLInputElement, FormField<NumericInputProps>>(
       max,
       required,
       methods,
+      inputProps
     } = props;
 
     let control = methods?.control;
@@ -42,18 +43,17 @@ const NumericInput = forwardRef<HTMLInputElement, FormField<NumericInputProps>>(
         message: T("numeric-input-max-msg", { name: label, value: max }),
       };
     }
-
-  
-
+    
     return (
       <Controller
         name={name}
         defaultValue={initialValue}
-        rules={vrules}
+        rules={vrules as any}
         control={control}
         render={({ field }) => (
           <NumericBox
-            ref={ref}            
+            {...inputProps}
+            ref={ref}
             onChange={(e: ChangeEvent<HTMLInputElement>) => field.onChange(e.currentTarget.value)}
             value={field.value}
           />

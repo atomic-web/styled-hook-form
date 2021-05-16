@@ -1,45 +1,51 @@
-import { FormBuilder } from "../../../../form-builder/form-builder"
-import { Box, Button } from "grommet"
+import { FormBuilder } from "../../../../form-builder/form-builder";
+import { Box, Button, Spinner } from "grommet";
 import { FormField, FormFieldType } from "components/form-builder/types";
-import {Add} from 'grommet-icons'
+import { Save } from "grommet-icons";
 import { useState } from "react";
+import { GHFContextProvider } from "context";
+import { UseFormReturn } from "react-hook-form";
+import { Checkmark, Close } from "grommet-icons";
 
-const playersFormFields: FormField[] = [
+export const Default = () => {
+  const handleSubmit = (values: any) => {
+    alert(JSON.stringify(values));
+  };
+
+  const playersFormFields: FormField[] = [
     {
-      name: "name",
-      label: "Name",
-      type: FormFieldType.Text,
-      gridArea: "left",
+      name: "numeric_value",
+      label: "Numeric Value",
+      type: FormFieldType.Number,
+      required: true,
     },
     {
-        name: "age",
-        label: "Age",
-        type: FormFieldType.Number,
-        gridArea: "left",
-        defaultValue:0
-      }         
+      name: "with_range",
+      label: "With Range (between 10-50)",
+      type: FormFieldType.Number,
+      min: 10,
+      max: 50,
+      defaultValue: 9,
+    },
   ];
 
-export const Simple = ()=>{
-
-    let [model,setModel] = useState({name: "John Nash" , sex:"man"});
-    
-    return <Box width="medium" pad="small" background="light-2">
-    <FormBuilder
-        fields={playersFormFields}
-        model={model} 
-      >
-        <Button
-          gridArea="actions"
-          icon={<Add />}
-          label="Submit"
-          type="submit"
-          primary
-        />
-      </FormBuilder>
-    </Box>
-}
+  return (
+    <GHFContextProvider>
+      <Box width="medium" pad="small" background="light-2">
+        <FormBuilder fields={playersFormFields} onSubmit={handleSubmit}>
+          <Button
+            gridArea="actions"
+            icon={<Save />}
+            label="Submit"
+            type="submit"
+            primary
+          />
+        </FormBuilder>
+      </Box>
+    </GHFContextProvider>
+  );
+};
 
 export default {
-    title :"Form Builder/Editors/NumericInput"
-}
+  title: "Form Builder/Editors/NumericInput",
+};

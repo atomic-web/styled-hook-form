@@ -52,7 +52,7 @@ const TimeInput = forwardRef<HTMLInputElement, FormField<TimeInputProps>>(
       <Controller
         name={name}
         defaultValue={initialValue}
-        rules={vrules}
+        rules={vrules as any}
         control={control}
         render={({ field }) => (
           <TimePicker

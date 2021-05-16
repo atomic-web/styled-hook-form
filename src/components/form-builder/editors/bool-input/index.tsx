@@ -1,4 +1,4 @@
-import React from 'react';
+import React from "react";
 import { forwardRef } from "react";
 import { Controller } from "react-hook-form";
 import { BoolInputProps } from "./types";
@@ -14,28 +14,28 @@ const BoolInput = forwardRef<HTMLInputElement, FormField<BoolInputProps>>(
       defaultValue: initialValue,
       controlType,
       methods,
-      label
+      label,
     } = props;
 
     let control = methods?.control;
 
     return (
-        <Controller
-          name={name}
-          defaultValue={initialValue}
-          rules={vrules}
-          control={control}
-          render={({ field }) => (
-            <CheckBox
-              ref={ref}
-              label={label}
-              checked={field.value}
-              onChange={(e) => field.onChange(e)}
-              value={field.value}
-              toggle={controlType == "switch"}
-            />
-          )}
-        />
+      <Controller
+        name={name}
+        defaultValue={initialValue}
+        rules={vrules as any}
+        control={control}
+        render={({ field }) => (
+          <CheckBox
+            ref={ref}
+            label={label}
+            checked={field.value}
+            onChange={(e) => field.onChange(e)}
+            value={field.value}
+            toggle={controlType == "switch"}
+          />
+        )}
+      />
     );
   }
 );
