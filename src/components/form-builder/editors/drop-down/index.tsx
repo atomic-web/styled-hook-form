@@ -1,4 +1,4 @@
-import React from "react";
+import React, { Fragment, useMemo } from "react";
 import { forwardRef, useCallback, useEffect, useState, memo } from "react";
 import {
   Controller,
@@ -7,7 +7,7 @@ import {
   useWatch,
 } from "react-hook-form";
 import { DropDownProps, OptionProps, RemoteDataSource } from "./types";
-import { Box, CheckBox, Select } from "grommet";
+import { Box, BoxProps, Button, CheckBox, Select, Text } from "grommet";
 import { FormField } from "../../types";
 import { Spinner } from "grommet";
 import { usePagedData } from "../../../utils/paged-data-source";
@@ -43,7 +43,9 @@ const DropDown = forwardRef<HTMLButtonElement, FormField<DropDownProps>>(
       itemLabelKey,
       itemValueKey,
       placeholder,
+      labelWrap,
       renderItem,
+      renderItemLabel,
       defaultValue: initialValue,
     } = props;
 
@@ -58,6 +60,12 @@ const DropDown = forwardRef<HTMLButtonElement, FormField<DropDownProps>>(
     )
       ? ((options as unknown) as RemoteDataSource)
       : null;
+
+    let computedValue = useMemo(
+      () =>
+        hasSelection ? localValue : methods?.getValues(name) ?? initialValue,
+      [hasSelection, localValue, initialValue]
+    );
 
     let {
       loading = false,
@@ -75,11 +83,7 @@ const DropDown = forwardRef<HTMLButtonElement, FormField<DropDownProps>>(
           onResponse: (data: any[], page: number) => {
             setRemoteOptions((oldOptions) => {
               let newOptions = [...(page > 1 ? oldOptions : []), ...data];
-
-              let option = getOptionsByValue(
-                newOptions,
-                hasSelection ? localValue : initialValue
-              );
+              let option = getOptionsByValue(newOptions, computedValue);
               setLocalValue(option);
               return newOptions;
             });
@@ -101,23 +105,26 @@ const DropDown = forwardRef<HTMLButtonElement, FormField<DropDownProps>>(
     }, [options]);
 
     let liveValue = useWatch({
-      name : name ,
-      control:methods!.control,
-      defaultValue : initialValue
+      name: name,
+      control: methods!.control,
+      defaultValue: initialValue,
     });
 
     useEffect(() => {
       setLocalOptions((o) => {
-        let option = getOptionsByValue(o,liveValue);
+        let option = getOptionsByValue(o, liveValue);
         setLocalValue(option);
         return o;
       });
-    }, [initialValue , liveValue]);
+    }, [initialValue, liveValue]);
 
     const getOptionsByValue = (options: any[], value: any[] | any): any[] => {
       return options.filter((o) =>
         Array.isArray(value)
-          ? value.some((v) => v === o[itemValueKey] || v[itemValueKey] === o[itemValueKey])
+          ? value.some(
+              (v) =>
+                v === o[itemValueKey] || v[itemValueKey] === o[itemValueKey]
+            )
           : value === o[itemValueKey]
       );
     };
@@ -173,7 +180,7 @@ const DropDown = forwardRef<HTMLButtonElement, FormField<DropDownProps>>(
 
     let selectContent = multiple
       ? (option: any) => {
-          let selectedValues = hasSelection ? localValue : initialValue;
+          let selectedValues = computedValue;
           return (
             <Option
               label={
@@ -195,6 +202,41 @@ const DropDown = forwardRef<HTMLButtonElement, FormField<DropDownProps>>(
         }
       : null;
 
+    const valueLabel = () => {
+      let labels =
+        localValue && localValue.length ? (
+          localValue.map((val: any, idx: number) => (
+            <Fragment key={val[itemValueKey]}>
+              {renderItemLabel ? (
+                renderItemLabel!(val, idx)
+              ) : (
+                <>
+                  <Text children={val[itemLabelKey]} />
+                  {localValue!.length - 1 > idx && <span>,</span>}
+                </>
+              )}
+            </Fragment>
+          ))
+        ) : (
+          <Text>{placeholder ?? T("drop-down-plcaholder")}</Text>
+        );
+
+      let wrapElement = labelWrap
+        ? React.cloneElement(labelWrap, {}, labels)
+        : React.createElement(
+            Box,
+            {
+              direction: "row",
+              overflow: "hidden",
+              pad: "xsmall",
+              wrap: true,
+            } as BoxProps,
+            labels
+          );
+
+      return wrapElement;
+    };
+
     return (
       <Controller
         name={name}
@@ -204,10 +246,10 @@ const DropDown = forwardRef<HTMLButtonElement, FormField<DropDownProps>>(
         render={({ field }) => (
           <>
             <Select
-              placeholder={placeholder}
               closeOnChange={!multiple}
               ref={ref as any}
               multiple={multiple}
+              valueLabel={valueLabel()}
               options={dataSourceOptions ? remoteOptions ?? [] : localOptions}
               labelKey={itemLabelKey}
               valueKey={itemValueKey}
