@@ -61,12 +61,6 @@ const DropDown = forwardRef<HTMLButtonElement, FormField<DropDownProps>>(
       ? ((options as unknown) as RemoteDataSource)
       : null;
 
-    let computedValue = useMemo(
-      () =>
-        hasSelection ? localValue : methods?.getValues(name) ?? initialValue,
-      [hasSelection, localValue, initialValue]
-    );
-
     let {
       loading = false,
       nextPage = null,
@@ -110,13 +104,10 @@ const DropDown = forwardRef<HTMLButtonElement, FormField<DropDownProps>>(
       defaultValue: initialValue,
     });
 
-    useEffect(() => {
-      setLocalOptions((o) => {
-        let option = getOptionsByValue(o, liveValue);
-        setLocalValue(option);
-        return o;
-      });
-    }, [initialValue, liveValue]);
+    let actualOptions = useMemo(
+      () => (dataSourceOptions ? remoteOptions ?? [] : localOptions),
+      [dataSourceOptions, remoteOptions, localOptions]
+    );
 
     const getOptionsByValue = (options: any[], value: any[] | any): any[] => {
       return options.filter((o) =>
@@ -128,6 +119,19 @@ const DropDown = forwardRef<HTMLButtonElement, FormField<DropDownProps>>(
           : value === o[itemValueKey]
       );
     };
+
+    let computedValue = useMemo(() => {
+      return getOptionsByValue(
+        actualOptions,
+        hasSelection ? localValue : liveValue ?? initialValue
+      );
+    }, [hasSelection, initialValue, liveValue, actualOptions]);
+
+    useEffect(() => {
+      if (actualOptions) {
+        setLocalValue(computedValue);
+      }
+    }, [computedValue, actualOptions]);
 
     const handleSearch = (text: string) => {
       if (!dataSourceOptions && text.length === 0) {
@@ -180,7 +184,7 @@ const DropDown = forwardRef<HTMLButtonElement, FormField<DropDownProps>>(
 
     let selectContent = multiple
       ? (option: any) => {
-          let selectedValues = computedValue;
+          let selectedValues = localValue;
           return (
             <Option
               label={
@@ -208,7 +212,18 @@ const DropDown = forwardRef<HTMLButtonElement, FormField<DropDownProps>>(
           localValue.map((val: any, idx: number) => (
             <Fragment key={val[itemValueKey]}>
               {renderItemLabel ? (
-                renderItemLabel!(val, idx)
+                renderItemLabel!(
+                  val,
+                  {
+                    setValue: (setter: (prev: any[] | any) => any[] | any) => {
+                      debugger
+                      let _value = setter(localValue);
+                      methods!.setValue(name, _value);
+                      setLocalValue(_value);
+                    },
+                  },
+                  idx
+                )
               ) : (
                 <>
                   <Text children={val[itemLabelKey]} />
@@ -250,7 +265,7 @@ const DropDown = forwardRef<HTMLButtonElement, FormField<DropDownProps>>(
               ref={ref as any}
               multiple={multiple}
               valueLabel={valueLabel()}
-              options={dataSourceOptions ? remoteOptions ?? [] : localOptions}
+              options={actualOptions}
               labelKey={itemLabelKey}
               valueKey={itemValueKey}
               onSearch={handleSearch}

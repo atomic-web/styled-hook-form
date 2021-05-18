@@ -18,19 +18,31 @@ const playersFormFields: FormField[] = [
     itemLabelKey: "text",
     itemValueKey: "value",
     placeholder: "Select a language",
-    renderItemLabel: ({ text }: any) => (
-      <Box
-        background="brand"
-        pad="xsmall"
-        round="xsmall"
-        margin={{ horizontal: "xxsmall", vertical: "xxsmall" }}
-      >
-        <Box direction="row">
-          <Text>{text}</Text>
-          <Button icon={<Close size="xxsmall" color="light-1"/>}></Button>
+    renderItemLabel: ({ text , value }: any , {setValue}) => {
+      const handleRemove = (e : Event) => {
+        e.stopPropagation();
+        setValue((p)=>p.filter((pv : any)=>pv.value !== value));
+      };
+
+      return (
+        <Box
+          background="brand"
+          pad="xsmall"
+          round="xsmall"
+          margin={{ horizontal: "xxsmall", vertical: "xxsmall" }}
+        >
+          <Box direction="row" onClick={handleRemove}>
+            <Text margin={{ end: "small" }}>{text}</Text>
+            <Button
+              plain
+              icon={
+                <Close size="small" style={{ width: "12px", height: "12px" }} />
+              }
+            ></Button>
+          </Box>
         </Box>
-      </Box>
-    ),
+      );
+    },
     multiple: true,
     options: [
       {
@@ -63,7 +75,7 @@ const playersFormFields: FormField[] = [
 ];
 
 export const Simple = () => {
-  let model = { name: "John Nash", lang: "english" };
+  let model = { name: "John Nash", lang: ["english"] };
   let handleSubmit = (values: any) => {
     alert(JSON.stringify(values));
   };
