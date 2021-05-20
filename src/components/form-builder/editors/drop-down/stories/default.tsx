@@ -1,44 +1,91 @@
-import { FormBuilder } from "../../../../form-builder/form-builder"
-import { Box, Button } from "grommet"
+import { FormBuilder } from "../../../../form-builder/form-builder";
+import { Box, Button, Drop, Text } from "grommet";
 import { FormField, FormFieldType } from "components/form-builder/types";
-import {Add} from 'grommet-icons'
+import { Add, Close } from "grommet-icons";
+import { useRef } from "react";
 
 const playersFormFields: FormField[] = [
-    {
-      name: "name",
-      label: "Name",
-      type: FormFieldType.Text,
-      gridArea: "left",
+  {
+    name: "name",
+    label: "Name",
+    type: FormFieldType.Text,
+    gridArea: "left",
+  },
+  {
+    name: "lang",
+    label: "Language",
+    type: FormFieldType.DropDown,
+    itemLabelKey: "text",
+    itemValueKey: "value",
+    placeholder: "Select a language",
+    renderItemLabel: ({ text , value }: any , {setValue}) => {
+      const handleRemove = (e : Event) => {
+        e.stopPropagation();
+        setValue((p)=>p.filter((pv : any)=>pv.value !== value));
+      };
+
+      return (
+        <Box
+          background="brand"
+          pad="xsmall"
+          round="xsmall"
+          margin={{ horizontal: "xxsmall", vertical: "xxsmall" }}
+        >
+          <Box direction="row" onClick={handleRemove}>
+            <Text margin={{ end: "small" }}>{text}</Text>
+            <Button
+              plain
+              icon={
+                <Close size="small" style={{ width: "12px", height: "12px" }} />
+              }
+            ></Button>
+          </Box>
+        </Box>
+      );
     },
-    {
-      name: "sex",
-      label: "Sex",
-      type: FormFieldType.DropDown,
-      itemLabelKey: "text",
-      itemValueKey: "value",
-      multiple:false,
-      options: [
-        {
-          text: "Man",
-          value: "man",
-        },
-        {
-          text: "Woman",
-          value: "woman",
-        },
-      ],
-      gridArea: "left",
-    }        
-  ];
+    multiple: true,
+    options: [
+      {
+        text: "English",
+        value: "english",
+      },
+      {
+        text: "German",
+        value: "german",
+      },
+      {
+        text: "Spanish",
+        value: "spanish",
+      },
+      {
+        text: "French",
+        value: "french",
+      },
+      {
+        text: "Chines",
+        value: "chines",
+      },
+      {
+        text: "Japanese",
+        value: "japanese",
+      },
+    ],
+    gridArea: "left",
+  },
+];
 
-export const Simple = ()=>{
+export const Simple = () => {
+  let model = { name: "John Nash", lang: ["english"] };
+  let handleSubmit = (values: any) => {
+    alert(JSON.stringify(values));
+  };
 
-    let model = {name: "John Nash" , sex:"man"};
-
-    return <Box width="medium" pad="small" background="light-2">
-    <FormBuilder
+  return (
+    <Box width="medium" pad="small" background="light-2">
+      <FormBuilder
+        onSubmit={handleSubmit}
         fields={playersFormFields}
-        model={model} 
+        model={model}
       >
         <Button
           gridArea="actions"
@@ -49,8 +96,9 @@ export const Simple = ()=>{
         />
       </FormBuilder>
     </Box>
-}
+  );
+};
 
 export default {
-    title :"Form Builder/Editors/DropDown"
-}
+  title: "Form Builder/Editors/DropDown",
+};
