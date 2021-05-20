@@ -1,7 +1,7 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`DropDown Editor renders default value 1`] = `
-.c15 {
+.c14 {
   display: inline-block;
   -webkit-flex: 0 0 auto;
   -ms-flex: 0 0 auto;
@@ -12,25 +12,25 @@ exports[`DropDown Editor renders default value 1`] = `
   stroke: #7D4CDB;
 }
 
-.c15 g {
+.c14 g {
   fill: inherit;
   stroke: inherit;
 }
 
-.c15 *:not([stroke])[fill="none"] {
+.c14 *:not([stroke])[fill="none"] {
   stroke-width: 0;
 }
 
-.c15 *[stroke*="#"],
-.c15 *[STROKE*="#"] {
+.c14 *[stroke*="#"],
+.c14 *[STROKE*="#"] {
   stroke: inherit;
   fill: none;
 }
 
-.c15 *[fill-rule],
-.c15 *[FILL-RULE],
-.c15 *[fill*="#"],
-.c15 *[FILL*="#"] {
+.c14 *[fill-rule],
+.c14 *[FILL-RULE],
+.c14 *[fill*="#"],
+.c14 *[FILL*="#"] {
   fill: inherit;
   stroke: none;
 }
@@ -136,7 +136,26 @@ exports[`DropDown Editor renders default value 1`] = `
   flex-basis: auto;
 }
 
-.c14 {
+.c11 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  box-sizing: border-box;
+  max-width: 100%;
+  min-width: 0;
+  min-height: 0;
+  -webkit-flex-direction: row;
+  -ms-flex-direction: row;
+  flex-direction: row;
+  padding: 6px;
+  -webkit-flex-wrap: wrap;
+  -ms-flex-wrap: wrap;
+  flex-wrap: wrap;
+  overflow: hidden;
+}
+
+.c13 {
   display: -webkit-box;
   display: -webkit-flex;
   display: -ms-flexbox;
@@ -155,7 +174,7 @@ exports[`DropDown Editor renders default value 1`] = `
   flex: 0 0 auto;
 }
 
-.c16 {
+.c15 {
   display: -webkit-box;
   display: -webkit-flex;
   display: -ms-flexbox;
@@ -220,6 +239,11 @@ exports[`DropDown Editor renders default value 1`] = `
   line-height: 24px;
 }
 
+.c12 {
+  font-size: 18px;
+  line-height: 24px;
+}
+
 .c0 {
   display: grid;
   box-sizing: border-box;
@@ -228,59 +252,6 @@ exports[`DropDown Editor renders default value 1`] = `
   grid-template-areas: "body" "actions";
   grid-template-columns: 1fr;
   grid-template-rows: 1fr 96px;
-}
-
-.c12 {
-  box-sizing: border-box;
-  font-size: inherit;
-  font-family: inherit;
-  border: none;
-  -webkit-appearance: none;
-  background: transparent;
-  color: inherit;
-  width: 100%;
-  padding: 11px;
-  font-weight: 600;
-  margin: 0;
-  border: 1px solid rgba(0,0,0,0.33);
-  border-radius: 4px;
-  outline: none;
-  border: none;
-}
-
-.c12::-webkit-input-placeholder {
-  color: #AAAAAA;
-}
-
-.c12::-moz-placeholder {
-  color: #AAAAAA;
-}
-
-.c12:-ms-input-placeholder {
-  color: #AAAAAA;
-}
-
-.c12::-webkit-search-decoration {
-  -webkit-appearance: none;
-}
-
-.c12::-moz-focus-inner {
-  border: none;
-  outline: none;
-}
-
-.c12:-moz-placeholder,
-.c12::-moz-placeholder {
-  opacity: 1;
-}
-
-.c11 {
-  position: relative;
-  width: 100%;
-}
-
-.c13 {
-  cursor: pointer;
 }
 
 .c8 {
@@ -305,21 +276,27 @@ exports[`DropDown Editor renders default value 1`] = `
 }
 
 @media only screen and (max-width:768px) {
-  .c14 {
+  .c11 {
+    padding: 3px;
+  }
+}
+
+@media only screen and (max-width:768px) {
+  .c13 {
     margin-left: 6px;
     margin-right: 6px;
   }
 }
 
 @media only screen and (max-width:768px) {
-  .c16 {
+  .c15 {
     margin-left: 6px;
     margin-right: 6px;
   }
 }
 
 @media only screen and (max-width:768px) {
-  .c16 {
+  .c15 {
     margin-top: 3px;
     margin-bottom: 3px;
   }
@@ -370,23 +347,20 @@ exports[`DropDown Editor renders default value 1`] = `
                       <div
                         class="c11"
                       >
-                        <input
-                          autocomplete="off"
-                          class="c12 c13"
-                          readonly=""
-                          tabindex="-1"
-                          type="text"
-                          value=""
-                        />
+                        <span
+                          class="c12"
+                        >
+                          Select an option
+                        </span>
                       </div>
                     </div>
                     <div
-                      class="c14"
+                      class="c13"
                       style="min-width: auto;"
                     >
                       <svg
                         aria-label="FormDown"
-                        class="c15"
+                        class="c14"
                         viewBox="0 0 24 24"
                       >
                         <polyline
@@ -401,7 +375,7 @@ exports[`DropDown Editor renders default value 1`] = `
                 </button>
               </div>
               <div
-                class="c16"
+                class="c15"
                 color="status-critical"
               />
             </div>
