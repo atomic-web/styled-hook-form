@@ -116,7 +116,7 @@ const DropDown = forwardRef<HTMLButtonElement, FormField<DropDownProps>>(
               (v) =>
                 v === o[itemValueKey] || v[itemValueKey] === o[itemValueKey]
             )
-          : value === o[itemValueKey]
+          : value === o[itemValueKey] || value === o
       );
     };
 

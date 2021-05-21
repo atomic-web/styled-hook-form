@@ -100,5 +100,5 @@ export const CustomLabel = () => {
 };
 
 export default {
-  title: "Form Builder/Editors/DropDown",
+  title: "Form Builder/Editors/DropDown/Custom Label",
 };
