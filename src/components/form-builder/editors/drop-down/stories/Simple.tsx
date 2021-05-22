@@ -22,7 +22,7 @@ export const Simple = () => {
         {
           text: "Option3",
           value: "option3",
-        },
+        }
       ],
     },
     {
