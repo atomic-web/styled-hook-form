@@ -8,8 +8,12 @@ export const ValuePriority = () => {
       name: "option",
       label: "Option",
       type: FormFieldType.DropDown,
-      tip:
-        "Value provided through the model prop of FormBuilder will override the one provided through the defaultValue prop of the FormField",
+      tip: (
+        <Box width="medium">
+          Value provided through the model prop of FormBuilder will override the
+          one provided through the defaultValue prop of the FormField
+        </Box>
+      ),
       options: [
         {
           text: "Opt1",
@@ -30,7 +34,8 @@ export const ValuePriority = () => {
     },
   ];
 
-  const handleSubmit = (values: any) => {debugger
+  const handleSubmit = (values: any) => {
+    debugger;
     alert(JSON.stringify(values));
   };
 
@@ -43,7 +48,7 @@ export const ValuePriority = () => {
           option: "opt3",
         }}
       >
-        <Button label="Submit" primary type="submit"/>
+        <Button label="Submit" primary type="submit" />
       </FormBuilder>
     </Box>
   );
