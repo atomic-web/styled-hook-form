@@ -52,7 +52,7 @@ const usePagedData = <
   let [page, setPage] = useState<number>(0);
   let [total, setTotal] = useState<number>(0);
   let [hasMore, setHasMore] = useState<boolean>(false);
-  let [isFirstLoad , setIsFirstLoad] = useState(true);
+  let [isFirstLoad, setIsFirstLoad] = useState(true);
 
   let [currentFetch, setCurrentFetch] = useState<DataFetchInfo<
     TServerData,
@@ -61,6 +61,7 @@ const usePagedData = <
 
   const requestParams = useMemo((): object => {
     let _params: Record<string, any> = {
+      ...params,
       [pageSizeParamName]: pageSize,
     };
 
@@ -74,6 +75,7 @@ const usePagedData = <
     }
     return _params;
   }, [
+    pageParamName,
     pageSizeParamName,
     pageSize,
     searchParamName,
@@ -160,7 +162,7 @@ const usePagedData = <
 
   const nextPage = () => {
     setPage((p) => {
-      loadPage((lazy && isFirstLoad) ? p : p + 1);
+      loadPage(lazy && isFirstLoad ? p : p + 1);
       return p;
     });
   };
@@ -227,19 +229,10 @@ const usePagedData = <
   }, [currentFetch]);
 
   useEffect(() => {
-    if (page > 1) {
+    if (!isFirstLoad) {
       reset();
     }
-  }, [
-    pageSize,
-    params,
-    searchParam,
-    searchParamName,
-    pageParamName,
-    pageSizeParamName,
-    orderDir,
-    orderProp
-  ]);
+  }, [requestParams]);
 
   return {
     data,
