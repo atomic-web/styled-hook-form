@@ -73,6 +73,7 @@ const DropDown = forwardRef<HTMLButtonElement, FormField<DropDownProps>>(
           pageSizeParamName: dataSourceOptions.pageSizeKey,
           searchParamName: dataSourceOptions.searchKey,
           searchParam: remoteSearchKey,
+          params:dataSourceOptions.extraParams,
           mockResponse: dataSourceOptions.mockResponse,
           onResponse: (data: any[], page: number) => {
             setRemoteOptions((oldOptions) => {

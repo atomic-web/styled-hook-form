@@ -6,6 +6,7 @@ export interface RemoteDataSource {
   searchKey?: string;
   pageKey?: string;
   pageSizeKey?: string;
+  extraParams? : any,
   mockResponse? : (req: MockAdapter)=>void
 }
 
