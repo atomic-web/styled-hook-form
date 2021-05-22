@@ -19,15 +19,19 @@ export const Default = () => {
       label: "User Name",
       required: true,
       tip: "The unique name you will be using throught the system",
-      render: (base: React.ReactNode, { watch }) => {
-        return <div>{base}</div>;
-      },
     },
     {
       type: FormFieldType.Text,
       name: "email",
       label: "Email",
       required: true,
+      validationRules: {
+        pattern: {
+          //from https://stackoverflow.com/questions/46155/how-to-validate-an-email-address-in-javascript
+          value: /^(([^<>()[\]\.,;:\s@\"]+(\.[^<>()[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i,
+          message: "Please Enter a valid email!",
+        },
+      },
       inputProps: {
         autoComplete: "Off",
       },
@@ -51,7 +55,6 @@ export const Default = () => {
     },
   ];
 
-  
   return (
     <GHFContextProvider>
       <Box align="center">
@@ -66,15 +69,14 @@ export const Default = () => {
             fields={fields}
             beforeSubmit={(data: MyModel) => data.agree}
             submitButton={<Text> Register </Text>}
-            onError={(err)=>{
+            onError={(err) => {
               alert(JSON.stringify(err));
             }}
             onSuccess={(data) => {
-             alert(JSON.stringify(data));
+              alert(JSON.stringify(data));
             }}
             mockResponse={(mock) => {
-              mock
-              .onPost("/api/user/signup").reply(() => {
+              mock.onPost("/api/user/signup").reply(() => {
                 return new Promise((res) => {
                   setTimeout(() => {
                     res([
