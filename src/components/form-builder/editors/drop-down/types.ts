@@ -1,3 +1,4 @@
+import MockAdapter from "axios-mock-adapter/types";
 import React from "react";
 
 export interface RemoteDataSource {
@@ -5,6 +6,7 @@ export interface RemoteDataSource {
   searchKey?: string;
   pageKey?: string;
   pageSizeKey?: string;
+  mockResponse? : (req: MockAdapter)=>void
 }
 
 export interface OptionProps {
