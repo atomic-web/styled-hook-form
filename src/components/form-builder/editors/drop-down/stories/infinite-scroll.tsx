@@ -2,13 +2,7 @@ import { FormBuilder } from "components/form-builder/form-builder";
 import { FormField, FormFieldType } from "components/form-builder/types";
 import { Box, Button, Text } from "grommet";
 import { commerce } from "faker";
-
-let nextId = () => {
-  let id = 0;
-  return () => ++id;
-};
-
-const ID = nextId();
+import { ID } from "./utils";
 
 export const InfiniteScroll = () => {
   let fields: FormField[] = [
