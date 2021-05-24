@@ -7,7 +7,7 @@ import {
   useWatch,
 } from "react-hook-form";
 import { DropDownProps, OptionProps, RemoteDataSource } from "./types";
-import { Box, BoxProps, Button, CheckBox, Select, Text } from "grommet";
+import { Box, BoxProps, CheckBox, Select, Text } from "grommet";
 import { FormField } from "../../types";
 import { Spinner } from "grommet";
 import { usePagedData } from "../../../utils/paged-data-source";
@@ -55,26 +55,26 @@ const DropDown = forwardRef<HTMLButtonElement, FormField<DropDownProps>>(
     let [remoteOptions, setRemoteOptions] = useState<any[]>([]);
     let [remoteSearchKey, setRemoteSearchKey] = useState<string>("");
 
-    let dataSourceOptions: RemoteDataSource | null = (options as object).hasOwnProperty(
-      "url"
-    )
-      ? ((options as unknown) as RemoteDataSource)
-      : null;
+    let dataSourceOptions: RemoteDataSource | null = useMemo(
+      () =>{
+        return (options as object).hasOwnProperty("url")
+          ? ((options as unknown) as RemoteDataSource)
+          : null},
+      [options]
+    );
 
     let {
       loading = false,
       nextPage = null,
-      hasMore = null
-    } = !dataSourceOptions
-      ? {}
-      : usePagedData({
-          request: dataSourceOptions.url ?? "",
-          pageParamName: dataSourceOptions.pageKey,
-          pageSizeParamName: dataSourceOptions.pageSizeKey,
-          searchParamName: dataSourceOptions.searchKey,
+      hasMore = null,
+    } = usePagedData({
+          request: dataSourceOptions?.url ?? null,
+          pageParamName: dataSourceOptions?.pageKey,
+          pageSizeParamName: dataSourceOptions?.pageSizeKey,
+          searchParamName: dataSourceOptions?.searchKey,
           searchParam: remoteSearchKey,
-          params:dataSourceOptions.extraParams,
-          mockResponse: dataSourceOptions.mockResponse,
+          params: dataSourceOptions?.extraParams,
+          mockResponse: dataSourceOptions?.mockResponse,
           onResponse: (data: any[], page: number) => {
             setRemoteOptions((oldOptions) => {
               let newOptions = [...(page > 1 ? oldOptions : []), ...data];
@@ -217,7 +217,7 @@ const DropDown = forwardRef<HTMLButtonElement, FormField<DropDownProps>>(
                   val,
                   {
                     setValue: (setter: (prev: any[] | any) => any[] | any) => {
-                      debugger
+                      debugger;
                       let _value = setter(localValue);
                       methods!.setValue(name, _value);
                       setLocalValue(_value);
