@@ -9,10 +9,17 @@ import { useDebouncedCallback } from "use-debounce";
 
 export type FormChildProps = UseFormReturn;
 
+export type FieldWatcher{
+  name : string ,
+  handler : (value:any)=>void,
+  defaultValue? : any
+}
+
 export interface AutoSubmitFormProps {
-  watchFor?: string[];
+  changeHandlers?: FieldWatcher[];
   defaultValues: any;
   autoSubmit?: boolean;
+  autoSubmitFields?: string[];
   submitTreshould?: number;
   onSubmit?: (state: any) => void;
   children?: (props: FormChildProps) => React.ReactNode;
@@ -27,7 +34,7 @@ const Form: React.FC<AutoSubmitFormProps> = (props) => {
     getValues,
     reset,
   } = methods;
-  const { onSubmit, children, watchFor, submitTreshould, autoSubmit } = props;
+  const { onSubmit, children, changeHandlers, submitTreshould, autoSubmit,autoSubmitFields } = props;
   const formRef = useRef<HTMLFormElement>(null);
 
   const onFormSubmit = () => {
@@ -42,12 +49,14 @@ const Form: React.FC<AutoSubmitFormProps> = (props) => {
     onFormSubmit();
   }, submitTreshould);
 
-  let watchers = watchFor?.length ? watch(watchFor) : watch();
+
+
+  let watchers = autoSubmit ? (autoSubmitFields?.length ? watch(autoSubmitFields) : watch()) : [];
 
   let lastSubmited: any = null;
 
   if (autoSubmit) {
-    if (watchFor?.length) {
+    if (autoSubmitFields?.length) {
       useEffect(() => {
         debuncedSubmit();
       }, Object.values(watchers));

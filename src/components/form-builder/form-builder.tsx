@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import Form from "../form";
+import Form, { FieldWatcher } from "../form";
 import styled from "styled-components";
 import { FormBuilderProps, FormField, ValidateWithMethods } from "./types";
 import { EditorMap } from "./editor-map";
@@ -64,19 +64,19 @@ const renderField = (field: FormField, methods: UseFormReturn<any>) => {
     p1?: any,
     p2?: any
   ) => {
-    let children : React.ReactNode , props : any;
+    let children: React.ReactNode, props: any;
 
     // if (!p2 && p1){
     //   children = p1 as React.ReactNode;
     //   props = null;
     // }
 
-    if (!p2 && p1){
+    if (!p2 && p1) {
       props = p1 as any;
       children = null;
     }
 
-    if (p2){
+    if (p2) {
       props = p2 as any;
       children = p1 as React.ReactNode;
     }
@@ -84,7 +84,7 @@ const renderField = (field: FormField, methods: UseFormReturn<any>) => {
     if (!children && !props) {
       return component;
     }
-    
+
     let clone = React.cloneElement(component, props ?? {}, children);
     return clone;
   };
@@ -139,6 +139,9 @@ const FormBuilder: React.FC<FormBuilderProps> = (props) => {
   };
 
   let submitTriggers = fields.filter((f) => f.submitTrigger).map((f) => f.name);
+  let changeHandlers = fields
+    .filter((f) => f.onChange)
+    .map((f) => ({ name: f.name, handler: f.onChange } as FieldWatcher));
 
   const renderFieldEditors = (items: FormField[], methods: any) => {
     let groupedEditors: Record<string, any[]> = {};
@@ -214,7 +217,8 @@ const FormBuilder: React.FC<FormBuilderProps> = (props) => {
         defaultValues={defaulValues}
         onSubmit={handleSubmit}
         autoSubmit={submitTriggers?.length > 0 ? true : false}
-        watchFor={submitTriggers || []}
+        autoSubmitFields={submitTriggers || []}
+        changeHandlers={changeHandlers}
       >
         {({ ...methods }) => (
           <Grid rows={rows} columns={columns} areas={areas} fill>
