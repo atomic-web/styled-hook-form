@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import Form, { FieldWatcher } from "../form";
+import Form, { WatchField } from "../form";
 import styled from "styled-components";
 import { FormBuilderProps, FormField, ValidateWithMethods } from "./types";
 import { EditorMap } from "./editor-map";
@@ -138,10 +138,20 @@ const FormBuilder: React.FC<FormBuilderProps> = (props) => {
     }
   };
 
-  let submitTriggers = fields.filter((f) => f.submitTrigger).map((f) => ({name : f.name , }));
+  let submitTriggers = fields
+    .filter((f) => f.submitTrigger)
+    .map((f) => ({ name: f.name, defaultValue: f.defaultValue } as WatchField));
+
   let changeHandlers = fields
     .filter((f) => f.onChange)
-    .map((f) => ({ name: f.name, handler: f.onChange } as FieldWatcher));
+    .map(
+      (f) =>
+        ({
+          name: f.name,
+          defaultValue: f.defaultValue,
+          handler: f.onChange,
+        } as WatchField)
+    );
 
   const renderFieldEditors = (items: FormField[], methods: any) => {
     let groupedEditors: Record<string, any[]> = {};

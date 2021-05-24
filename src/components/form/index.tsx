@@ -9,66 +9,86 @@ import { useDebouncedCallback } from "use-debounce";
 
 export type FormChildProps = UseFormReturn;
 
-export type FieldWatcher{
-  name : string ,
-  handler : (value:any)=>void,
-  defaultValue? : any
+export interface WatchField {
+  name: string;
+  handler: (value: any) => void;
+  defaultValue?: any;
 }
 
 export interface AutoSubmitFormProps {
-  changeHandlers?: FieldWatcher[];
+  changeHandlers?: WatchField[];
   defaultValues: any;
   autoSubmit?: boolean;
-  autoSubmitFields?: string[];
+  autoSubmitFields?: WatchField[];
   submitTreshould?: number;
   onSubmit?: (state: any) => void;
   children?: (props: FormChildProps) => React.ReactNode;
 }
 
 const Form: React.FC<AutoSubmitFormProps> = (props) => {
-  const methods = useForm({ defaultValues: props.defaultValues , mode:"onTouched" });
+  const methods = useForm({
+    defaultValues: props.defaultValues,
+    mode: "onTouched",
+  });
   const {
     handleSubmit,
     watch,
     formState: { isValid, errors },
     getValues,
     reset,
+    control,
   } = methods;
-  const { onSubmit, children, changeHandlers, submitTreshould, autoSubmit,autoSubmitFields } = props;
+  const {
+    onSubmit,
+    children,
+    changeHandlers,
+    submitTreshould,
+    autoSubmit,
+    autoSubmitFields,
+  } = props;
   const formRef = useRef<HTMLFormElement>(null);
 
-  const onFormSubmit = () => {
+  const onFormSubmit = (values: any) => {
     if (!isValid && errors.length) {
       return;
     }
-    onSubmit && onSubmit(getValues());
+    onSubmit && onSubmit(values);
     return true;
   };
 
-  const debuncedSubmit = useDebouncedCallback(() => {
-    onFormSubmit();
+  const debuncedSubmit = useDebouncedCallback((values: any) => {
+    onFormSubmit(values);
   }, submitTreshould);
 
+  useEffect(() => {
+    control.watchInternal();
+    let watchSubscriptions = control.watchSubjectRef.current.subscribe({
+      next: ({ name: changingName, value }) => {
+        const getLiveValue = (name?: string | string[], defaultValues?: any) =>
+          control.watchInternal(name, defaultValues, false);
 
+        if (changingName) {
+          if (
+            autoSubmit &&
+            (!autoSubmitFields ||
+              !autoSubmitFields?.length ||
+              autoSubmitFields.some((f) => f.name === changingName))
+          ) {
+            debuncedSubmit(getLiveValue());
+          }
 
-  let watchers = autoSubmit ? (autoSubmitFields?.length ? watch(autoSubmitFields) : watch()) : [];
-
-  let lastSubmited: any = null;
-
-  if (autoSubmit) {
-    if (autoSubmitFields?.length) {
-      useEffect(() => {
-        debuncedSubmit();
-      }, Object.values(watchers));
-    } else {
-      useEffect(() => {
-        if (lastSubmited == null) {
-          debuncedSubmit();
-          lastSubmited = watchers;
+          let listener = changeHandlers?.find((f) => f.name === changingName);
+          if (listener) {
+            listener.handler(
+              getLiveValue(changingName, props.defaultValues[changingName])
+            );
+          }
         }
-      }, [watchers]);
-    }
-  }
+      },
+    });
+
+    return () => watchSubscriptions.unsubscribe();
+  }, []);
 
   useEffect(() => {
     if (props.defaultValues) {
@@ -92,7 +112,7 @@ const Form: React.FC<AutoSubmitFormProps> = (props) => {
 
 Form.defaultProps = {
   autoSubmit: false,
-  watchFor: [],
+  autoSubmitFields: [],
   submitTreshould: 1000,
 };
 
