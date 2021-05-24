@@ -1,8 +1,8 @@
 import { FormBuilder } from "components/form-builder/form-builder";
 import { FormField, FormFieldType } from "components/form-builder/types";
 import { Box, Button } from "grommet";
-import _ from "lodash";
 import { useMemo, useState } from "react";
+import { RemoteDataSource } from "../types";
 
 const countries = [
   {
@@ -106,8 +106,7 @@ const cities = [
 ];
 
 export const CascadingSelections = () => {
-  let [country, setCountry] = useState<any>(null);
-  let cid = useMemo(() => (country?.id), [country]);
+  let [citiesSource, setCitiesSource] = useState<any[] | RemoteDataSource>([]);
 
   let fields: FormField[] = [
     {
@@ -117,25 +116,25 @@ export const CascadingSelections = () => {
       options: countries,
       itemLabelKey: "name",
       itemValueKey: "id",
-      onChange: (value) => {setCountry(value)},
+      onChange: (cid) => {
+        setCitiesSource({
+          url: "/api/cities",
+          extraParams: {
+            cid,
+          },
+          mockResponse: (mock) => {
+            mock.onGet("/api/cities").reply(({ params: { cid } }) => {
+              return [200, cities.filter((c) => c.cid === cid)];
+            });
+          }
+        });
+      },
     },
     {
       name: "province",
       label: "Province",
       type: FormFieldType.DropDown,
-      options: !cid
-        ? []
-        : {
-            url: "/api/cities",
-            extraParams: {
-              cid
-            },
-            mockResponse: (mock) => {
-              mock.onGet("/api/cities").reply(({ params: { cid } }) => {
-                return [200, cities.filter((c) => c.cid === cid)];
-              });
-            },
-          },
+      options:citiesSource,
       itemLabelKey: "name",
       itemValueKey: "id",
     },
