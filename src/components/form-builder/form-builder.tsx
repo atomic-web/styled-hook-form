@@ -138,7 +138,7 @@ const FormBuilder: React.FC<FormBuilderProps> = (props) => {
     }
   };
 
-  let submitTriggers = fields.filter((f) => f.submitTrigger).map((f) => f.name);
+  let submitTriggers = fields.filter((f) => f.submitTrigger).map((f) => ({name : f.name , }));
   let changeHandlers = fields
     .filter((f) => f.onChange)
     .map((f) => ({ name: f.name, handler: f.onChange } as FieldWatcher));
