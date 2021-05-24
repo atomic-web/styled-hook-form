@@ -124,9 +124,13 @@ export const CascadingSelections = () => {
           },
           mockResponse: (mock) => {
             mock.onGet("/api/cities").reply(({ params: { cid } }) => {
-              return [200, cities.filter((c) => c.cid === cid)];
+              return new Promise((res) => {
+                setTimeout(() => {
+                  res([200, cities.filter((c) => c.cid === cid)]);
+                }, 1000);
+              });
             });
-          }
+          },
         });
       },
     },
@@ -134,16 +138,20 @@ export const CascadingSelections = () => {
       name: "province",
       label: "Province",
       type: FormFieldType.DropDown,
-      options:citiesSource,
+      options: citiesSource,
       itemLabelKey: "name",
       itemValueKey: "id",
     },
   ];
 
+  const handleSubmit = (values: any) => {
+    alert(JSON.stringify(values));
+  };
+
   return (
     <Box width="medium">
-      <FormBuilder fields={fields}>
-        <Button label="Submit" type="submit" />
+      <FormBuilder fields={fields} onSubmit={handleSubmit}>
+        <Button label="Submit" type="submit" primary />
       </FormBuilder>
     </Box>
   );
