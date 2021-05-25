@@ -1,10 +1,7 @@
 import React, { FormEvent, useEffect, useRef } from "react";
-import {
-  FormProvider,
-  useForm,
-  UseFormReturn,
-} from "react-hook-form";
+import { FormProvider, useForm, UseFormReturn } from "react-hook-form";
 import { useDebouncedCallback } from "use-debounce";
+import equals from "fast-deep-equal";
 
 export type FormChildProps = UseFormReturn;
 
@@ -44,10 +41,12 @@ const Form: React.FC<AutoSubmitFormProps> = (props) => {
     autoSubmitFields,
   } = props;
   const formRef = useRef<HTMLFormElement>(null);
+  const valuesRef = useRef<any | null>(null);
 
   useEffect(() => {
-    if (Object.values(props.defaultValues).some((v) => v !== undefined)) {
+    if (!equals(valuesRef.current, props.defaultValues)) {
       reset(props.defaultValues);
+      valuesRef.current = props.defaultValues;
     }
   }, [props.defaultValues]);
 
