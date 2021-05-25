@@ -21,5 +21,8 @@ or
 
 There is no css dependency or whatsoever, so you won't be spending you'r precious minutes dealing with css monster 😃. 
 
+# Working Demo
+Check this [storybook](https://6096dd058e820000392c7809-vidpcdkgre.chromatic.com/?path=/story/example-introduction--page) to see `grommet-hook-form` in action. Stories are  improving constantly , so stay tuned.
+
 # Documentation
 Working on it...
