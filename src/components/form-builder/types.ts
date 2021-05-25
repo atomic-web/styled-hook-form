@@ -121,3 +121,7 @@ export interface FormBuilderProps<TModel = any>
 }
 
 export type FormEditorPropsBase = Pick<FormFieldBase, "validationRules"> & {};
+
+export interface FormBuilderRef{
+   methods : UseFormReturn
+}

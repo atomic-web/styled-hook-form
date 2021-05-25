@@ -1,7 +1,12 @@
-import React, { useEffect, useState } from "react";
+import React, { forwardRef, useEffect, useState } from "react";
 import Form, { WatchField } from "../form";
 import styled from "styled-components";
-import { FormBuilderProps, FormField, ValidateWithMethods } from "./types";
+import {
+  FormBuilderProps,
+  FormBuilderRef,
+  FormField,
+  ValidateWithMethods,
+} from "./types";
 import { EditorMap } from "./editor-map";
 import { UseFormReturn, ValidateResult } from "react-hook-form";
 import WidthEditorWrap from "./editors/shared/editor-wrap";
@@ -104,152 +109,172 @@ const renderField = (field: FormField, methods: UseFormReturn<any>) => {
   );
 };
 
-const FormBuilder: React.FC<FormBuilderProps> = (props) => {
-  let {
-    fields,
-    children,
-    onSubmit,
-    className,
-    beforeSubmit,
-    model,
-    rows,
-    columns,
-    areas,
-  } = props;
+const FormBuilder = forwardRef<FormBuilderRef | null, FormBuilderProps>(
+  (props, ref) => {
+    let {
+      fields,
+      children,
+      onSubmit,
+      className,
+      beforeSubmit,
+      model,
+      rows,
+      columns,
+      areas,
+    } = props;
 
-  const getAggValues = () => ({
-    ...fields.reduce((p: any, c: FormField) => {
-      p[c.name] = c.defaultValue;
-      return p;
-    }, {}),
-    ...model,
-  });
+    const getAggValues = () => ({
+      ...fields.reduce((p: any, c: FormField) => {
+        p[c.name] = c.defaultValue;
+        return p;
+      }, {}),
+      ...model,
+    });
 
-  let [defaulValues, setDefautValues] = useState(getAggValues);
+    let [defaulValues, setDefautValues] = useState(getAggValues);
 
-  useEffect(() => {
-    setDefautValues(getAggValues());
-  }, [model, fields]);
+    useEffect(() => {
+      setDefautValues(getAggValues());
+    }, [model, fields]);
 
-  const handleSubmit = (values: any) => {
-    let shoudlSubmit = beforeSubmit ? beforeSubmit(values) : true;
-    if (shoudlSubmit) {
-      onSubmit?.call(null, values);
+    const handleSubmit = (values: any) => {
+      let shoudlSubmit = beforeSubmit ? beforeSubmit(values) : true;
+      if (shoudlSubmit) {
+        onSubmit?.call(null, values);
+      }
+    };
+
+    let submitTriggers = fields
+      .filter((f) => f.submitTrigger)
+      .map(
+        (f) => ({ name: f.name, defaultValue: f.defaultValue } as WatchField)
+      );
+
+    let changeHandlers = fields
+      .filter((f) => f.onChange)
+      .map(
+        (f) =>
+          ({
+            name: f.name,
+            defaultValue: f.defaultValue,
+            handler: f.onChange,
+          } as WatchField)
+      );
+
+    const renderFieldEditors = (items: FormField[], methods: any) => {
+      let groupedEditors: Record<string, any[]> = {};
+
+      items = items.map((item, index) => ({
+        ...item,
+        order: item.order ?? index,
+      }));
+
+      items
+        .sort((a, b) => a.order! - b.order!)
+        .forEach((field) => {
+          let fieldEditor = renderField(field, methods);
+          if (field.gridArea) {
+            let existingArea = groupedEditors[field.gridArea];
+            groupedEditors[field.gridArea] = existingArea
+              ? [...existingArea, fieldEditor]
+              : [fieldEditor];
+          } else {
+            groupedEditors["no-area"] = groupedEditors["no-area"]
+              ? [...groupedEditors["no-area"], fieldEditor]
+              : [fieldEditor];
+          }
+        });
+
+      return Object.keys(groupedEditors).map((k) => (
+        <Box gridArea={k} key={k} pad="small">
+          {groupedEditors[k].map((field) => (
+            <Box key={field.key}>{field}</Box>
+          ))}
+        </Box>
+      ));
+    };
+
+    if (
+      (rows && (!columns || !areas)) ||
+      (columns && (!rows || !areas)) ||
+      (areas && (!columns || !rows))
+    ) {
+      throw new Error(
+        "`columns` , `rows` and `areas` should be defined defined together!"
+      );
     }
-  };
 
-  let submitTriggers = fields
-    .filter((f) => f.submitTrigger)
-    .map((f) => ({ name: f.name, defaultValue: f.defaultValue } as WatchField));
+    let gridDefined: boolean = true;
 
-  let changeHandlers = fields
-    .filter((f) => f.onChange)
-    .map(
-      (f) =>
-        ({
-          name: f.name,
-          defaultValue: f.defaultValue,
-          handler: f.onChange,
-        } as WatchField)
-    );
+    if (!rows) {
+      gridDefined = false;
+      rows = ["flex", "xsmall"];
+      columns = ["flex"];
+      areas = [
+        {
+          name: "body",
+          start: [0, 0],
+          end: [0, 0],
+        },
+        {
+          name: "actions",
+          start: [0, 1],
+          end: [0, 1],
+        },
+      ];
+    }
 
-  const renderFieldEditors = (items: FormField[], methods: any) => {
-    let groupedEditors: Record<string, any[]> = {};
+    const renderChildren = (
+      children:
+        | React.ReactChild
+        | ((methods: UseFormReturn) => React.ReactNode),
+      methods: UseFormReturn
+    ) => (typeof children === "function" ? children(methods) : children);
 
-    items = items.map((item, index) => ({
-      ...item,
-      order: item.order ?? index,
-    }));
-
-    items
-      .sort((a, b) => a.order! - b.order!)
-      .forEach((field) => {
-        let fieldEditor = renderField(field, methods);
-        if (field.gridArea) {
-          let existingArea = groupedEditors[field.gridArea];
-          groupedEditors[field.gridArea] = existingArea
-            ? [...existingArea, fieldEditor]
-            : [fieldEditor];
-        } else {
-          groupedEditors["no-area"] = groupedEditors["no-area"]
-            ? [...groupedEditors["no-area"], fieldEditor]
-            : [fieldEditor];
-        }
-      });
-
-    return Object.keys(groupedEditors).map((k) => (
-      <Box gridArea={k} key={k} pad="small">
-        {groupedEditors[k].map((field) => (
-          <Box key={field.key}>{field}</Box>
-        ))}
-      </Box>
-    ));
-  };
-
-  if (
-    (rows && (!columns || !areas)) ||
-    (columns && (!rows || !areas)) ||
-    (areas && (!columns || !rows))
-  ) {
-    throw new Error(
-      "`columns` , `rows` and `areas` should be defined defined together!"
+    return (
+      <StyledFormBuilder className={className}>
+        <Form
+          defaultValues={defaulValues}
+          onSubmit={handleSubmit}
+          autoSubmit={submitTriggers?.length > 0 ? true : false}
+          autoSubmitFields={submitTriggers || []}
+          changeHandlers={changeHandlers}
+        >
+          {({ ...methods }) => {
+            if (ref) {
+              let refObj = {
+                methods,
+              };
+              if (typeof ref === "function") {
+                ref(refObj);
+              } else {
+                ref.current = refObj;
+              }
+            }
+            return (
+              <Grid rows={rows} columns={columns} areas={areas} fill>
+                {gridDefined ? (
+                  renderFieldEditors(fields, methods)
+                ) : (
+                  <Box gridArea="body">
+                    {renderFieldEditors(fields, methods)}
+                  </Box>
+                )}
+                {children &&
+                  (gridDefined ? (
+                    renderChildren(children as any, methods)
+                  ) : (
+                    <Box gridArea="actions">
+                      {renderChildren(children as any, methods)}
+                    </Box>
+                  ))}
+              </Grid>
+            );
+          }}
+        </Form>
+      </StyledFormBuilder>
     );
   }
-
-  let gridDefined: boolean = true;
-
-  if (!rows) {
-    gridDefined = false;
-    rows = ["flex", "xsmall"];
-    columns = ["flex"];
-    areas = [
-      {
-        name: "body",
-        start: [0, 0],
-        end: [0, 0],
-      },
-      {
-        name: "actions",
-        start: [0, 1],
-        end: [0, 1],
-      },
-    ];
-  }
-
-  const renderChildren = (
-    children: React.ReactChild | ((methods: UseFormReturn) => React.ReactNode),
-    methods: UseFormReturn
-  ) => (typeof children === "function" ? children(methods) : children);
-
-  return (
-    <StyledFormBuilder className={className}>
-      <Form
-        defaultValues={defaulValues}
-        onSubmit={handleSubmit}
-        autoSubmit={submitTriggers?.length > 0 ? true : false}
-        autoSubmitFields={submitTriggers || []}
-        changeHandlers={changeHandlers}
-      >
-        {({ ...methods }) => (
-          <Grid rows={rows} columns={columns} areas={areas} fill>
-            {gridDefined ? (
-              renderFieldEditors(fields, methods)
-            ) : (
-              <Box gridArea="body">{renderFieldEditors(fields, methods)}</Box>
-            )}
-            {children &&
-              (gridDefined ? (
-                renderChildren(children as any, methods)
-              ) : (
-                <Box gridArea="actions">
-                  {renderChildren(children as any, methods)}
-                </Box>
-              ))}
-          </Grid>
-        )}
-      </Form>
-    </StyledFormBuilder>
-  );
-};
+);
 
 export { FormBuilder };
