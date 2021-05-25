@@ -1,4 +1,4 @@
-import React, { FormEvent, useEffect, useRef } from "react";
+import React, { FormEvent, useEffect, useRef, useState } from "react";
 import {
   Controller,
   FormProvider,
@@ -32,9 +32,7 @@ const Form: React.FC<AutoSubmitFormProps> = (props) => {
   });
   const {
     handleSubmit,
-    watch,
     formState: { isValid, errors },
-    getValues,
     reset,
     control,
   } = methods;
@@ -47,6 +45,12 @@ const Form: React.FC<AutoSubmitFormProps> = (props) => {
     autoSubmitFields,
   } = props;
   const formRef = useRef<HTMLFormElement>(null);
+
+  useEffect(() => {
+    if (Object.values(props.defaultValues).some((v) => v !== undefined)) {
+      reset(props.defaultValues);
+    }
+  }, [props.defaultValues]);
 
   const onFormSubmit = (values: any) => {
     if (!isValid && errors.length) {
@@ -61,12 +65,10 @@ const Form: React.FC<AutoSubmitFormProps> = (props) => {
   }, submitTreshould);
 
   useEffect(() => {
-    control.watchInternal();
     let watchSubscriptions = control.watchSubjectRef.current.subscribe({
-      next: ({ name: changingName, value }) => {
+      next: ({ name: changingName }) => {
         const getLiveValue = (name?: string | string[], defaultValues?: any) =>
           control.watchInternal(name, defaultValues, false);
-
         if (changingName) {
           if (
             autoSubmit &&
@@ -77,7 +79,9 @@ const Form: React.FC<AutoSubmitFormProps> = (props) => {
             debuncedSubmit(getLiveValue());
           }
 
-          let listener = changeHandlers?.find((f) => f.name === changingName);
+          let listener =
+            changeHandlers?.find((f) => f.name === changingName) ?? null;
+
           if (listener) {
             listener.handler(
               getLiveValue(changingName, props.defaultValues[changingName])
@@ -89,13 +93,6 @@ const Form: React.FC<AutoSubmitFormProps> = (props) => {
 
     return () => watchSubscriptions.unsubscribe();
   }, []);
-
-  useEffect(() => {
-    if (props.defaultValues) {
-      reset(props.defaultValues);
-    }
-  }, [props.defaultValues]);
-
   const handleFormSubmit = (e: FormEvent) => {
     e.stopPropagation();
     handleSubmit(onFormSubmit)(e);
