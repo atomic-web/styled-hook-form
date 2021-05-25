@@ -13,7 +13,9 @@
     "chromatic": "cross-env CHROMATIC_PROJECT_TOKEN=bbe47529dd72 chromatic",
     "dev": "start-storybook -p 6006",
     "build:sb": "build-storybook",
-    "test": "jest --runInBand"
+    "test": "jest --runInBand",
+    "type-check" : "npx tsc --noEmit",
+    "prepare": "husky install"
   },
   "engines": {
     "node": ">= 12"
