@@ -1,4 +1,3 @@
-import React from 'react';
 import { render } from "@testing-library/react";
 import { FormBuilder } from "../../../../form-builder/form-builder";
 import { FormFieldType } from "../../../../form-builder/types";
@@ -27,7 +26,7 @@ describe("DropDown Editor", () => {
       );
     };
 
-    let { container, getByText } = render(<DropDownField />);
+    let { container } = render(<DropDownField />);
     expect(container.firstElementChild).toMatchSnapshot();
   });
 });

@@ -1,7 +1,7 @@
 import { FormBuilder } from "components/form-builder/form-builder";
 import { FormField, FormFieldType } from "components/form-builder/types";
 import { Box, Button } from "grommet";
-import { name, datatype } from "faker";
+import { name } from "faker";
 
 export const RemoteOptions = () => {
   let fields: FormField[] = [

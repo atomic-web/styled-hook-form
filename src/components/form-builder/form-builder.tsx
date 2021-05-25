@@ -3,7 +3,7 @@ import Form, { WatchField } from "../form";
 import styled from "styled-components";
 import { FormBuilderProps, FormField, ValidateWithMethods } from "./types";
 import { EditorMap } from "./editor-map";
-import { UseFormReturn, Validate, ValidateResult } from "react-hook-form";
+import { UseFormReturn, ValidateResult } from "react-hook-form";
 import WidthEditorWrap from "./editors/shared/editor-wrap";
 import { Box, Grid } from "grommet";
 
@@ -251,7 +251,5 @@ const FormBuilder: React.FC<FormBuilderProps> = (props) => {
     </StyledFormBuilder>
   );
 };
-
-const formAdapter = () => {};
 
 export { FormBuilder };

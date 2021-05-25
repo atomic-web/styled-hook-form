@@ -5,7 +5,6 @@ import { FormBuilderProps, FormField, FormFieldType } from "../types";
 import styled from "styled-components";
 import { Box, Button, Layer } from "grommet";
 import React, { useState } from "react";
-import { useForm, UseFormReturn, useFormState } from "react-hook-form";
 
 const meta: Meta = {
   title: "Form Builder/Overview",

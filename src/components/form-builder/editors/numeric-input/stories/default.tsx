@@ -1,11 +1,8 @@
 import { FormBuilder } from "../../../../form-builder/form-builder";
-import { Box, Button, Spinner } from "grommet";
+import { Box, Button } from "grommet";
 import { FormField, FormFieldType } from "components/form-builder/types";
 import { Save } from "grommet-icons";
-import { useState } from "react";
 import { GHFContextProvider } from "context";
-import { UseFormReturn } from "react-hook-form";
-import { Checkmark, Close } from "grommet-icons";
 
 export const Default = () => {
   const handleSubmit = (values: any) => {

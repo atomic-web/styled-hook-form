@@ -8,7 +8,7 @@ import {
 } from "grommet";
 import { DataTableProps } from "./types";
 import DataTableLoader from "./loader";
-import React, { Fragment, useEffect, useMemo, useRef, useState } from "react";
+import React, { Fragment, useEffect, useMemo, useState } from "react";
 import { DataTableContextProvider, useDataTableContext } from "./data-context";
 import { usePagedData } from "../../utils/paged-data-source";
 import { PropType } from "../../../types/utils";

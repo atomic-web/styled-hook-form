@@ -72,7 +72,7 @@ export const Default = () => {
               return new Promise((resolve) => {
                 let data = new Array(page === 10 ? 5 : 10)
                   .fill(0)
-                  .map((_, i) => ({
+                  .map((_) => ({
                     id: ID() + 1,
                     name: `${name.firstName()} ${name.lastName()}`,
                     rem: datatype.number(100),
@@ -93,7 +93,7 @@ export const Default = () => {
               });
             });
           }}
-          onRequestError={(e) => {}}
+          onRequestError={() => {}}
           columns={columns}
         
         />

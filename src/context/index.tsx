@@ -1,4 +1,4 @@
-import React, { createContext, ReactNode, Reducer, useContext, useReducer } from "react";
+import React, { createContext, Reducer, useContext, useReducer } from "react";
 import { DefaultTheme } from "styled-components";
 import { FormTheme } from "../themes/base-theme";
 import { Grommet } from "grommet";
@@ -32,7 +32,7 @@ const GHFContextProvider: React.FC<GHFContextProviderProps> = (props) => {
       ...defaults.config
   };
 
-  const reducer : Reducer<GHFContextModel,GHFContextReducerAction> = (state: GHFContextModel, action: GHFContextReducerAction) => {
+  const reducer : Reducer<GHFContextModel,GHFContextReducerAction> = (state: GHFContextModel) => {
     return state;
   };
 

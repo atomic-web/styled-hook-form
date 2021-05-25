@@ -1,8 +1,7 @@
 import { FormBuilder } from "../../../../form-builder/form-builder";
-import { Box, Button, Drop, Text } from "grommet";
+import { Box, Button, Text } from "grommet";
 import { FormField, FormFieldType } from "components/form-builder/types";
 import { Add, Close } from "grommet-icons";
-import { useRef } from "react";
 
 const playersFormFields: FormField[] = [
   {

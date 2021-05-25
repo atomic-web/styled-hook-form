@@ -1,13 +1,13 @@
 import { DataTableContextModel, DataTableContextReducerAction } from "../types";
 import { Map } from "immutable";
 
-export const getSyncKey = ()=> (new Date()).getTime();
+export const getSyncKey = () => new Date().getTime();
 
 const findOrderedIndex = (
   list: any[],
   primaryKey: string,
   obj: any,
-  currentPage : number,
+  currentPage: number,
   orderDir: string = "asc",
   orderParam?: string
 ) => {
@@ -15,17 +15,16 @@ const findOrderedIndex = (
   let sortedList = list.sort((a, b) => {
     return typeof a[id_prop] === "number"
       ? a - b
-      : (orderDir === "asc"
+      : orderDir === "asc"
       ? ("" + a[id_prop]).localeCompare(b[id_prop])
-      : ("" + b.attr).localeCompare(a.attr));
-      
+      : ("" + b.attr).localeCompare(a.attr);
   }) as any;
   for (let i = 0; i < sortedList.length; i++) {
     let match =
       orderDir === "asc"
         ? obj[id_prop] < sortedList[i][id_prop]
         : obj[id_prop] > sortedList[i][id_prop];
-    if (match) {  
+    if (match) {
       return i > 0 ? i : currentPage === 1 ? 0 : -1;
     }
   }
@@ -44,11 +43,11 @@ const removeData = (
         : payload(item);
     return !match;
   });
-  
+
   return {
     ...state,
     data: newItems,
-    syncKey : getSyncKey()
+    syncKey: getSyncKey(),
   };
 };
 
@@ -82,30 +81,30 @@ const addData = (state: DataTableContextModel, payload: any | any[]) => {
     );
     if (idx >= 0) {
       newList.splice(idx, 0, item);
-      newList = newList.slice(0,state.pageSize!);
-    }else{
+      newList = newList.slice(0, state.pageSize!);
+    } else {
       prevPageItems++;
     }
   }
   let result = {
     ...state,
     data: [...newList],
-    totalRecords : state.totalRecords + items.length
+    totalRecords: state.totalRecords + items.length,
   } as any;
-  
-  if (prevPageItems){
+
+  if (prevPageItems) {
     result.neg_dirty = (result.neg_dirty ?? 0) + prevPageItems;
   }
 
-  if (result.neg_dirty === state.pageSize){
-      result.neg_dirty = 0;
-      result.currentPage ++;
-  }   
-debugger
+  if (result.neg_dirty === state.pageSize) {
+    result.neg_dirty = 0;
+    result.currentPage++;
+  }
+  debugger;
   return result;
 };
 
-const setData = (state: DataTableContextModel, payload: any | any[]) => {  
+const setData = (state: DataTableContextModel, payload: any | any[]) => {
   let items = Array.isArray(payload) ? payload : [payload];
   return {
     ...state,
@@ -153,7 +152,11 @@ const updateDataInPath = (
               item,
               path,
               value,
-              updaterFunc ?? ((props, v) => (props = v))
+              updaterFunc ??
+                ((props, v) => {
+                  props = {};
+                  Object.assign(props, v);
+                })
             )
           : item
       )
