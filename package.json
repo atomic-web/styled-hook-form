@@ -1,7 +1,7 @@
 {
-  "name": "gromet-hook-form",
-  "version": "0.1.30",
-  "description": "React library to craft smart forms leveraging grommet and react-hook-form",
+  "name": "styled-hook-form",
+  "version": "1.0.0-beta.0",
+  "description": "React form library for styled-components based on grommet and react-hook-form",
   "main": "lib/index.js",
   "sideEffects": false,
   "scripts": {
@@ -28,7 +28,7 @@
     "form"
   ],
   "author": "B-Esmaili",
-  "repository": "https://github.com/B-Esmaili/gmt-forms",
+  "repository": "https://github.com/atomic-web/styled-hook-form",
   "license": "ISC",
   "files": [
     "lib",
