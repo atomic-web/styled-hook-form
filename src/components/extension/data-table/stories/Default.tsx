@@ -1,7 +1,7 @@
 import { DataTable } from "..";
 import { name, address, phone, image, datatype } from "faker";
 import { Avatar, Box, ColumnConfig, Meter, Stack, Text } from "grommet";
-import { GHFContextProvider } from "gromet-hook-form";
+import { SHFContextProvider } from "gromet-hook-form";
 import { DataTableContextProvider } from "../data-context";
 
 const columns: ColumnConfig<any>[] = [
@@ -58,7 +58,7 @@ const ID = getId();
 
 export const Default = () => {
   return (
-    <GHFContextProvider>
+    <SHFContextProvider>
       <DataTableContextProvider>
         <DataTable
           primaryKey="id"
@@ -98,7 +98,7 @@ export const Default = () => {
         
         />
       </DataTableContextProvider>
-    </GHFContextProvider>
+    </SHFContextProvider>
   );
 };
 

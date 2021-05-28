@@ -2,9 +2,9 @@
 
 import { Dispatch } from "react";
 import { DeepMap } from "react-hook-form";
-import { GHFContextReducerAction } from "./actions/types";
+import { SHFContextReducerAction } from "./actions/types";
 
-export type GHFContextModel = GHFOptions & DeepMap<any, any> & {
+export type SHFContextModel = SHFOptions & DeepMap<any, any> & {
   ssr:boolean
 };
 
@@ -13,22 +13,22 @@ export type TranslatorFunc = (
   values?: object & Record<any, any>
 ) => string;
 
-export interface GHFContextReducer {
-  (state: GHFContextModel, action: GHFContextReducerAction): GHFContextModel;
+export interface SHFContextReducer {
+  (state: SHFContextModel, action: SHFContextReducerAction): SHFContextModel;
 }
 
-export interface GHFContextProviderValue {
-  config: GHFContextModel;
+export interface SHFContextProviderValue {
+  config: SHFContextModel;
   translate: TranslatorFunc;
-  dispatch: Dispatch<GHFContextReducerAction>;
+  dispatch: Dispatch<SHFContextReducerAction>;
 }
 
-export interface GHFOptions {
+export interface SHFOptions {
   translator?: TranslatorFunc;
 }
 
-export interface GHFContextProviderProps {
+export interface SHFContextProviderProps {
   children: React.ReactChild;
-  options?: GHFOptions;
+  options?: SHFOptions;
 }
  

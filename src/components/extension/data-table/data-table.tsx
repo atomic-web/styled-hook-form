@@ -1,4 +1,4 @@
-import { useGHFContext } from "../../../context";
+import { useSHFContext } from "../../../context";
 import {
   Box,
   DataTable as GrommetDataTable,
@@ -82,7 +82,7 @@ const DataTableImpl: React.FC<DataTableProps> = (props) => {
 
   let {
     config: { ssr: globalSSR },
-  } = useGHFContext();
+  } = useSHFContext();
 
   let {
     state: {

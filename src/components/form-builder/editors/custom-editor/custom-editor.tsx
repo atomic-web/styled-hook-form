@@ -1,13 +1,13 @@
 import React from 'react';
 import { FormField } from "../../../form-builder/types";
-import { useGHFContext } from "../../../../context";
+import { useSHFContext } from "../../../../context";
 import { Controller } from "react-hook-form";
 import { CustomEditorProps } from "./types";
 
 const CustomEditor: React.FC<FormField<CustomEditorProps>> = (props) => {
   
     let vrules = props.validationRules || {};
-    const {translate : T } = useGHFContext();
+    const {translate : T } = useSHFContext();
 
     let {
       name,

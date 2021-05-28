@@ -7,11 +7,11 @@ import {
 import { FileInputProps } from "./types";
 import { FileInput as GrommetFileInput } from "grommet";
 import { FormField } from "../../types";
-import { useGHFContext } from "../../../../context";
+import { useSHFContext } from "../../../../context";
 
 const FileInput = forwardRef<HTMLInputElement, FormField<FileInputProps>>(
   (props, ref) => {
-    const {translate : T } = useGHFContext();
+    const {translate : T } = useSHFContext();
 
     let {
       name,

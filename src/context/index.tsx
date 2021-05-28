@@ -3,19 +3,19 @@ import { DefaultTheme } from "styled-components";
 import { FormTheme } from "../themes/base-theme";
 import { Grommet } from "grommet";
 import {
-  GHFContextModel,
-  GHFContextProviderProps,    
-  GHFContextProviderValue,
+  SHFContextModel,
+  SHFContextProviderProps,    
+  SHFContextProviderValue,
 } from "./types";
 import { translate as FallbackTranslate } from "./actions";
-import { GHFContextReducerAction } from "./actions/types";
+import { SHFContextReducerAction } from "./actions/types";
 
 export interface WPTheme extends DefaultTheme {}
 
 export type DirectionType = "rtl" | "ltr" | undefined;
 
 
-const defaults: GHFContextProviderValue = {  
+const defaults: SHFContextProviderValue = {  
     config:{
       ssr: true
     },
@@ -23,34 +23,34 @@ const defaults: GHFContextProviderValue = {
     dispatch : ()=>{}
 };
 
-export const GHFContext = createContext<GHFContextProviderValue>(defaults);
+export const SHFContext = createContext<SHFContextProviderValue>(defaults);
 
-const GHFContextProvider: React.FC<GHFContextProviderProps> = (props) => {
+const SHFContextProvider: React.FC<SHFContextProviderProps> = (props) => {
   const { children, options } = props;
 
-  const _model: GHFContextModel = {
+  const _model: SHFContextModel = {
       ...defaults.config
   };
 
-  const reducer : Reducer<GHFContextModel,GHFContextReducerAction> = (state: GHFContextModel) => {
+  const reducer : Reducer<SHFContextModel,SHFContextReducerAction> = (state: SHFContextModel) => {
     return state;
   };
 
-  const [config , dispatch] = useReducer<Reducer<GHFContextModel,GHFContextReducerAction>>(reducer, _model);
+  const [config , dispatch] = useReducer<Reducer<SHFContextModel,SHFContextReducerAction>>(reducer, _model);
 
   const theme = FormTheme;
 
   return (
-    <GHFContext.Provider value={{
+    <SHFContext.Provider value={{
         config,
         translate : options?.translator ?? FallbackTranslate ,
         dispatch
     }}>
       <Grommet theme={theme} children={children} />
-    </GHFContext.Provider>
+    </SHFContext.Provider>
   );
 };
 
-const useGHFContext = ()=> useContext<GHFContextProviderValue>(GHFContext);
+const useSHFContext = ()=> useContext<SHFContextProviderValue>(SHFContext);
 
-export { GHFContextProvider , useGHFContext};
+export { SHFContextProvider , useSHFContext};

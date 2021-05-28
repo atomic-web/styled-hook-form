@@ -3,12 +3,12 @@ import { Controller } from "react-hook-form";
 import { TimeInputProps } from "./types";
 import { FormField } from "../../types";
 import { TimePicker } from "../../../extension/time-picker";
-import { useGHFContext } from "../../../../context";
+import { useSHFContext } from "../../../../context";
 
 const TimeInput: React.FC<FormField<TimeInputProps>> = (props) => {
   let vrules = props.validationRules || {};
 
-  const { translate: T } = useGHFContext();
+  const { translate: T } = useSHFContext();
 
   let {
     name,

@@ -3,7 +3,7 @@ import { FormBuilder } from "../form-builder";
 import React, { useEffect } from "react";
 import { HttpFormProps } from "./types";
 import { Box, Button, Spinner } from "grommet";
-import { useGHFContext } from "../../context";
+import { useSHFContext } from "../../context";
 import staticAxios from "axios";
 import MockAdapter from "axios-mock-adapter";
 
@@ -23,7 +23,7 @@ const HttpForm: React.FC<HttpFormProps> = (props) => {
     ...rest
   } = props;
 
-  let { translate: T } = useGHFContext();
+  let { translate: T } = useSHFContext();
   let [{ loading, data, error, response }, submitToServer] = useAxios(request, {
     manual: true,
   });

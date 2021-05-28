@@ -11,7 +11,7 @@ import { Box, BoxProps, CheckBox, Select, Text } from "grommet";
 import { FormField } from "../../types";
 import { Spinner } from "grommet";
 import { usePagedData } from "../../../utils/paged-data-source";
-import { useGHFContext } from "../../../../context";
+import { useSHFContext } from "../../../../context";
 
 const Option = memo((props: OptionProps) => {
   let { label, selected } = props;
@@ -30,7 +30,7 @@ const DefaultOptionLabel = ({ content }: { content: string }) => (
 const DropDown = forwardRef<HTMLButtonElement, FormField<DropDownProps>>(
   (props, ref) => {
     let vrules = props.validationRules || {};
-    const { translate: T } = useGHFContext();
+    const { translate: T } = useSHFContext();
 
     let {
       name,

@@ -3,13 +3,13 @@ import { Controller } from "react-hook-form";
 import { TextInputProps } from "./types";
 import { TextInput as GrommetTextInput } from "grommet";
 import { FormField } from "../../types";
-import { useGHFContext } from "../../../../context";
+import { useSHFContext } from "../../../../context";
 
 const TextInput = forwardRef<HTMLInputElement, FormField<TextInputProps>>(
   (props, ref) => {
     let vrules = props.validationRules || {};
 
-    const {translate : T } = useGHFContext();
+    const {translate : T } = useSHFContext();
 
     let {
       name,

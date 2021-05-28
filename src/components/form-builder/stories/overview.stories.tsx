@@ -1,6 +1,6 @@
 import { Story, Meta } from "@storybook/react/types-6-0";
 import { FormBuilder } from "../form-builder";
-import { GHFContextProvider } from "../../../index";
+import { SHFContextProvider } from "../../../index";
 import { FormBuilderProps, FormField, FormFieldType } from "../types";
 import styled from "styled-components";
 import { Box, Button, Layer } from "grommet";
@@ -153,7 +153,7 @@ const StyledFormBuilder = styled(FormBuilder)`
 `;
 
 const Template: Story<FormBuilderProps> = (args) => (
-  <GHFContextProvider>
+  <SHFContextProvider>
     <StyledFormBuilder
       {...args}
       onSubmit={(data) => alert(JSON.stringify(data))}
@@ -186,7 +186,7 @@ const Template: Story<FormBuilderProps> = (args) => (
         alignSelf="start"
       />
     </StyledFormBuilder>
-  </GHFContextProvider>
+  </SHFContextProvider>
 );
 
 export const SampleForm = Template.bind({});

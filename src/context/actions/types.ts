@@ -1,4 +1,4 @@
-export type GHFContextReducerAction = 
+export type SHFContextReducerAction = 
 |{
    
 }

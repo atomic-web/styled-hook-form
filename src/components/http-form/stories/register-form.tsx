@@ -1,5 +1,5 @@
 import { FormField, FormFieldType } from "../../form-builder";
-import { GHFContextProvider } from "../../../context";
+import { SHFContextProvider } from "../../../context";
 import { Box, Text } from "grommet";
 import { HttpForm } from "../http-form";
 interface MyModel {
@@ -54,7 +54,7 @@ export const Default = () => {
   ];
 
   return (
-    <GHFContextProvider>
+    <SHFContextProvider>
       <Box align="center">
         <Box
           width="25em"
@@ -94,7 +94,7 @@ export const Default = () => {
           ></HttpForm>
         </Box>
       </Box>
-    </GHFContextProvider>
+    </SHFContextProvider>
   );
 };
 

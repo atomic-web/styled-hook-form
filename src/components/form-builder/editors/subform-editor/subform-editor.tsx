@@ -1,6 +1,6 @@
 import React from "react";
 import { FormField } from "../../../form-builder/types";
-import { useGHFContext } from "../../../../context";
+import { useSHFContext } from "../../../../context";
 import { Controller } from "react-hook-form";
 import { SubFormEditorProps } from "./types";
 import { FormBuilder } from "../../../form-builder/form-builder";
@@ -8,7 +8,7 @@ import { Box } from "grommet";
 
 const SubFormEditor: React.FC<FormField<SubFormEditorProps>> = (props) => {
   let vrules = props.validationRules || {};
-  const { translate: T } = useGHFContext();
+  const { translate: T } = useSHFContext();
 
   let {
     name,

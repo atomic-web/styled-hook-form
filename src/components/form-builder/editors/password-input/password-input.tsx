@@ -5,7 +5,7 @@ import { TextInput as GrommetTextInput } from "grommet";
 import { FormField } from "../../types";
 import styled from "styled-components";
 import PasswordStrength from "./password-strength";
-import { useGHFContext } from "../../../../context";
+import { useSHFContext } from "../../../../context";
 
 const PasswordBoxWrap = styled.div`
   display: flex;
@@ -17,7 +17,7 @@ export const PasswordInput = forwardRef<
   FormField<PasswordInputProps>
 >((props, ref) => {
   let vrules = props.validationRules || {};
-  const {translate : T } = useGHFContext();
+  const {translate : T } = useSHFContext();
   
   const [passStrength, setPassStrength] = useState<number>(0);
 
