@@ -12,11 +12,11 @@ Cancel changes
 To start using this library issuing the following in you'r preferred terminal would be enough:
 
 ```
- yarn add gromet-hook-form  
+ yarn add styled-hook-form  
 ```
 or
 ```
- npm install gromet-hook-form 
+ npm install styled-hook-form 
 ```
 
 There is no css dependency or whatsoever, so you won't be spending you'r precious minutes dealing with css monster 😃. 
