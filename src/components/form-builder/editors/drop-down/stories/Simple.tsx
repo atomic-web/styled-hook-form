@@ -34,15 +34,15 @@ export const Simple = () => {
         multiple:true,
         options: [
           {
-            text: "Option1",
+            text1: "Option1",
             value: "option1",
           },
           {
-            text: "Option2",
+            text1: "Option2",
             value: "option2",
           },
           {
-            text: "Option3",
+            text1: "Option3",
             value: "option3",
           },
         ],
