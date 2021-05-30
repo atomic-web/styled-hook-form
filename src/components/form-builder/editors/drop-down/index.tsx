@@ -55,36 +55,30 @@ const DropDown = forwardRef<HTMLButtonElement, FormField<DropDownProps>>(
     let [remoteOptions, setRemoteOptions] = useState<any[]>([]);
     let [remoteSearchKey, setRemoteSearchKey] = useState<string>("");
 
-    let dataSourceOptions: RemoteDataSource | null = useMemo(
-      () =>{
-        return (options as object).hasOwnProperty("url")
-          ? ((options as unknown) as RemoteDataSource)
-          : null},
-      [options]
-    );
+    let dataSourceOptions: RemoteDataSource | null = useMemo(() => {
+      return (options as object).hasOwnProperty("url")
+        ? ((options as unknown) as RemoteDataSource)
+        : null;
+    }, [options]);
 
-    let {
-      loading = false,
-      nextPage = null,
-      hasMore = null,
-    } = usePagedData({
-          request: dataSourceOptions?.url ?? null,
-          pageParamName: dataSourceOptions?.pageKey,
-          pageSizeParamName: dataSourceOptions?.pageSizeKey,
-          searchParamName: dataSourceOptions?.searchKey,
-          searchParam: remoteSearchKey,
-          params: dataSourceOptions?.extraParams,
-          mockResponse: dataSourceOptions?.mockResponse,
-          onResponse: (data: any[], page: number) => {
-            setRemoteOptions((oldOptions) => {
-              let newOptions = [...(page > 1 ? oldOptions : []), ...data];
-              let option = getOptionsByValue(newOptions, computedValue);
-              setLocalValue(option);
-              return newOptions;
-            });
-            return data;
-          },
+    let { loading = false, nextPage = null, hasMore = null } = usePagedData({
+      request: dataSourceOptions?.url ?? null,
+      pageParamName: dataSourceOptions?.pageKey,
+      pageSizeParamName: dataSourceOptions?.pageSizeKey,
+      searchParamName: dataSourceOptions?.searchKey,
+      searchParam: remoteSearchKey,
+      params: dataSourceOptions?.extraParams,
+      mockResponse: dataSourceOptions?.mockResponse,
+      onResponse: (data: any[], page: number) => {
+        setRemoteOptions((oldOptions) => {
+          let newOptions = [...(page > 1 ? oldOptions : []), ...data];
+          let option = getOptionsByValue(newOptions, computedValue);
+          setLocalValue(option);
+          return newOptions;
         });
+        return data;
+      },
+    });
 
     let control = methods?.control;
 
@@ -186,21 +180,25 @@ const DropDown = forwardRef<HTMLButtonElement, FormField<DropDownProps>>(
     let selectContent = multiple
       ? (option: any) => {
           let selectedValues = localValue;
+
+          let opt_value = option[itemValueKey],
+            opt_label = option[itemLabelKey];
+
           return (
             <Option
               label={
                 renderItem ? (
                   renderItem(option)
                 ) : (
-                  <DefaultOptionLabel content={option[itemLabelKey]} />
+                  <DefaultOptionLabel content={opt_label} />
                 )
               }
               selected={
                 selectedValues && Array.isArray(selectedValues)
                   ? selectedValues.findIndex(
-                      (v) => v[itemValueKey] === option[itemValueKey]
+                      (v) => v[itemValueKey] === opt_value
                     ) !== -1
-                  : selectedValues === option[itemValueKey]
+                  : selectedValues === opt_value
               }
             />
           );
