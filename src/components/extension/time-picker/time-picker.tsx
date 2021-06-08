@@ -1,9 +1,4 @@
-import {
-  Box,
-  Drop,
-  RadioButtonGroup,
-  Text,
-} from "grommet";
+import { Box, Drop, RadioButtonGroup, Text } from "grommet";
 import React, {
   ChangeEvent,
   useCallback,
@@ -13,6 +8,13 @@ import React, {
 } from "react";
 import { TimePickerProps, TimeValue } from "./types";
 import { NumericUpDown } from "../numeric-updown";
+// @ts-ignore
+import { inputStyle } from "grommet/utils/styles";
+import styled from "styled-components";
+
+const InputBox = styled(Box)`
+   ${inputStyle}
+`;
 
 const to12Hour = (date: Date) => {
   let hours: number = date.getHours();
@@ -117,23 +119,28 @@ const TimePicker: React.FC<TimePickerProps> = (props) => {
   return (
     <Box>
       <Box direction="row">
-        <Box direction="row" ref={inputRef} align="center" onClick={handleFocus}
-        pad="small" border="all" round="small">
-          <Box basis="3em">
+        <InputBox
+          direction="row"
+          justify="start"
+          ref={inputRef}
+          align="center"
+          onClick={handleFocus}
+        >
+          <Box>
             <Text>{pad2(hour)}</Text>
           </Box>
           <span> : </span>
-          <Box basis="3em">
+          <Box>
             <Text>{pad2(min)}</Text>
           </Box>
           <span> : </span>
-          <Box basis="3em">
+          <Box>
             <Text>{pad2(second)}</Text>
           </Box>
-          <Box basis="3em" margin={{start:"0.5em"}}>
+          <Box margin={{ start: "0.5em" }}>
             <Text>{AMPM}</Text>
           </Box>
-        </Box>
+        </InputBox>
       </Box>
       {inputRef?.current && hasFocus && (
         <Drop
