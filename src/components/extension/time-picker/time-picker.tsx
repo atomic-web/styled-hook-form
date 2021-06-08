@@ -1,5 +1,16 @@
-import { Box, RadioButtonGroup } from "grommet";
-import React, { ChangeEvent, useEffect, useState } from "react";
+import {
+  Box,
+  Drop,
+  RadioButtonGroup,
+  Text,
+} from "grommet";
+import React, {
+  ChangeEvent,
+  useCallback,
+  useEffect,
+  useRef,
+  useState,
+} from "react";
 import { TimePickerProps, TimeValue } from "./types";
 import { NumericUpDown } from "../numeric-updown";
 
@@ -10,29 +21,43 @@ const to12Hour = (date: Date) => {
   let ampm = hours >= 12 ? "PM" : "AM";
   hours = hours % 12;
   hours = hours ? hours : 12;
-  return [hours, minutes,seconds, ampm];
+  return [hours, minutes, seconds, ampm];
 };
 
-const to24Hour = (hours: number, minutes: number , second:number, ampm: "AM" | "PM") => {
+const to24Hour = (
+  hours: number,
+  minutes: number,
+  second: number,
+  ampm: "AM" | "PM"
+) => {
   if (ampm == "PM" && hours < 12) hours = hours + 12;
   if (ampm == "AM" && hours == 12) hours = hours - 12;
-  return [hours, minutes,second];
+  return [hours, minutes, second];
 };
 
+const pad2 = (num: number) => num.toString().padStart(2, "0");
+
 const TimePicker: React.FC<TimePickerProps> = (props) => {
-  let [second, setSecond] = useState<number>(0);
-  let [min, setMin] = useState<number>(0);
-  let [hour, setHour] = useState<number>(0);
-  let [AMPM, setAMPM] = useState<"AM" | "PM" | null>("AM");
+  const [second, setSecond] = useState<number>(0);
+  const [min, setMin] = useState<number>(0);
+  const [hour, setHour] = useState<number>(0);
+  const [AMPM, setAMPM] = useState<"AM" | "PM" | null>("AM");
+  const [hasFocus, setHasFocus] = useState(false);
 
-  let [localValue, setLocalValue] = useState<Date | TimeValue | null>(null);
-  let { value , onChange } = props;
+  const [localValue, setLocalValue] = useState<Date | TimeValue | null>(null);
+  const { value: valueProp, onChange } = props;
+  const inputRef = useRef(null);
 
-  const updateValue = (hour: number, minute: number,second :number, ampm: "AM" | "PM") => {
+  const updateValue = (
+    hour: number,
+    minute: number,
+    second: number,
+    ampm: "AM" | "PM"
+  ) => {
     setLocalValue((lv) => {
       if (lv instanceof Date) {
-        let [_hour, _min , _second] = to24Hour(hour, minute,second, ampm);
-        lv.setHours(_hour,_min,_second);
+        let [_hour, _min, _second] = to24Hour(hour, minute, second, ampm);
+        lv.setHours(_hour, _min, _second);
       } else {
         lv!.seconds = second;
         lv!.hours = hour;
@@ -46,12 +71,10 @@ const TimePicker: React.FC<TimePickerProps> = (props) => {
   };
 
   useEffect(() => {
-    if (!value) {
-      value = new Date();
-    }
+    let value = valueProp ?? new Date();
 
     if (value instanceof Date) {
-      let [_hours, _mins,_seconds, _ampm] = to12Hour(value);
+      let [_hours, _mins, _seconds, _ampm] = to12Hour(value);
       setSecond(_seconds as number);
       setMin(_mins as number);
       setHour(_hours as number);
@@ -63,13 +86,13 @@ const TimePicker: React.FC<TimePickerProps> = (props) => {
       setAMPM(value.XM);
     }
     setLocalValue(value);
-  }, [value]);
+  }, [valueProp]);
 
   useEffect(() => {
     if (localValue) {
-      updateValue(hour, min,second, AMPM!);
+      updateValue(hour, min, second, AMPM!);
     }
-  }, [min, hour,second, AMPM]);
+  }, [min, hour, second, AMPM]);
 
   const handleHourChange = (h: number) => {
     setHour(h);
@@ -81,83 +104,125 @@ const TimePicker: React.FC<TimePickerProps> = (props) => {
 
   const handleSecondChange = (s: number) => {
     setSecond(s);
-  };  
+  };
+
+  const handleFocus = useCallback(() => {
+    setHasFocus(true);
+  }, []);
+
+  const handleBlur = useCallback(() => {
+    setHasFocus(false);
+  }, []);
 
   return (
-    <Box
-      margin={{
-        bottom: "0.5em",
-      }}
-      width="10em"
-      align="center"
-      border="all"
-      pad="small"
-      round="xsmall"
-      background="light-1"
-    >
-      <Box
-        direction="row"
-        align="center"
-        margin={{
-          vertical: "1em",
-        }}
-      >
-        <Box>
-          <NumericUpDown
-            value={hour}
-            minValue={1}
-            maxValue={23}
-            changeTreshold={80}
-            onChange={handleHourChange}
-          />
+    <Box>
+      <Box direction="row">
+        <Box direction="row" ref={inputRef} align="center" onClick={handleFocus}
+        pad="small" border="all" round="small">
+          <Box basis="3em">
+            <Text>{pad2(hour)}</Text>
+          </Box>
+          <span> : </span>
+          <Box basis="3em">
+            <Text>{pad2(min)}</Text>
+          </Box>
+          <span> : </span>
+          <Box basis="3em">
+            <Text>{pad2(second)}</Text>
+          </Box>
+          <Box basis="3em" margin={{start:"0.5em"}}>
+            <Text>{AMPM}</Text>
+          </Box>
         </Box>
-        <Box
-          margin={{
-            horizontal: "xsmall",
+      </Box>
+      {inputRef?.current && hasFocus && (
+        <Drop
+          target={inputRef.current!}
+          onClickOutside={handleBlur}
+          align={{
+            top: "bottom",
           }}
+          plain
         >
-          <NumericUpDown
-            value={min}
-            onChange={handleMinChange}
-            changeTreshold={80}
-            minValue={1}
-            maxValue={59}
-          />
-        </Box>
-        <Box>
-          <NumericUpDown
-            value={second}
-            minValue={1}
-            maxValue={59}
-            changeTreshold={80}
-            onChange={handleSecondChange}
-          />
-        </Box>
-      </Box>
-      <Box>
-        <Box>
-          <RadioButtonGroup
-            direction="row"
-            name={"sdsd"}
-            value={AMPM as string}
-            options={["AM", "PM"]}
-            onChange={(e : ChangeEvent<HTMLInputElement>) => setAMPM(e.target.value as any)}
-          >
-            {(option: string, { checked, hover }: any) => {
-              let background;
-              if (checked) background = "brand";
-              else if (hover) background = "light-4";
-              else background = "light-3";
-
-              return (
-                <Box background={background} pad="xsmall">
-                  {option}
-                </Box>
-              );
+          <Box
+            margin={{
+              bottom: "0.5em",
             }}
-          </RadioButtonGroup>
-        </Box>
-      </Box>
+            width="10em"
+            align="center"
+            border="all"
+            pad="small"
+            round="xsmall"
+            background="light-1"
+          >
+            <Box
+              direction="row"
+              align="center"
+              margin={{
+                vertical: "1em",
+              }}
+            >
+              <Box>
+                <NumericUpDown
+                  value={hour}
+                  minValue={1}
+                  maxValue={23}
+                  changeTreshold={80}
+                  onChange={handleHourChange}
+                />
+              </Box>
+              <Box
+                margin={{
+                  horizontal: "xsmall",
+                }}
+              >
+                <NumericUpDown
+                  value={min}
+                  onChange={handleMinChange}
+                  changeTreshold={80}
+                  minValue={1}
+                  maxValue={59}
+                />
+              </Box>
+              <Box>
+                <NumericUpDown
+                  value={second}
+                  minValue={1}
+                  maxValue={59}
+                  changeTreshold={80}
+                  onChange={handleSecondChange}
+                />
+              </Box>
+            </Box>
+            <Box>
+              <Box>
+                <RadioButtonGroup
+                  direction="row"
+                  name={"sdsd"}
+                  value={AMPM as string}
+                  options={["AM", "PM"]}
+                  onChange={(e: ChangeEvent<HTMLInputElement>) =>
+                    setAMPM(e.target.value as any)
+                  }
+                >
+                  {(option: string, { checked, hover }: any) => {
+                    let background;
+                    if (checked) background = "brand";
+                    else if (hover) background = "light-4";
+                    else background = "light-3";
+
+                    return (
+                      <Box background={background} pad="xsmall">
+                        {option}
+                      </Box>
+                    );
+                  }}
+                </RadioButtonGroup>
+              </Box>
+            </Box>
+          </Box>
+        </Drop>
+      )}
     </Box>
   );
 };
