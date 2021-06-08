@@ -1,4 +1,4 @@
-import React, { useMemo } from "react";
+import React, { Fragment, useMemo } from "react";
 import { forwardRef, useCallback, useEffect, useState, memo } from "react";
 import {
   Controller,
@@ -14,7 +14,7 @@ import { usePagedData } from "../../../utils/paged-data-source";
 import { useSHFContext } from "../../../../context";
 import styled from "styled-components";
 // @ts-ignore
-import {inputStyle} from 'grommet/utils/styles';
+import { inputStyle } from "grommet/utils/styles";
 
 const Option = memo((props: OptionProps) => {
   let { label, selected } = props;
@@ -26,9 +26,13 @@ const Option = memo((props: OptionProps) => {
   );
 });
 
-const LabelBox = styled.div<{plainLabel?:boolean}>`
-   ${({plainLabel})=> !plainLabel && inputStyle}
-   border:none;
+const LabelBox = styled(Box).attrs({
+  direction: "row",
+})<{ plainLabel?: boolean }>`
+  ${({ plainLabel }) => !plainLabel && inputStyle}
+  border:none;
+  display: flex;
+  flex-direction: row;
 `;
 
 const DefaultOptionLabel = ({ content }: { content: string }) => (
@@ -215,36 +219,38 @@ const DropDown = forwardRef<HTMLButtonElement, FormField<DropDownProps>>(
       : null;
 
     const valueLabel = () => {
-      let labels =
-        localValue && localValue.length ? (
-          localValue.map((val: any, idx: number) => (
-            <LabelBox
-              plainLabel={plainLabel}
-              key={val[itemValueKey]}
-            >
-              {renderItemLabel ? (
-                renderItemLabel!(
-                  val,
-                  {
-                    setValue: (setter: (prev: any[] | any) => any[] | any) => {
-                      let _value = setter(localValue);
-                      methods!.setValue(name, _value);
-                      setLocalValue(_value);
+      let labels = (
+        <LabelBox plainLabel={plainLabel}>
+          {localValue && localValue.length ? (
+            localValue.map((val: any, idx: number) => (
+              <Fragment key={val[itemValueKey]}>
+                {renderItemLabel ? (
+                  renderItemLabel!(
+                    val,
+                    {
+                      setValue: (
+                        setter: (prev: any[] | any) => any[] | any
+                      ) => {
+                        let _value = setter(localValue);
+                        methods!.setValue(name, _value);
+                        setLocalValue(_value);
+                      },
                     },
-                  },
-                  idx
-                )
-              ) : (
-                <>
-                  <Text children={val[itemLabelKey]} />
-                  {localValue!.length - 1 > idx && <span>,</span>}
-                </>
-              )}
-            </LabelBox>
-          ))
-        ) : (
-          <Text>{placeholder ?? T("drop-down-plcaholder")}</Text>
-        );
+                    idx
+                  )
+                ) : (
+                  <>
+                    <Text children={val[itemLabelKey]} />
+                    {localValue!.length - 1 > idx && <span>,</span>}
+                  </>
+                )}
+              </Fragment>
+            ))
+          ) : (
+            <Text>{placeholder ?? T("drop-down-plcaholder")}</Text>
+          )}
+        </LabelBox>
+      );
 
       let wrapElement = labelWrap
         ? React.cloneElement(labelWrap, {}, labels)
