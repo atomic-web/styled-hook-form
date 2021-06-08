@@ -16,8 +16,8 @@ export default meta;
 
 const fields: FormField[] = [
   {
-    label: "Full Name:",
-    name: "fullName",
+    label: "Text Input:",
+    name: "textInput",
     defaultValue: "",
     type: FormFieldType.Text,
     maxLength: 20,
@@ -26,32 +26,52 @@ const fields: FormField[] = [
     gridArea: "left",
   },
   {
-    label: "Zip Code:",
-    name: "age",
+    label: "Numeric Input",
+    name: "numericInput",
     defaultValue: 0,
     type: FormFieldType.Number,
-    tip: "Your age",
+    tip: "Numbers only",
     gridArea: "left",
   },
   {
-    label: "Appointment Date:",
-    name: "app_date",
+    label: "Date Input",
+    name: "dateVal",
     defaultValue: "",
     type: FormFieldType.Date,
     tip: "Enter your birtdate",
     gridArea: "left",
   },
   {
-    label: "Appointment Time:",
-    name: "app_time",
+    label: "Time Input:",
+    name: "timeVal",
     defaultValue: new Date(),
     type: FormFieldType.Time,
     tip: "Enter time of appointment",
     gridArea: "left",
   },
   {
-    label: "Programming Language :",
-    name: "plang",
+    label: "Single Select List",
+    name: "singleList",
+    defaultValue: 2,
+    type: FormFieldType.DropDown,
+    options: [
+      {
+        name: "Male",
+        value: 1,
+      },
+      {
+        name: "Female",
+        value: 2,
+      }
+    ],
+    itemLabelKey: "name",
+    itemValueKey: "value",
+    tip: "You are allowed to pick one",
+    gridArea: "right",
+  },
+  {
+    label: "Mutiple Select List",
+    name: "multiList",
     defaultValue: 2,
     type: FormFieldType.DropDown,
     options: [
@@ -70,7 +90,8 @@ const fields: FormField[] = [
     ],
     itemLabelKey: "name",
     itemValueKey: "value",
-    tip: "You'r prefered programming language",
+    multiple:true,
+    tip: "You can choose many",
     gridArea: "right",
   },
   {
