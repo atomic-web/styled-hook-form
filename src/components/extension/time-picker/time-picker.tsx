@@ -2,6 +2,7 @@ import { Box, Drop, RadioButtonGroup, Text } from "grommet";
 import React, {
   ChangeEvent,
   useCallback,
+  useContext,
   useEffect,
   useRef,
   useState,
@@ -10,10 +11,10 @@ import { TimePickerProps, TimeValue } from "./types";
 import { NumericUpDown } from "../numeric-updown";
 // @ts-ignore
 import { inputStyle } from "grommet/utils/styles";
-import styled from "styled-components";
+import styled, { ThemeContext } from "styled-components";
 
 const InputBox = styled(Box)`
-   ${inputStyle}
+  ${inputStyle}
 `;
 
 const to12Hour = (date: Date) => {
@@ -113,8 +114,11 @@ const TimePicker: React.FC<TimePickerProps> = (props) => {
   }, []);
 
   const handleBlur = useCallback(() => {
+    debugger;
     setHasFocus(false);
   }, []);
+
+  let themeContext = useContext(ThemeContext);
 
   return (
     <Box>
@@ -146,8 +150,16 @@ const TimePicker: React.FC<TimePickerProps> = (props) => {
         <Drop
           target={inputRef.current!}
           onClickOutside={handleBlur}
+          stretch={false}
           align={{
             top: "bottom",
+            ...(themeContext.dir == "rtl"
+              ? {
+                  right: "right",
+                }
+              : {
+                  left: "left",
+                }),
           }}
           plain
         >

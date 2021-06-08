@@ -7,6 +7,7 @@ import React from "react";
 // extend them!
 declare module "styled-components" {
   export interface DefaultTheme extends ThemeType {
+    dir? : "rtl" | undefined,
     validation?: {
       error?: {
         color: string;
