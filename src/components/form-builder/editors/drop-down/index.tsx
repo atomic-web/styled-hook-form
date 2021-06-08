@@ -33,6 +33,7 @@ const LabelBox = styled(Box).attrs({
   border:none;
   display: flex;
   flex-direction: row;
+  flex-wrap:wrap;
 `;
 
 const DefaultOptionLabel = ({ content }: { content: string }) => (
