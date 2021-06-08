@@ -100,7 +100,6 @@ const addData = (state: DataTableContextModel, payload: any | any[]) => {
     result.neg_dirty = 0;
     result.currentPage++;
   }
-  debugger;
   return result;
 };
 

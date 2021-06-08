@@ -1,4 +1,4 @@
-import React, { Fragment, useMemo } from "react";
+import React, { useMemo } from "react";
 import { forwardRef, useCallback, useEffect, useState, memo } from "react";
 import {
   Controller,
@@ -12,6 +12,9 @@ import { FormField } from "../../types";
 import { Spinner } from "grommet";
 import { usePagedData } from "../../../utils/paged-data-source";
 import { useSHFContext } from "../../../../context";
+import styled from "styled-components";
+// @ts-ignore
+import {inputStyle} from 'grommet/utils/styles';
 
 const Option = memo((props: OptionProps) => {
   let { label, selected } = props;
@@ -22,6 +25,11 @@ const Option = memo((props: OptionProps) => {
     </Box>
   );
 });
+
+const LabelBox = styled.div<{plainLabel?:boolean}>`
+   ${({plainLabel})=> !plainLabel && inputStyle}
+   border:none;
+`;
 
 const DefaultOptionLabel = ({ content }: { content: string }) => (
   <span> {content} </span>
@@ -46,6 +54,7 @@ const DropDown = forwardRef<HTMLButtonElement, FormField<DropDownProps>>(
       labelWrap,
       renderItem,
       renderItemLabel,
+      plainLabel,
       defaultValue: initialValue,
     } = props;
 
@@ -209,13 +218,15 @@ const DropDown = forwardRef<HTMLButtonElement, FormField<DropDownProps>>(
       let labels =
         localValue && localValue.length ? (
           localValue.map((val: any, idx: number) => (
-            <Fragment key={val[itemValueKey]}>
+            <LabelBox
+              plainLabel={plainLabel}
+              key={val[itemValueKey]}
+            >
               {renderItemLabel ? (
                 renderItemLabel!(
                   val,
                   {
                     setValue: (setter: (prev: any[] | any) => any[] | any) => {
-                      debugger;
                       let _value = setter(localValue);
                       methods!.setValue(name, _value);
                       setLocalValue(_value);
@@ -229,7 +240,7 @@ const DropDown = forwardRef<HTMLButtonElement, FormField<DropDownProps>>(
                   {localValue!.length - 1 > idx && <span>,</span>}
                 </>
               )}
-            </Fragment>
+            </LabelBox>
           ))
         ) : (
           <Text>{placeholder ?? T("drop-down-plcaholder")}</Text>
@@ -242,7 +253,6 @@ const DropDown = forwardRef<HTMLButtonElement, FormField<DropDownProps>>(
             {
               direction: "row",
               overflow: "hidden",
-              pad: "xsmall",
               wrap: true,
             } as BoxProps,
             labels

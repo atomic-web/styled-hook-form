@@ -23,6 +23,7 @@ export interface DropDownProps {
   itemValueKey: string;
   itemLabelKey: string;
   labelWrap?: React.ReactElement;
+  plainLabel?:boolean;
   renderItemLabel?: <TOption = any>(
     option: TOption,
     operations: DropDownOperations,

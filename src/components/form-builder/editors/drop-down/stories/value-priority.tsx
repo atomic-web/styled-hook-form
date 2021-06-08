@@ -35,7 +35,6 @@ export const ValuePriority = () => {
   ];
 
   const handleSubmit = (values: any) => {
-    debugger;
     alert(JSON.stringify(values));
   };
 
