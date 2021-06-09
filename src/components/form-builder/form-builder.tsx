@@ -200,7 +200,7 @@ const FormBuilder = forwardRef<FormBuilderRef | null, FormBuilderProps>(
       (areas && (!columns || !rows))
     ) {
       throw new Error(
-        "`columns` , `rows` and `areas` should be defined defined together!"
+        "`columns` , `rows` and `areas` should be defined together!"
       );
     }
 
