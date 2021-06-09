@@ -89,7 +89,7 @@ export const LoginForm = () => {
             }}
             request={{
               url: "api/user/signup",
-              method: "POST",
+              method: "POST"
             }}
           ></HttpForm>
         </Box>
