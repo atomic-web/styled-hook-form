@@ -1,5 +1,5 @@
 import useAxios from "axios-hooks";
-import { FormBuilder } from "../form-builder";
+import { FormBuilder, FormBuilderRef, FormFieldType } from "../form-builder";
 import React, { useEffect } from "react";
 import { HttpFormProps } from "./types";
 import { Box, Button, Spinner } from "grommet";
@@ -9,69 +9,87 @@ import MockAdapter from "axios-mock-adapter";
 
 const successCodes = [200, 201, 202];
 
-const HttpForm: React.FC<HttpFormProps> = (props) => {
-  let {
-    fields,
-    request,
-    onSuccess,
-    onError,
-    model,
-    loadingIndicator,
-    submitButton,
-    resetButton,
-    mockResponse,
-    ...rest
-  } = props;
+const HttpForm = React.forwardRef<FormBuilderRef, HttpFormProps>(
+  (props, ref) => {
+    let {
+      fields,
+      request,
+      onSuccess,
+      onError,
+      model,
+      loadingIndicator,
+      submitButton,
+      resetButton,
+      mockResponse,
+      children,
+      ...rest
+    } = props;
 
-  let { translate: T } = useSHFContext();
-  let [{ loading, data, error, response }, submitToServer] = useAxios(request, {
-    manual: true,
-  });
+    let { translate: T } = useSHFContext();
+    let [{ loading, data, error, response }, submitToServer] = useAxios(
+      request,
+      {
+        manual: true,
+      }
+    );
 
-  useEffect(() => {
-    if (response?.status && successCodes.indexOf(response?.status) != -1) {
-      onSuccess && onSuccess(data);
-    }
-  }, [data]);
+    useEffect(() => {
+      if (response?.status && successCodes.indexOf(response?.status) != -1) {
+        onSuccess && onSuccess(data);
+      }
+    }, [data]);
 
-  useEffect(() => {
-    (onError && error) && onError(error);
-  }, [error]);
+    useEffect(() => {
+      onError && error && onError(error);
+    }, [error]);
 
-  const handleSubmit = (data: any) => {
-    if (mockResponse) {
-      let mockAdapter = new MockAdapter(staticAxios);
-      mockResponse(mockAdapter);      
-    }
-    submitToServer({
-      data,
-    });
-  };
+    const handleSubmit = (data: any) => {
+      if (mockResponse) {
+        let mockAdapter = new MockAdapter(staticAxios);
+        mockResponse(mockAdapter);
+      }
 
-  return (
-    <FormBuilder
-      {...rest}
-      fields={fields}
-      onSubmit={handleSubmit}
-      model={model}
-    >
-      {submitButton && (
-        <Button
-          type="submit"
-          primary
-          icon={loading && !loadingIndicator ? <Spinner /> : <div />}
-          label={
-            <Box>
-              {typeof submitButton === "boolean"
-                ? T("form.submit.label")
-                : submitButton}
-            </Box>
-          }
-        />
-      )}
-    </FormBuilder>
-  );
-};
+      if (fields.some((f) => f.type === FormFieldType.File)) {
+        let formData = new FormData();
+
+        for (let field in data) {
+          formData.append(field, data[field]);
+        }
+        data = formData;
+      }
+
+      submitToServer({
+        data,
+      });
+    };
+
+    return (
+      <FormBuilder
+        {...rest}
+        ref={ref}
+        fields={fields}
+        onSubmit={handleSubmit}
+        model={model}
+      >
+        {children}
+        {submitButton && (
+          <Button
+            type="submit"
+            primary
+            icon={loading && !loadingIndicator ? <Spinner /> : <div />}
+            label={
+              <Box>
+                {typeof submitButton === "boolean"
+                  ? T("form.submit.label")
+                  : submitButton}
+              </Box>
+            }
+          />
+        )}
+      </FormBuilder>
+    );
+  }
+);
 
 HttpForm.defaultProps = {
   submitButton: true,
