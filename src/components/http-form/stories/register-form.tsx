@@ -9,7 +9,7 @@ interface MyModel {
   agree: boolean;
 }
 
-export const Default = () => {
+export const LoginForm = () => {
   let fields: FormField[] = [
     {
       type: FormFieldType.Text,

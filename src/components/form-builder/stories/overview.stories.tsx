@@ -16,42 +16,55 @@ export default meta;
 
 const fields: FormField[] = [
   {
-    label: "Text Input:",
     name: "textInput",
+    label: "Text Input:",
     defaultValue: "",
     type: FormFieldType.Text,
     maxLength: 20,
     minLength: 10,
-    tip: "First Name",
+    tip: "Plain Text Input",
     gridArea: "left",
   },
   {
-    label: "Numeric Input",
     name: "numericInput",
+    label: "Numeric Input",
     defaultValue: 0,
     type: FormFieldType.Number,
     tip: "Numbers only",
     gridArea: "left",
   },
   {
-    label: "Date Input",
     name: "dateVal",
+    label: "Date Input",
     defaultValue: "",
     type: FormFieldType.Date,
-    tip: "Enter your birtdate",
+    tip: "Date Value",
     gridArea: "left",
   },
   {
-    label: "Time Input:",
-    name: "timeVal",
-    defaultValue: new Date(),
-    type: FormFieldType.Time,
-    tip: "Enter time of appointment",
+    name: "password",
+    label: "Password",
+    defaultValue: "",
+    type: FormFieldType.Password,
+    tip: "Choose as passsword",
+    showPasswordStrength: true,
+    minPasswordStrength: 50,
+    required: true,
     gridArea: "left",
   },
   {
-    label: "Single Select List",
+    name: "boolCheckbox",
+    label: "Boolean Input Checkbox",
+    defaultValue: true,
+    type: FormFieldType.Boolean,
+    tip: "Bool input using checkbox",
+    required: true,
+    controlType: "checkbox",
+    gridArea: "left",
+  },
+  {
     name: "singleList",
+    label: "Single Select List",
     defaultValue: 2,
     type: FormFieldType.DropDown,
     options: [
@@ -70,8 +83,8 @@ const fields: FormField[] = [
     gridArea: "right",
   },
   {
-    label: "Mutiple Select List",
     name: "multiList",
+    label: "Mutiple Select List",
     defaultValue: 2,
     type: FormFieldType.DropDown,
     options: [
@@ -95,30 +108,16 @@ const fields: FormField[] = [
     gridArea: "right",
   },
   {
-    label: "Password",
-    name: "Password",
-    defaultValue: "",
-    type: FormFieldType.Password,
-    tip: "Choose as passsword",
-    showPasswordStrength: true,
-    minPasswordStrength: 50,
-    required: true,
-    gridArea: "right",
-  },
-
-  {
-    label: "Agree with terms",
-    name: "agree",
-    defaultValue: true,
-    type: FormFieldType.Boolean,
-    tip: "Upload you'r RESUME",
-    required: true,
-    controlType: "checkbox",
+    name: "timeVal",
+    label: "Time Input:",
+    defaultValue: new Date(),
+    type: FormFieldType.Time,
+    tip: "Time Input",
     gridArea: "right",
   },
   {
     name: "sub",
-    label: "Detail",
+    label: "Sub Form Editor",
     type: FormFieldType.SubForm,
     gridArea: "right",
     required: true,
@@ -149,7 +148,7 @@ const fields: FormField[] = [
               )}
             </Layer>
           )}
-          <Button label="Show Sub Info" onClick={() => setShowSub(true)} />
+          <Button label="Edit Form In Modal" onClick={() => setShowSub(true)} />
         </Box>
       );
     },
@@ -159,7 +158,7 @@ const fields: FormField[] = [
           name: "sub-info",
           label: "Sub Info",
           type: FormFieldType.Text,
-        },
+        }
       ],
     },
   },
@@ -210,8 +209,8 @@ const Template: Story<FormBuilderProps> = (args) => (
   </SHFContextProvider>
 );
 
-export const SampleForm = Template.bind({});
+export const Overview = Template.bind({});
 
-SampleForm.args = {
+Overview.args = {
   fields: fields,
 };
