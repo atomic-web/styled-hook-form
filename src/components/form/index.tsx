@@ -1,7 +1,7 @@
 import React, { FormEvent, useEffect, useRef } from "react";
 import { FormProvider, useForm, UseFormReturn } from "react-hook-form";
 import { useDebouncedCallback } from "use-debounce";
-import equals from "fast-deep-equal";
+import equals from "fast-deep-equal/es6";
 
 export type FormChildProps = UseFormReturn;
 
@@ -63,8 +63,8 @@ const Form: React.FC<AutoSubmitFormProps> = (props) => {
   }, submitTreshould);
 
   useEffect(() => {
-    let watchSubscriptions = control.watchSubjectRef.current.subscribe({
-      next: ({ name: changingName }) => {
+    let watchSubscriptions = control.subjectsRef.current.watch.subscribe({
+      next: ({ name: changingName }: any) => {
         const getLiveValue = (name?: string | string[], defaultValues?: any) =>
           control.watchInternal(name, defaultValues, false);
         if (changingName) {
