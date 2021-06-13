@@ -52,8 +52,15 @@ const HttpForm = React.forwardRef<FormBuilderRef, HttpFormProps>(
       if (fields.some((f) => f.type === FormFieldType.File)) {
         let formData = new FormData();
 
-        for (let field in data) {
-          formData.append(field, data[field]);
+        for (let fieldName in data) {
+          let field = data[fieldName];
+          if (field instanceof FileList) {
+            for (let [i, file] of Object.entries(field)) {
+              formData.append(`${fieldName}[${i}]`, file);
+            }
+          } else {
+            formData.append(fieldName, field);
+          }
         }
         data = formData;
       }

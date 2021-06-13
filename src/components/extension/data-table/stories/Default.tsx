@@ -1,7 +1,7 @@
 import { DataTable } from "..";
 import { name, address, phone, image, datatype } from "faker";
 import { Avatar, Box, ColumnConfig, Meter, Stack, Text } from "grommet";
-import { SHFContextProvider } from "gromet-hook-form";
+import { SHFContextProvider } from "styled-hook-form";
 import { DataTableContextProvider } from "../data-context";
 
 const columns: ColumnConfig<any>[] = [
