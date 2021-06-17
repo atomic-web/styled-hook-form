@@ -21,6 +21,7 @@ const HttpForm = React.forwardRef<FormBuilderRef, HttpFormProps>(
       submitButton,
       resetButton,
       mockResponse,
+      encodingMode = "AUTO",
       children,
       ...rest
     } = props;
@@ -49,7 +50,10 @@ const HttpForm = React.forwardRef<FormBuilderRef, HttpFormProps>(
         mockResponse(mockAdapter);
       }
 
-      if (fields.some((f) => f.type === FormFieldType.File)) {
+      if (
+        ["MUTIPART", "AUTO"].includes(encodingMode) ||
+        fields.some((f) => f.type === FormFieldType.File)
+      ) {
         let formData = new FormData();
 
         for (let fieldName in data) {

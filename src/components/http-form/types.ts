@@ -12,6 +12,7 @@ export type HttpFormProps<TModel=any,TServerResult=any,TResult=TServerResult,TEr
    onSuccess? : (data:TResult)=>void,
    request: AxiosRequestConfig | string,
    loadingIndicator?:()=>React.ReactNode,
+   encodingMode : "JSON" | "MUTIPART" | "AUTO",
    model? : TModel,
    submitButton? : boolean | React.ReactNode
    resetButton? : boolean | React.ReactNode,
