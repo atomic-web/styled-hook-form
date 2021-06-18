@@ -1,6 +1,7 @@
 import { AxiosRequestConfig } from "axios";
 import MockAdapter from "axios-mock-adapter/types";
 import React from "react";
+import { SelectProps } from "grommet";
 
 export interface RemoteDataSource {
   request: string | AxiosRequestConfig;
@@ -38,4 +39,5 @@ export interface DropDownProps {
   placeholder?: React.ReactNode;
   onSearch?: (text: string, options: any[]) => any[];
   renderItem?: <TOption = any>(options: TOption) => React.ReactNode;
+  selectProps : SelectProps
 }

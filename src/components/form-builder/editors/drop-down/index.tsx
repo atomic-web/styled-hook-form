@@ -60,6 +60,7 @@ const DropDown = forwardRef<HTMLButtonElement, FormField<DropDownProps>>(
       renderItem,
       renderItemLabel,
       plainLabel,
+      selectProps,
       defaultValue: initialValue,
     } = props;
 
@@ -81,6 +82,8 @@ const DropDown = forwardRef<HTMLButtonElement, FormField<DropDownProps>>(
       pageSizeParamName: dataSourceOptions?.pageSizeKey,
       searchParamName: dataSourceOptions?.searchKey,
       searchParam: remoteSearchKey,
+      listPropName:dataSourceOptions?.listKey,
+      totalPropName:dataSourceOptions?.totalKey,
       params: dataSourceOptions?.extraParams,
       mockResponse: dataSourceOptions?.mockResponse,
       onResponse: (data: any[], page: number) => {
@@ -280,6 +283,7 @@ const DropDown = forwardRef<HTMLButtonElement, FormField<DropDownProps>>(
         render={({ field }) => (
           <>
             <Select
+              {...selectProps}
               closeOnChange={!multiple}
               ref={ref as any}
               multiple={multiple}
