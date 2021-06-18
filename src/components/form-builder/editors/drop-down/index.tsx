@@ -80,6 +80,7 @@ const DropDown = forwardRef<HTMLButtonElement, FormField<DropDownProps>>(
       request: dataSourceOptions?.request ?? null,
       pageParamName: dataSourceOptions?.pageKey,
       pageSizeParamName: dataSourceOptions?.pageSizeKey,
+      pageSize:dataSourceOptions?.pageSize,
       searchParamName: dataSourceOptions?.searchKey,
       searchParam: remoteSearchKey,
       listPropName:dataSourceOptions?.listKey,
