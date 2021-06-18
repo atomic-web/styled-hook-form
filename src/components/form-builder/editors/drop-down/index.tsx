@@ -76,14 +76,19 @@ const DropDown = forwardRef<HTMLButtonElement, FormField<DropDownProps>>(
     }, [options]);
 
     let { loading = false, nextPage = null, hasMore = null } = usePagedData({
-      request: dataSourceOptions?.url ?? null,
+      request: dataSourceOptions?.request ?? null,
       pageParamName: dataSourceOptions?.pageKey,
       pageSizeParamName: dataSourceOptions?.pageSizeKey,
       searchParamName: dataSourceOptions?.searchKey,
+      listPropName:dataSourceOptions?.listKey,
+      totalPropName:dataSourceOptions?.totalKey,
       searchParam: remoteSearchKey,
       params: dataSourceOptions?.extraParams,
       mockResponse: dataSourceOptions?.mockResponse,
       onResponse: (data: any[], page: number) => {
+        if (dataSourceOptions?.onResponse){
+          data = dataSourceOptions.onResponse(data);
+        }
         setRemoteOptions((oldOptions) => {
           let newOptions = [...(page > 1 ? oldOptions : []), ...data];
           let option = getOptionsByValue(newOptions, computedValue);

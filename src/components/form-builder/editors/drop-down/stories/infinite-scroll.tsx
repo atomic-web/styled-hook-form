@@ -14,7 +14,7 @@ export const InfiniteScroll = () => {
       itemValueKey: "id",
       defaultValue: 0,
       options: {
-        url: "/api/categories",
+        request: "/api/categories",
         searchKey: "queryText",
         extraParams: { blaa: "Blaa" },
         mockResponse: (mock) => {

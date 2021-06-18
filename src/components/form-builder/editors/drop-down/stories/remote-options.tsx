@@ -13,7 +13,7 @@ export const RemoteOptions = () => {
       itemValueKey: "id",
       defaultValue: 0,
       options: {
-        url: "/api/options",
+        request: "/api/options",
         mockResponse: (mock) => {
           mock.onGet("/api/options").reply(() => {
             return [

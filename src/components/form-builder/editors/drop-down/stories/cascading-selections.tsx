@@ -118,7 +118,7 @@ export const CascadingSelections = () => {
       itemValueKey: "id",
       onChange: (cid) => {
         setCitiesSource({
-          url: "/api/cities",
+          request: "/api/cities",
           extraParams: {
             cid,
           },

@@ -1,12 +1,16 @@
+import { AxiosRequestConfig } from "axios";
 import MockAdapter from "axios-mock-adapter/types";
 import React from "react";
 
 export interface RemoteDataSource {
-  url: string;
+  request: string | AxiosRequestConfig;
   searchKey?: string;
   pageKey?: string;
   pageSizeKey?: string;
   extraParams? : any,
+  onResponse? : (data :any)=> any,
+  listKey?: string,
+  totalKey?: string,
   mockResponse? : (req: MockAdapter)=>void
 }
 
