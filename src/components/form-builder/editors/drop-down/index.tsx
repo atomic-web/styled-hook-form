@@ -89,6 +89,10 @@ const DropDown = forwardRef<HTMLButtonElement, FormField<DropDownProps>>(
       onResponse: (data: any[], page: number) => {
         if (dataSourceOptions?.onResponse){
           data = dataSourceOptions.onResponse(data);
+        }else{
+          if (!Array.isArray(data)){
+            data = data[dataSourceOptions?.listKey ?? "list"];
+          }
         }
         setRemoteOptions((oldOptions) => {
           let newOptions = [...(page > 1 ? oldOptions : []), ...data];
