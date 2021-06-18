@@ -8,6 +8,7 @@ export interface RemoteDataSource {
   searchKey?: string;
   pageKey?: string;
   pageSizeKey?: string;
+  pageSize?: string;
   extraParams? : any,
   onResponse? : (data :any)=> any,
   listKey?: string,
