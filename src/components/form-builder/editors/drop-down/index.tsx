@@ -70,7 +70,7 @@ const DropDown = forwardRef<HTMLButtonElement, FormField<DropDownProps>>(
     let [remoteSearchKey, setRemoteSearchKey] = useState<string>("");
 
     let dataSourceOptions: RemoteDataSource | null = useMemo(() => {
-      return (options as object).hasOwnProperty("url")
+      return (options as object).hasOwnProperty("request")
         ? ((options as unknown) as RemoteDataSource)
         : null;
     }, [options]);
@@ -80,8 +80,6 @@ const DropDown = forwardRef<HTMLButtonElement, FormField<DropDownProps>>(
       pageParamName: dataSourceOptions?.pageKey,
       pageSizeParamName: dataSourceOptions?.pageSizeKey,
       searchParamName: dataSourceOptions?.searchKey,
-      listPropName:dataSourceOptions?.listKey,
-      totalPropName:dataSourceOptions?.totalKey,
       searchParam: remoteSearchKey,
       params: dataSourceOptions?.extraParams,
       mockResponse: dataSourceOptions?.mockResponse,
