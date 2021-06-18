@@ -39,5 +39,5 @@ export interface DropDownProps {
   placeholder?: React.ReactNode;
   onSearch?: (text: string, options: any[]) => any[];
   renderItem?: <TOption = any>(options: TOption) => React.ReactNode;
-  selectProps : SelectProps
+  selectProps? : SelectProps
 }
