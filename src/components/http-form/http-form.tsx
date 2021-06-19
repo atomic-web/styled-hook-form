@@ -51,7 +51,7 @@ const HttpForm = React.forwardRef<FormBuilderRef, HttpFormProps>(
       }
 
       if (
-        ["MUTIPART", "AUTO"].includes(encodingMode) ||
+        ["MUTIPART", "AUTO"].includes(encodingMode) &&
         fields.some((f) => f.type === FormFieldType.File)
       ) {
         let formData = new FormData();
