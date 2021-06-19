@@ -1,4 +1,4 @@
-import React, { forwardRef, useEffect, useState } from "react";
+import React, { forwardRef, useEffect, useMemo, useState } from "react";
 import Form, { WatchField } from "../form";
 import styled from "styled-components";
 import {
@@ -112,7 +112,7 @@ const renderField = (field: FormField, methods: UseFormReturn<any>) => {
 const FormBuilder = forwardRef<FormBuilderRef | null, FormBuilderProps>(
   (props, ref) => {
     let {
-      fields,
+      fields: fieldsProp,
       children,
       onSubmit,
       className,
@@ -122,6 +122,15 @@ const FormBuilder = forwardRef<FormBuilderRef | null, FormBuilderProps>(
       columns,
       areas,
     } = props;
+
+    let fields = useMemo(
+      () =>
+        fieldsProp.filter(
+          (f) =>
+            f.visible === undefined || (f.visible !== undefined && f.visible)
+        ),
+      [fieldsProp]
+    );
 
     const getAggValues = () => ({
       ...fields.reduce((p: any, c: FormField) => {

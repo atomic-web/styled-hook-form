@@ -100,6 +100,7 @@ export interface FormFieldBase {
   onChange?: (value: any) => void;
   gridArea?: string;
   order?: number;
+  visible? : boolean
 }
 
 export type FormField<TProps extends {} = {}> = FormFieldBase &
