@@ -146,8 +146,11 @@ const FormBuilder = forwardRef<FormBuilderRef | null, FormBuilderProps>(
       setDefautValues(getAggValues());
     }, [model, fields]);
 
-    const handleSubmit = (values: any) => {
-      let shoudlSubmit = beforeSubmit ? beforeSubmit(values) : true;
+    const handleSubmit = async(values: any) => {
+      let shoudlSubmit : boolean | Promise<boolean> = beforeSubmit ? beforeSubmit(values) : true;
+      if (shoudlSubmit as any instanceof Promise){
+        shoudlSubmit = await shoudlSubmit;
+      }
       if (shoudlSubmit) {
         onSubmit?.call(null, values);
       }

@@ -115,7 +115,7 @@ export interface FormBuilderProps<TModel = any>
   children?: React.ReactNode | ((methods: UseFormReturn) => React.ReactNode);
   model?: TModel;
   onSubmit?: (values: any) => void;
-  beforeSubmit?: (values: TModel) => boolean;
+  beforeSubmit?: (values: TModel) => boolean | Promise<boolean>;
   rows?: PropType<GridProps, "rows">;
   columns?: PropType<GridProps, "columns">;
   areas?: PropType<GridProps, "areas">;
