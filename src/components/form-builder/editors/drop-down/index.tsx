@@ -33,7 +33,7 @@ const LabelBox = styled(Box).attrs({
   border:none;
   display: flex;
   flex-direction: row;
-  flex-wrap:wrap;
+  flex-wrap: wrap;
 `;
 
 const DefaultOptionLabel = ({ content }: { content: string }) => (
@@ -80,20 +80,25 @@ const DropDown = forwardRef<HTMLButtonElement, FormField<DropDownProps>>(
       request: dataSourceOptions?.request ?? null,
       pageParamName: dataSourceOptions?.pageKey,
       pageSizeParamName: dataSourceOptions?.pageSizeKey,
-      pageSize:dataSourceOptions?.pageSize,
+      pageSize: dataSourceOptions?.pageSize,
       searchParamName: dataSourceOptions?.searchKey,
       searchParam: remoteSearchKey,
-      listPropName:dataSourceOptions?.listKey,
-      totalPropName:dataSourceOptions?.totalKey,
+      listPropName: dataSourceOptions?.listKey,
+      totalPropName: dataSourceOptions?.totalKey,
       params: dataSourceOptions?.extraParams,
       mockResponse: dataSourceOptions?.mockResponse,
-      onResponse: (data: any[], page: number) => {
-        if (dataSourceOptions?.onResponse){
-          data = dataSourceOptions.onResponse(data);
-        }else{
-          if (!Array.isArray(data)){
-            data = data[dataSourceOptions?.listKey ?? "list"];
-          }
+      onRequest: (data: any, headers: any) => {
+        if (dataSourceOptions?.onRequest) {
+          data = dataSourceOptions.onRequest(data, headers);
+        }
+        return data;
+      },
+      onResponse: (data: any[], page: number, headers: any) => {
+        if (dataSourceOptions?.onResponse) {
+          data = dataSourceOptions.onResponse(data, headers);
+        }
+        if (!Array.isArray(data)) {
+          data = data[dataSourceOptions?.listKey ?? "list"];
         }
         setRemoteOptions((oldOptions) => {
           let newOptions = [...(page > 1 ? oldOptions : []), ...data];

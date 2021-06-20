@@ -10,7 +10,8 @@ export interface RemoteDataSource {
   pageSizeKey?: string;
   pageSize?: number;
   extraParams? : any,
-  onResponse? : (data :any)=> any,
+  onResponse? : (data :any,headers :any)=> any,
+  onRequest?: (data: any , header:any)=>any,
   listKey?: string,
   totalKey?: string,
   mockResponse? : (req: MockAdapter)=>void
