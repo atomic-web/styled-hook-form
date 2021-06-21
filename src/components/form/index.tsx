@@ -1,7 +1,13 @@
 import React, { FormEvent, useEffect, useRef } from "react";
-import { FormProvider, useForm, UseFormReturn } from "react-hook-form";
+import {
+  FormProvider,
+  useForm,
+  UseFormReturn,
+  UseFormProps,
+} from "react-hook-form";
 import { useDebouncedCallback } from "use-debounce";
 import equals from "fast-deep-equal/es6";
+import { DevTool } from "@hookform/devtools";
 
 export type FormChildProps = UseFormReturn;
 
@@ -11,21 +17,25 @@ export interface WatchField {
   defaultValue?: any;
 }
 
-export interface AutoSubmitFormProps {
+export interface FormProps {
   changeHandlers?: WatchField[];
-  defaultValues: any;
   autoSubmit?: boolean;
   autoSubmitFields?: WatchField[];
   submitTreshould?: number;
+  devMode?: boolean;
   onSubmit?: (state: any) => void;
   children?: (props: FormChildProps) => React.ReactNode;
+  options: UseFormProps<any, any>;
 }
 
-const Form: React.FC<AutoSubmitFormProps> = (props) => {
+const Form: React.FC<FormProps> = (props) => {
   const methods = useForm({
-    defaultValues: props.defaultValues,
     mode: "onTouched",
+    ...props.options,
   });
+
+  const { devMode } = props;
+
   const {
     handleSubmit,
     formState: { isValid, errors },
@@ -44,11 +54,11 @@ const Form: React.FC<AutoSubmitFormProps> = (props) => {
   const valuesRef = useRef<any | null>(null);
 
   useEffect(() => {
-    if (!equals(valuesRef.current, props.defaultValues)) {
-      reset(props.defaultValues);
-      valuesRef.current = props.defaultValues;
+    if (!equals(valuesRef.current, props.options.defaultValues)) {
+      reset(props.options.defaultValues);
+      valuesRef.current = props.options.defaultValues;
     }
-  }, [props.defaultValues]);
+  }, [props.options.defaultValues]);
 
   const onFormSubmit = (values: any) => {
     if (!isValid && errors.length) {
@@ -82,7 +92,10 @@ const Form: React.FC<AutoSubmitFormProps> = (props) => {
 
           if (listener) {
             listener.handler(
-              getLiveValue(changingName, props.defaultValues[changingName])
+              getLiveValue(
+                changingName,
+                props.options.defaultValues[changingName]
+              )
             );
           }
         }
@@ -99,6 +112,7 @@ const Form: React.FC<AutoSubmitFormProps> = (props) => {
   return (
     <form ref={formRef} onSubmit={handleFormSubmit}>
       <FormProvider {...methods}>
+        {devMode && methods.control && <DevTool control={methods.control} />}
         {children && children({ ...methods })}
       </FormProvider>
     </form>

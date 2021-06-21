@@ -1,6 +1,6 @@
 {
   "name": "styled-hook-form",
-  "version": "1.0.0-beta.12",
+  "version": "1.0.0-beta.13",
   "description": "React form library for styled-components based on grommet and react-hook-form",
   "main": "lib/index.js",
   "sideEffects": false,
@@ -44,6 +44,7 @@
     "@babel/preset-env": "7.14.0",
     "@babel/preset-react": "7.13.13",
     "@babel/preset-typescript": "7.13.0",
+    "@hookform/devtools": "^3.0.0-rc.2",
     "@storybook/addon-actions": "6.2.9",
     "@storybook/addon-essentials": "6.2.9",
     "@storybook/addon-links": "6.2.9",

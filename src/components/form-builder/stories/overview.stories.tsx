@@ -12,6 +12,22 @@ const meta: Meta = {
   component: FormBuilder,
 };
 
+const ResponsiveFlex = styled.div`
+  display:flex;
+  flex-wrap:wrap;
+`;
+
+const ResponsiveFlexCol = styled.div`
+   flex-basis :25%;
+   min-width:300px;
+   flex-basis:50%;
+   box-sizing:border-box;
+   padding:0.5em 1em;
+   @media (max-width:720px){
+     flex-basis:100%;
+   }
+`;
+
 export default meta;
 
 const fields: FormField[] = [
@@ -169,7 +185,6 @@ const StyledFormBuilder = styled(FormBuilder)`
   padding: 2em;
   border-radius: 4px;
   border: solid 1px #aaa;
-  width: 900px;
 `;
 
 const Template: Story<FormBuilderProps> = (args) => (
@@ -177,8 +192,11 @@ const Template: Story<FormBuilderProps> = (args) => (
     <StyledFormBuilder
       {...args}
       onSubmit={(data) => alert(JSON.stringify(data))}
+      layout={<ResponsiveFlex></ResponsiveFlex>}
       rows={["flex", "flex", "5em"]}
       columns={["50%", "50%"]}
+      editorComponent={<ResponsiveFlexCol/>}
+      devMode
       areas={[
         {
           name: "right",

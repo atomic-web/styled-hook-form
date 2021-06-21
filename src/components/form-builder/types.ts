@@ -4,6 +4,7 @@ import { BoolInputProps } from "./editors/bool-input/types";
 import {
   FieldPathValue,
   RegisterOptions,
+  UseFormProps,
   UseFormReturn,
   ValidateResult,
 } from "react-hook-form";
@@ -89,7 +90,7 @@ export interface FormFieldBase {
   renderLabel?: boolean;
   render?: (
     base:
-       (() => React.ReactNode)
+      | (() => React.ReactNode)
       | ((props?: any) => React.ReactNode)
       | ((children?: React.ReactNode, props?: any) => React.ReactNode),
     formMethods: UseFormReturn<any>
@@ -100,7 +101,7 @@ export interface FormFieldBase {
   onChange?: (value: any) => void;
   gridArea?: string;
   order?: number;
-  visible? : boolean
+  visible?: boolean;
 }
 
 export type FormField<TProps extends {} = {}> = FormFieldBase &
@@ -109,20 +110,25 @@ export type FormField<TProps extends {} = {}> = FormFieldBase &
     methods?: UseFormReturn;
   };
 
-export interface FormBuilderProps<TModel = any>
-  extends Partial<Omit<HTMLDivElement, "children">> {
+export type FormBuilderProps<TModel = any> = Partial<
+  Omit<HTMLDivElement, "children">
+> & {
   fields: FormField[];
   children?: React.ReactNode | ((methods: UseFormReturn) => React.ReactNode);
   model?: TModel;
+  devMode?: boolean;
   onSubmit?: (values: any) => void;
   beforeSubmit?: (values: TModel) => boolean | Promise<boolean>;
+  options?: Omit<UseFormProps<TModel, any>, "defaultValues">;
+  layout?:"GRID" | React.ReactElement | undefined,
   rows?: PropType<GridProps, "rows">;
   columns?: PropType<GridProps, "columns">;
   areas?: PropType<GridProps, "areas">;
-}
+  editorComponent?:React.ReactElement
+};
 
 export type FormEditorPropsBase = Pick<FormFieldBase, "validationRules"> & {};
 
-export interface FormBuilderRef{
-   methods : UseFormReturn
+export interface FormBuilderRef {
+  methods: UseFormReturn;
 }
