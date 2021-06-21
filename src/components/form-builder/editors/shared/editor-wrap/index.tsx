@@ -83,6 +83,7 @@ const WidthEditorWrap: React.FC<EditorWrapProps> = (props) => {
                   >
                     <Button
                       focusIndicator={false}
+                      tabIndex={-1}
                       icon={
                         <CircleInformation size="medium" color="neutral-3" />
                       }
