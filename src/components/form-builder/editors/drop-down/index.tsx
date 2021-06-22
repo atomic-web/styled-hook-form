@@ -15,6 +15,7 @@ import { useSHFContext } from "../../../../context";
 import styled from "styled-components";
 // @ts-ignore
 import { inputStyle } from "grommet/utils/styles";
+import { useDebouncedCallback } from "use-debounce/lib";
 
 const Option = memo((props: OptionProps) => {
   let { label, selected } = props;
@@ -62,6 +63,7 @@ const DropDown = forwardRef<HTMLButtonElement, FormField<DropDownProps>>(
       plainLabel,
       selectProps,
       defaultValue: initialValue,
+      searchDebounce = 500,
     } = props;
 
     let [localValue, setLocalValue] = useState<any[] | null>(null);
@@ -158,7 +160,7 @@ const DropDown = forwardRef<HTMLButtonElement, FormField<DropDownProps>>(
       }
     }, [computedValue, actualOptions]);
 
-    const handleSearch = (text: string) => {
+    const handleSearch = useDebouncedCallback((text: string) => {
       if (!dataSourceOptions && text.length === 0) {
         setLocalOptions(options instanceof Array ? options : []);
         return;
@@ -180,7 +182,7 @@ const DropDown = forwardRef<HTMLButtonElement, FormField<DropDownProps>>(
 
         setLocalOptions(filteredOptions);
       }
-    };
+    }, searchDebounce);
 
     const handleMore = () => {
       if (hasMore) {
