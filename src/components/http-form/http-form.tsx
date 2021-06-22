@@ -1,15 +1,16 @@
 import useAxios from "axios-hooks";
-import { FormBuilder, FormBuilderRef, FormFieldType } from "../form-builder";
+import { FormBuilder,  FormFieldType } from "../form-builder";
 import React, { useEffect } from "react";
 import { HttpFormProps } from "./types";
 import { Box, Button, Spinner } from "grommet";
 import { useSHFContext } from "../../context";
 import staticAxios from "axios";
 import MockAdapter from "axios-mock-adapter";
+import { FormMethodsRef } from "components/form/types";
 
 const successCodes = [200, 201, 202];
 
-const HttpForm = React.forwardRef<FormBuilderRef, HttpFormProps>(
+const HttpForm = React.forwardRef<FormMethodsRef, HttpFormProps>(
   (props, ref) => {
     let {
       fields,

@@ -1,32 +1,9 @@
 import React, { FormEvent, useEffect, useRef } from "react";
-import {
-  FormProvider,
-  useForm,
-  UseFormReturn,
-  UseFormProps,
-} from "react-hook-form";
+import { FormProvider, useForm } from "react-hook-form";
 import { useDebouncedCallback } from "use-debounce";
 import equals from "fast-deep-equal/es6";
 import { DevTool } from "@hookform/devtools";
-
-export type FormChildProps = UseFormReturn;
-
-export interface WatchField {
-  name: string;
-  handler: (value: any) => void;
-  defaultValue?: any;
-}
-
-export interface FormProps {
-  changeHandlers?: WatchField[];
-  autoSubmit?: boolean;
-  autoSubmitFields?: WatchField[];
-  submitTreshould?: number;
-  devMode?: boolean;
-  onSubmit?: (state: any) => void;
-  children?: (props: FormChildProps) => React.ReactNode;
-  options: UseFormProps<any, any>;
-}
+import { FormProps } from "./types";
 
 const Form: React.FC<FormProps> = (props) => {
   const methods = useForm({
@@ -34,7 +11,18 @@ const Form: React.FC<FormProps> = (props) => {
     ...props.options,
   });
 
-  const { devMode } = props;
+  const { devMode, methodsRef } = props;
+
+  if (methodsRef && methods) {
+    let refObj = {
+      methods,
+    };
+    if (typeof methodsRef === "function") {
+      methodsRef(refObj);
+    } else {
+      methodsRef.current = refObj;
+    }
+  }
 
   const {
     handleSubmit,
@@ -50,7 +38,6 @@ const Form: React.FC<FormProps> = (props) => {
     autoSubmit,
     autoSubmitFields,
   } = props;
-  const formRef = useRef<HTMLFormElement>(null);
   const valuesRef = useRef<any | null>(null);
 
   useEffect(() => {
@@ -114,9 +101,9 @@ const Form: React.FC<FormProps> = (props) => {
   };
 
   return (
-    <form ref={formRef} onSubmit={handleFormSubmit}>
+    <form onSubmit={handleFormSubmit}>
       <FormProvider {...methods}>
-        {devMode && methods.control && <DevTool control={methods.control} />}
+        {devMode && <DevTool control={methods.control} />}
         {children && children({ ...methods })}
       </FormProvider>
     </form>

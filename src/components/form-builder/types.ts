@@ -102,7 +102,7 @@ export interface FormFieldBase {
   gridArea?: string;
   order?: number;
   visible?: boolean;
-  shouldUnregister? : boolean;
+  shouldUnregister?: boolean;
 }
 
 export type FormField<TProps extends {} = {}> = FormFieldBase &
@@ -121,15 +121,11 @@ export type FormBuilderProps<TModel = any> = Partial<
   onSubmit?: (values: any) => void;
   beforeSubmit?: (values: TModel) => boolean | Promise<boolean>;
   options?: Omit<UseFormProps<TModel, any>, "defaultValues">;
-  layout?:"GRID" | React.ReactElement | undefined,
+  layout?: "GRID" | React.ReactElement | undefined;
   rows?: PropType<GridProps, "rows">;
   columns?: PropType<GridProps, "columns">;
   areas?: PropType<GridProps, "areas">;
-  editorComponent?:React.ReactElement
+  editorComponent?: React.ReactElement;
 };
 
 export type FormEditorPropsBase = Pick<FormFieldBase, "validationRules"> & {};
-
-export interface FormBuilderRef {
-  methods: UseFormReturn;
-}

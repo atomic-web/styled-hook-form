@@ -1,9 +1,9 @@
 import { Meta } from "@storybook/react";
-import {
-  FormBuilderRef,
+import {  
   FormField,
   FormFieldType,
 } from "components/form-builder/types";
+import { FormMethodsRef } from "components/form/types";
 import { HttpForm } from "components/http-form";
 import { Box, Button, Meter } from "grommet";
 import { useRef, useState } from "react";
@@ -23,7 +23,7 @@ export const WithProgress = () => {
 
   const [progress, setProgress] = useState<number>(0);
 
-  const formRef = useRef<FormBuilderRef>(null);
+  const formRef = useRef<FormMethodsRef>(null);
 
   return (
     <Box justify="center" direction="row">

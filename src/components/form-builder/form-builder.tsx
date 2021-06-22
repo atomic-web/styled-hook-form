@@ -1,9 +1,9 @@
 import React, { forwardRef, useEffect, useMemo, useState } from "react";
-import Form, { WatchField } from "../form";
+import { FormMethodsRef, WatchField } from "../form/types";
+import Form from "../form";
 import styled from "styled-components";
 import {
   FormBuilderProps,
-  FormBuilderRef,
   FormField,
   ValidateWithMethods,
 } from "./types";
@@ -28,7 +28,8 @@ const getValidateFuncWithMethods = (
   } else {
     return result;
   }
-};
+};export type FormChildProps = UseFormReturn;
+
 
 const renderField = (
   field: FormField,
@@ -120,7 +121,7 @@ const renderField = (
   return EditorView;
 };
 
-const FormBuilder = forwardRef<FormBuilderRef | null, FormBuilderProps>(
+const FormBuilder = forwardRef<FormMethodsRef | null, FormBuilderProps>(
   (props, ref) => {
     let {
       fields: fieldsProp,
@@ -317,6 +318,7 @@ const FormBuilder = forwardRef<FormBuilderRef | null, FormBuilderProps>(
             ...(options ?? {}),
             defaultValues,
           }}
+          methodsRef={ref}
           devMode={devMode}
           onSubmit={handleSubmit}
           autoSubmit={submitTriggers?.length > 0 ? true : false}
@@ -324,16 +326,6 @@ const FormBuilder = forwardRef<FormBuilderRef | null, FormBuilderProps>(
           changeHandlers={changeHandlers}
         >
           {({ ...methods }) => {
-            if (ref) {
-              let refObj = {
-                methods,
-              };
-              if (typeof ref === "function") {
-                ref(refObj);
-              } else {
-                ref.current = refObj;
-              }
-            }
             return layout === "GRID"
               ? renderGrid(methods, rows, columns, areas)
               : renderCustomLayout(methods);
