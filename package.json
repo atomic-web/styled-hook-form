@@ -44,7 +44,6 @@
     "@babel/preset-env": "7.14.0",
     "@babel/preset-react": "7.13.13",
     "@babel/preset-typescript": "7.13.0",
-    "@hookform/devtools": "^3.0.0-rc.2",
     "@storybook/addon-actions": "6.2.9",
     "@storybook/addon-essentials": "6.2.9",
     "@storybook/addon-links": "6.2.9",
@@ -83,7 +82,8 @@
   "peerDependencies": {
     "react": "^16.6.1 || ^17.0.0",
     "react-dom": "^16.6.1 || ^17.0.0",
-    "styled-components": ">= 5.1"
+    "styled-components": ">= 5.1",
+    "@hookform/devtools": ">=3.0.0"
   },
   "dependencies": {
     "@hookform/error-message": "^2.0.0",

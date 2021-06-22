@@ -2,11 +2,7 @@ import React, { forwardRef, useEffect, useMemo, useState } from "react";
 import { FormMethodsRef, WatchField } from "../form/types";
 import Form from "../form";
 import styled from "styled-components";
-import {
-  FormBuilderProps,
-  FormField,
-  ValidateWithMethods,
-} from "./types";
+import { FormBuilderProps, FormField, ValidateWithMethods } from "./types";
 import { EditorMap } from "./editor-map";
 import { UseFormReturn, ValidateResult } from "react-hook-form";
 import WidthEditorWrap from "./editors/shared/editor-wrap";
@@ -28,8 +24,8 @@ const getValidateFuncWithMethods = (
   } else {
     return result;
   }
-};export type FormChildProps = UseFormReturn;
-
+};
+export type FormChildProps = UseFormReturn;
 
 const renderField = (
   field: FormField,
@@ -103,7 +99,7 @@ const renderField = (
   };
 
   const EditorView = React.cloneElement(
-    editorComponent ?? <React.Fragment />,
+    field.wrapComponent ?? editorComponent ?? <React.Fragment />,
     {},
     <WidthEditorWrap
       key={field.name}
