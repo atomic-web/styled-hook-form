@@ -54,7 +54,11 @@ const Form: React.FC<FormProps> = (props) => {
   const valuesRef = useRef<any | null>(null);
 
   useEffect(() => {
-    if (!equals(valuesRef.current, props.options.defaultValues)) {
+    if (
+      Object.keys(valuesRef.current ?? {}).length ===
+        Object.keys(props.options.defaultValues).length &&
+      !equals(valuesRef.current, props.options.defaultValues)
+    ) {
       reset(props.options.defaultValues);
       valuesRef.current = props.options.defaultValues;
     }
