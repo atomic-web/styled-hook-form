@@ -102,6 +102,7 @@ export interface FormFieldBase {
   gridArea?: string;
   order?: number;
   visible?: boolean;
+  shouldUnregister? : boolean;
 }
 
 export type FormField<TProps extends {} = {}> = FormFieldBase &

@@ -33,11 +33,13 @@ const getValidateFuncWithMethods = (
 const renderField = (
   field: FormField,
   methods: UseFormReturn<any>,
-  editorComponent: React.ReactElement | undefined
+  editorComponent: React.ReactElement | undefined,
+  shouldUnregister?: boolean
 ) => {
   field.methods = methods;
   let component = React.createElement(EditorMap[field.type], {
     ...((field as unknown) as any),
+    shouldUnregister: field.shouldUnregister ?? shouldUnregister,
     key: field.name,
   });
 
@@ -200,7 +202,12 @@ const FormBuilder = forwardRef<FormBuilderRef | null, FormBuilderProps>(
 
       if (layout === "GRID") {
         sortedItems.forEach((field) => {
-          let fieldEditor = renderField(field, methods, editorComponent);
+          let fieldEditor = renderField(
+            field,
+            methods,
+            editorComponent,
+            options?.shouldUnregister
+          );
           if (field.gridArea) {
             let existingArea = groupedEditors[field.gridArea];
             groupedEditors[field.gridArea] = existingArea
@@ -223,7 +230,7 @@ const FormBuilder = forwardRef<FormBuilderRef | null, FormBuilderProps>(
       }
 
       return sortedItems.map((field) =>
-        renderField(field, methods, editorComponent)
+        renderField(field, methods, editorComponent, options?.shouldUnregister)
       );
     };
 
