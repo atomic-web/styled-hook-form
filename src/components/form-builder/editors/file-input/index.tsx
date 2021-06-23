@@ -19,7 +19,6 @@ const FileInput = forwardRef<HTMLInputElement, FormField<FileInputProps>>(
       required,
       methods,
       multiple,
-      onChange,
     } = props;
 
     let control = methods?.control;
@@ -38,7 +37,6 @@ const FileInput = forwardRef<HTMLInputElement, FormField<FileInputProps>>(
         e: ChangeEvent<HTMLInputElement>
       ) => {
         field.onChange(e.target.files);
-        onChange?.call(null, e.target.value);
       },
       []
     );

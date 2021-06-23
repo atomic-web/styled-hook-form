@@ -114,7 +114,6 @@ const TimePicker: React.FC<TimePickerProps> = (props) => {
   }, []);
 
   const handleBlur = useCallback(() => {
-    debugger;
     setHasFocus(false);
   }, []);
 
