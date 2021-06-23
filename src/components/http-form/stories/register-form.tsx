@@ -87,7 +87,7 @@ export const LoginForm = () => {
                 });
               });
             }}
-            request={{
+            saveRequest={{
               url: "api/user/signup",
               method: "POST"
             }}

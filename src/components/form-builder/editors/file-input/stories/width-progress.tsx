@@ -31,7 +31,7 @@ export const WithProgress = () => {
         <HttpForm
           ref={formRef}
           submitButton={false}
-          request={{
+          saveRequest={{
             url: "/api/file",
             method: "POST",
             onUploadProgress: (p: any) => {

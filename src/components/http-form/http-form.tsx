@@ -1,5 +1,5 @@
 import useAxios from "axios-hooks";
-import { FormBuilder,  FormFieldType } from "../form-builder";
+import { FormBuilder, FormFieldType } from "../form-builder";
 import React, { useEffect } from "react";
 import { HttpFormProps } from "./types";
 import { Box, Button, Spinner } from "grommet";
@@ -14,7 +14,8 @@ const HttpForm = React.forwardRef<FormMethodsRef, HttpFormProps>(
   (props, ref) => {
     let {
       fields,
-      request,
+      saveRequest,
+      loadRequest,
       onSuccess,
       onError,
       model,
@@ -29,7 +30,7 @@ const HttpForm = React.forwardRef<FormMethodsRef, HttpFormProps>(
 
     let { translate: T } = useSHFContext();
     let [{ loading, data, error, response }, submitToServer] = useAxios(
-      request,
+      saveRequest,
       {
         manual: true,
       }
@@ -75,13 +76,23 @@ const HttpForm = React.forwardRef<FormMethodsRef, HttpFormProps>(
       });
     };
 
+    const [{ data: serverData }, getServerData] = useAxios(loadRequest ?? "/", {
+      manual: true,
+    });
+
+    useEffect(() => {
+      if (loadRequest) {
+        getServerData();
+      }
+    }, []);
+
     return (
       <FormBuilder
         {...rest}
         ref={ref}
         fields={fields}
         onSubmit={handleSubmit}
-        model={model}
+        model={model ?? serverData}
       >
         {children}
         {submitButton && (
