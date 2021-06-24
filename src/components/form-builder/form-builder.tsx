@@ -130,7 +130,6 @@ const FormBuilder = forwardRef<FormMethodsRef | null, FormBuilderProps>(
       columns,
       areas,
       options,
-      devMode,
       layout = "GRID",
       editorComponent,
     } = props;
@@ -315,7 +314,6 @@ const FormBuilder = forwardRef<FormMethodsRef | null, FormBuilderProps>(
             defaultValues,
           }}
           methodsRef={ref}
-          devMode={devMode}
           onSubmit={handleSubmit}
           autoSubmit={submitTriggers?.length > 0 ? true : false}
           autoSubmitFields={submitTriggers || []}

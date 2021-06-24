@@ -104,7 +104,6 @@ const DataTableImpl: React.FC<DataTableProps> = (props) => {
 
   let {
     error,
-    data: ServerData,
     refresh: refreshCurrentPage,
     loading,
   } = request
@@ -127,6 +126,10 @@ const DataTableImpl: React.FC<DataTableProps> = (props) => {
           });
 
           let cdata = onResponse ? onResponse(_data, headers) : _data;
+          dispatch({
+            type: "set-data",
+            payload: cdata[reqParams?.listPropName ?? "list"]
+          });
           return cdata;
         },
         mockResponse,
@@ -147,15 +150,6 @@ const DataTableImpl: React.FC<DataTableProps> = (props) => {
       onRequestError(error);
     }
   }, [error]);
-
-  useEffect(() => {
-    if (ServerData) {
-      dispatch({
-        type: "set-data",
-        payload: ServerData[reqParams?.listPropName ?? "list"],
-      });
-    }
-  }, [ServerData]);
 
   useEffect(() => {
     dispatch({
