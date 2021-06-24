@@ -15,7 +15,7 @@ import { useSHFContext } from "../../../../context";
 import styled from "styled-components";
 // @ts-ignore
 import { inputStyle } from "grommet/utils/styles";
-import { useDebouncedCallback } from "use-debounce/lib";
+import { useDebouncedCallback } from "use-debounce";
 
 const Option = memo((props: OptionProps) => {
   let { label, selected } = props;

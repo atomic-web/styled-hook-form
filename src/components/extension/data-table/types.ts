@@ -21,6 +21,7 @@ export type DataTableProps<
     pageSizeParamName?:string
     pageNumParamName?:string,
     totalPropName?:string,
+    listPropName?:string
   },
   paginate?:{
     type?:"button-based" | "infinite-scroll",

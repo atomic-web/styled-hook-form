@@ -38,11 +38,11 @@ const DataTable: React.FC<DataTableProps> = (props) => {
     childrenWrap
   );
 
-  if (!alreadyContextDefined) {
-    useEffect(() => {
-      tableContext.dispatch({type :"merge-value" , payload :contextOptions})
-    }, []);
-  }
+  useEffect(() => {
+    if (!alreadyContextDefined) {
+      tableContext.dispatch({ type: "merge-value", payload: contextOptions });
+    }
+  }, []);
 
   return <>{children}</>;
 };
@@ -150,7 +150,10 @@ const DataTableImpl: React.FC<DataTableProps> = (props) => {
 
   useEffect(() => {
     if (ServerData) {
-      dispatch({ type: "set-data", payload: ServerData.list });
+      dispatch({
+        type: "set-data",
+        payload: ServerData[reqParams?.listPropName ?? "list"],
+      });
     }
   }, [ServerData]);
 
