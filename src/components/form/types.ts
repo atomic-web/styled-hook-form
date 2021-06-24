@@ -16,7 +16,6 @@ export interface FormProps {
   autoSubmit?: boolean;
   autoSubmitFields?: WatchField[];
   submitTreshould?: number;
-  devMode?: boolean;
   onSubmit?: (state: any) => void;
   children?: (props: FormChildProps) => React.ReactNode;
   options: UseFormProps<any, any>;

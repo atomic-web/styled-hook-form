@@ -2,7 +2,6 @@ import React, { FormEvent, useEffect, useRef } from "react";
 import { FormProvider, useForm } from "react-hook-form";
 import { useDebouncedCallback } from "use-debounce";
 import equals from "fast-deep-equal/es6";
-import { DevTool } from "@hookform/devtools";
 import { FormProps } from "./types";
 
 const Form: React.FC<FormProps> = (props) => {
@@ -11,7 +10,7 @@ const Form: React.FC<FormProps> = (props) => {
     ...props.options,
   });
 
-  const { devMode, methodsRef } = props;
+  const { methodsRef } = props;
 
   if (methodsRef && methods) {
     let refObj = {
@@ -103,7 +102,6 @@ const Form: React.FC<FormProps> = (props) => {
   return (
     <form onSubmit={handleFormSubmit}>
       <FormProvider {...methods}>
-        {devMode && <DevTool control={methods.control} />}
         {children && children({ ...methods })}
       </FormProvider>
     </form>
