@@ -84,7 +84,7 @@ const HttpForm = React.forwardRef<FormMethodsRef, HttpFormProps>(
       if (loadRequest) {
         getServerData();
       }
-    }, []);
+    }, [loadRequest]);
 
     return (
       <FormBuilder
