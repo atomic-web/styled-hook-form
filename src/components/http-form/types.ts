@@ -6,10 +6,14 @@ import { FormBuilderProps } from './../form-builder/types';
 export type HttpFormProps<TModel=any,TServerResult=any,TResult=TServerResult,TError=any> =
  Partial<FormBuilderProps> &
  Pick<FormBuilderProps,'fields'> & {
-   onRequest? : (model:TModel)=>any,
-   onResponse? : (data:TServerResult)=>TResult,
-   onError? : (error:TError)=>void,
-   onSuccess? : (data:TResult)=>void,
+   onSaveRequest?: (data:any,headers:any)=>void,
+   onSaveResponse?: (data:any,headers:any)=>void,
+   onLoadRequest?: (data:any,headers:any)=>void,
+   onLoadResponse?: (data:any,headers:any)=>void,
+   onSaveError? : (error:TError)=>void,
+   onLoadError? : (error:TError)=>void,
+   onSaveSuccess? : (data:TResult)=>void,
+   onLoadSuccess? : (data:TResult)=>void,
    saveRequest: AxiosRequestConfig | string,
    loadRequest?: AxiosRequestConfig | string,
    loadingIndicator?:()=>React.ReactNode,

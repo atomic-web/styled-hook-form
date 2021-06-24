@@ -1,10 +1,10 @@
 import useAxios from "axios-hooks";
 import { FormBuilder, FormFieldType } from "../form-builder";
-import React, { useEffect } from "react";
+import React, { useCallback, useEffect, useMemo } from "react";
 import { HttpFormProps } from "./types";
 import { Box, Button, Spinner } from "grommet";
 import { useSHFContext } from "../../context";
-import staticAxios from "axios";
+import staticAxios, { AxiosRequestConfig } from "axios";
 import MockAdapter from "axios-mock-adapter";
 import { FormMethodsRef } from "components/form/types";
 
@@ -13,11 +13,17 @@ const successCodes = [200, 201, 202];
 const HttpForm = React.forwardRef<FormMethodsRef, HttpFormProps>(
   (props, ref) => {
     let {
+      onSaveRequest,
+      onSaveResponse,
+      onLoadRequest,
+      onLoadResponse,
       fields,
-      saveRequest,
-      loadRequest,
-      onSuccess,
-      onError,
+      saveRequest: saveReqProp,
+      loadRequest: loadRequestProp,
+      onSaveSuccess,
+      onLoadSuccess,
+      onSaveError,
+      onLoadError,
       model,
       loadingIndicator,
       submitButton,
@@ -29,22 +35,104 @@ const HttpForm = React.forwardRef<FormMethodsRef, HttpFormProps>(
     } = props;
 
     let { translate: T } = useSHFContext();
-    let [{ loading, data, error, response }, submitToServer] = useAxios(
-      saveRequest,
+
+    let saveRequest: AxiosRequestConfig = useMemo(() => {
+      return typeof saveReqProp === "string"
+        ? {
+            url: saveReqProp,
+          }
+        : saveReqProp;
+    }, [saveReqProp]);
+
+    let loadRequest: AxiosRequestConfig | undefined = useMemo(() => {
+      return typeof loadRequestProp === "string"
+        ? {
+            url: loadRequestProp,
+          }
+        : loadRequestProp;
+    }, [loadRequestProp]);
+
+    const [
+      { loading, data, error: saveError, response: saveResponse },
+      submitToServer,
+    ] = useAxios(
+      {
+        ...saveRequest,
+        transformResponse: useCallback((data, headers) => {
+          if (typeof data === "string") {
+            data = JSON.parse(data);
+          }
+
+          if (onSaveResponse) {
+            data = onSaveResponse(data, headers);
+          }
+
+          return data;
+        }, []),
+        transformRequest: useCallback((data, headers) => {
+          if (onSaveRequest) {
+            onSaveRequest(data, headers);
+          }
+        }, []),
+      },
       {
         manual: true,
       }
     );
 
+    const [
+      { data: serverData, response: loadResponse, error: loadError },
+      getServerData,
+    ] = useAxios(
+      loadRequest ? {
+        ...loadRequest,
+        transformResponse: useCallback((data, headers) => {
+          if (typeof data === "string") {
+            data = JSON.parse(data);
+          }
+
+          if (onLoadResponse) {
+            data = onLoadResponse(data, headers);
+          }
+
+          return data;
+        }, []),
+        transformRequest: useCallback((data, headers) => {
+          if (onLoadRequest) {
+            onLoadRequest(data, headers);
+          }
+        }, []),
+      } : "/", {
+      manual: true,
+    });
+
     useEffect(() => {
-      if (response?.status && successCodes.indexOf(response?.status) != -1) {
-        onSuccess && onSuccess(data);
+      if (
+        saveResponse &&
+        saveResponse?.status &&
+        successCodes.indexOf(saveResponse?.status) != -1
+      ) {
+        onSaveSuccess && onSaveSuccess(data);
       }
     }, [data]);
 
     useEffect(() => {
-      onError && error && onError(error);
-    }, [error]);
+      onSaveError && saveError && onSaveError(saveError);
+    }, [saveError]);
+
+    useEffect(() => {
+      if (
+        loadResponse &&
+        loadResponse?.status &&
+        successCodes.indexOf(loadResponse?.status) != -1
+      ) {
+        onLoadSuccess && onLoadSuccess(data);
+      }
+    }, [serverData]);
+
+    useEffect(() => {
+      onSaveError && loadError && onSaveError(loadError);
+    }, [loadError]);
 
     const handleSubmit = (data: any) => {
       if (mockResponse) {
@@ -76,10 +164,6 @@ const HttpForm = React.forwardRef<FormMethodsRef, HttpFormProps>(
       });
     };
 
-    const [{ data: serverData }, getServerData] = useAxios(loadRequest ?? "/", {
-      manual: true,
-    });
-
     useEffect(() => {
       if (loadRequest) {
         getServerData();
@@ -95,6 +179,7 @@ const HttpForm = React.forwardRef<FormMethodsRef, HttpFormProps>(
         model={model ?? serverData}
       >
         {children}
+        {loadingIndicator}
         {submitButton && (
           <Button
             type="submit"

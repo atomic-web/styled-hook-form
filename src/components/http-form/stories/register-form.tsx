@@ -67,10 +67,10 @@ export const LoginForm = () => {
             fields={fields}
             beforeSubmit={(data: MyModel) => data.agree}
             submitButton={<Text> Register </Text>}
-            onError={(err) => {
+            onSaveError={(err) => {
               alert(JSON.stringify(err));
             }}
-            onSuccess={(data) => {
+            onSaveSuccess={(data) => {
               alert(JSON.stringify(data));
             }}
             mockResponse={(mock) => {
