@@ -73,6 +73,7 @@ const HttpForm = React.forwardRef<FormMethodsRef, HttpFormProps>(
           if (onSaveRequest) {
             data = onSaveRequest(data, headers);
           }
+          return data;
         }, []),
       },
       {
@@ -96,6 +97,7 @@ const HttpForm = React.forwardRef<FormMethodsRef, HttpFormProps>(
         if (onLoadRequest) {
           data = onLoadRequest(data, headers);
         }
+        return data;
       }, []),
     };
 
