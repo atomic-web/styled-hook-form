@@ -3,6 +3,7 @@ import { FormProvider, useForm } from "react-hook-form";
 import { useDebouncedCallback } from "use-debounce";
 import equals from "fast-deep-equal/es6";
 import { FormProps } from "./types";
+import { isEmptyObject } from "../../components/utils/comp";
 
 const Form: React.FC<FormProps> = (props) => {
   const methods = useForm({
@@ -41,7 +42,8 @@ const Form: React.FC<FormProps> = (props) => {
 
   useEffect(() => {
     if (
-      Object.keys(valuesRef.current ?? {}).length ===
+      isEmptyObject(valuesRef.current) ||
+      Object.keys(valuesRef.current).length ===
         Object.keys(props.options.defaultValues).length &&
       !equals(valuesRef.current, props.options.defaultValues)
     ) {
