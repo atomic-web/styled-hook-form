@@ -13,19 +13,19 @@ const meta: Meta = {
 };
 
 const ResponsiveFlex = styled.div`
-  display:flex;
-  flex-wrap:wrap;
+  display: flex;
+  flex-wrap: wrap;
 `;
 
 const ResponsiveFlexCol = styled.div`
-   flex-basis :25%;
-   min-width:300px;
-   flex-basis:50%;
-   box-sizing:border-box;
-   padding:0.5em 1em;
-   @media (max-width:720px){
-     flex-basis:100%;
-   }
+  flex-basis: 25%;
+  min-width: 300px;
+  flex-basis: 50%;
+  box-sizing: border-box;
+  padding: 0.5em 1em;
+  @media (max-width: 720px) {
+    flex-basis: 100%;
+  }
 `;
 
 export default meta;
@@ -91,7 +91,7 @@ const fields: FormField[] = [
       {
         name: "Female",
         value: 2,
-      }
+      },
     ],
     itemLabelKey: "name",
     itemValueKey: "value",
@@ -119,7 +119,7 @@ const fields: FormField[] = [
     ],
     itemLabelKey: "name",
     itemValueKey: "value",
-    multiple:true,
+    multiple: true,
     tip: "You can choose many",
     gridArea: "right",
   },
@@ -174,7 +174,7 @@ const fields: FormField[] = [
           name: "sub-info",
           label: "Sub Info",
           type: FormFieldType.Text,
-        }
+        },
       ],
     },
   },
@@ -195,7 +195,7 @@ const Template: Story<FormBuilderProps> = (args) => (
       layout={<ResponsiveFlex></ResponsiveFlex>}
       rows={["flex", "flex", "5em"]}
       columns={["50%", "50%"]}
-      editorComponent={<ResponsiveFlexCol/>}
+      editorComponent={<ResponsiveFlexCol />}
       devMode
       areas={[
         {
@@ -215,14 +215,16 @@ const Template: Story<FormBuilderProps> = (args) => (
         },
       ]}
     >
-      <Button
-        gridArea="foot"
-        type="submit"
-        primary
-        size="small"
-        label="Submit"
-        alignSelf="start"
-      />
+      <Box fill>
+        <Button
+          gridArea="foot"
+          type="submit"
+          primary
+          size="small"
+          label="Submit"
+          alignSelf="start"
+        />
+      </Box>
     </StyledFormBuilder>
   </SHFContextProvider>
 );

@@ -150,9 +150,10 @@ const HttpForm = React.forwardRef<FormMethodsRef, HttpFormProps>(
         mockResponse(mockAdapter);
       }
 
+      let hasFile : boolean = fields.some((f) => f.type === FormFieldType.File);
+
       if (
-        ["MUTIPART", "AUTO"].includes(encodingMode) &&
-        fields.some((f) => f.type === FormFieldType.File)
+        ["MUTIPART", "AUTO"].includes(encodingMode) && hasFile
       ) {
         let formData = new FormData();
 
@@ -167,6 +168,10 @@ const HttpForm = React.forwardRef<FormMethodsRef, HttpFormProps>(
           }
         }
         data = formData;
+      }
+
+      if ( ["JSON", "AUTO"].includes(encodingMode) && !hasFile){
+          data = JSON.stringify(data);
       }
 
       submitToServer({
