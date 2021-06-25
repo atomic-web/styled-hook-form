@@ -151,7 +151,7 @@ const HttpForm = React.forwardRef<FormMethodsRef, HttpFormProps>(
       }
 
       let hasFile : boolean = fields.some((f) => f.type === FormFieldType.File);
-      let multipartEncoded : boolean;
+      let multipartEncoded : boolean = false;
 
       if (
         ["MUTIPART", "AUTO"].includes(encodingMode) && hasFile
