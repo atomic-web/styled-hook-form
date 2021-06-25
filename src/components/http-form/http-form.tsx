@@ -151,6 +151,7 @@ const HttpForm = React.forwardRef<FormMethodsRef, HttpFormProps>(
       }
 
       let hasFile : boolean = fields.some((f) => f.type === FormFieldType.File);
+      let multipartEncoded : boolean;
 
       if (
         ["MUTIPART", "AUTO"].includes(encodingMode) && hasFile
@@ -168,9 +169,10 @@ const HttpForm = React.forwardRef<FormMethodsRef, HttpFormProps>(
           }
         }
         data = formData;
+        multipartEncoded = true;
       }
 
-      if ( ["JSON", "AUTO"].includes(encodingMode) && !hasFile){
+      if ( ["JSON", "AUTO"].includes(encodingMode) && !multipartEncoded){
           data = JSON.stringify(data);
       }
 
