@@ -71,7 +71,7 @@ const HttpForm = React.forwardRef<FormMethodsRef, HttpFormProps>(
         }, []),
         transformRequest: useCallback((data, headers) => {
           if (onSaveRequest) {
-            onSaveRequest(data, headers);
+            data = onSaveRequest(data, headers);
           }
         }, []),
       },
@@ -99,7 +99,7 @@ const HttpForm = React.forwardRef<FormMethodsRef, HttpFormProps>(
         }, []),
         transformRequest: useCallback((data, headers) => {
           if (onLoadRequest) {
-            onLoadRequest(data, headers);
+            data =onLoadRequest(data, headers);
           }
         }, []),
       } : "/", {
