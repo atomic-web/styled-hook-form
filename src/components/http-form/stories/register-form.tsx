@@ -74,7 +74,8 @@ export const LoginForm = () => {
               alert(JSON.stringify(data));
             }}
             mockResponse={(mock) => {
-              mock.onPost("/api/user/signup").reply(() => {
+              mock.onPost("/api/user/signup").reply((req) => {
+                alert(JSON.stringify(req.data))
                 return new Promise((res) => {
                   setTimeout(() => {
                     res([

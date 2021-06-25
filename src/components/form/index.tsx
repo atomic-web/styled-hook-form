@@ -42,10 +42,12 @@ const Form: React.FC<FormProps> = (props) => {
 
   useEffect(() => {
     if (
-      isEmptyObject(valuesRef.current) ||
-      Object.keys(valuesRef.current).length ===
-        Object.keys(props.options.defaultValues).length &&
-      !equals(valuesRef.current, props.options.defaultValues)
+      !methods.formState.isDirty &&
+      (isEmptyObject(valuesRef.current) ||
+        (
+          Object.keys(valuesRef.current ?? {}).length ===
+          Object.keys(props.options.defaultValues ?? {}).length &&
+          !equals(valuesRef.current, props.options.defaultValues)))
     ) {
       reset(props.options.defaultValues);
       valuesRef.current = props.options.defaultValues;
