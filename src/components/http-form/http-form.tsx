@@ -80,31 +80,39 @@ const HttpForm = React.forwardRef<FormMethodsRef, HttpFormProps>(
       }
     );
 
+    const loadRequestOptions = {
+      transformResponse: useCallback((data, headers) => {
+        if (typeof data === "string") {
+          data = JSON.parse(data);
+        }
+
+        if (onLoadResponse) {
+          data = onLoadResponse(data, headers);
+        }
+
+        return data;
+      }, []),
+      transformRequest: useCallback((data, headers) => {
+        if (onLoadRequest) {
+          data = onLoadRequest(data, headers);
+        }
+      }, []),
+    };
+
     const [
       { data: serverData, response: loadResponse, error: loadError },
       getServerData,
     ] = useAxios(
-      loadRequest ? {
-        ...loadRequest,
-        transformResponse: useCallback((data, headers) => {
-          if (typeof data === "string") {
-            data = JSON.parse(data);
+      loadRequest
+        ? {
+            ...loadRequest,
+            ...loadRequestOptions,
           }
-
-          if (onLoadResponse) {
-            data = onLoadResponse(data, headers);
-          }
-
-          return data;
-        }, []),
-        transformRequest: useCallback((data, headers) => {
-          if (onLoadRequest) {
-            data =onLoadRequest(data, headers);
-          }
-        }, []),
-      } : "/", {
-      manual: true,
-    });
+        : { url: "/", ...loadRequestOptions }, // to make hook call order identical
+      {
+        manual: true,
+      }
+    );
 
     useEffect(() => {
       if (
