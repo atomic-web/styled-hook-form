@@ -196,7 +196,7 @@ const HttpForm = React.forwardRef<FormMethodsRef, HttpFormProps>(
         model={model ?? serverData}
       >
         {children}
-        {loadingIndicator}
+        {loading && loadingIndicator}
         {submitButton && (
           <Button
             type="submit"
