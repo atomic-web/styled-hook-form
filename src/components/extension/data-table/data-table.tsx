@@ -76,7 +76,7 @@ const DataTableImpl: React.FC<DataTableProps> = (props) => {
   };
 
   let requestParamsConfig = {
-    ...DataTable.defaultProps,
+    ...DataTable.defaultProps!.requestParamsConfig,
     ...reqParams,
   };
 

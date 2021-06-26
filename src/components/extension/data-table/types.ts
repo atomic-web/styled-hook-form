@@ -27,7 +27,7 @@ export type DataTableProps<
     type?:"button-based" | "infinite-scroll",
     enabled:boolean,
     pageSize?:number,
-    currentPage : number,
+    currentPage?: number,
     pageSizeOptions? : number[],
     pagerOptions?:Omit<PaginationProps,'numberItems'>
   },
