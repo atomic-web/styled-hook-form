@@ -112,8 +112,12 @@ const DataTableImpl: React.FC<DataTableProps> = (props) => {
         params: internalReqParams,
         orderDir: sort?.direction,
         orderProp: sort?.property,
-        orderDirParamName: requestParamsConfig!.orderDirParamName,
-        orderPropParamName: requestParamsConfig!.orderPropParamName,
+        orderDirParamName: requestParamsConfig.orderDirParamName,
+        orderPropParamName: requestParamsConfig.orderPropParamName,
+        listPropName:requestParamsConfig.listPropName,
+        pageParamName : requestParamsConfig.pageNumParamName,
+        pageSizeParamName : requestParamsConfig.pageSizeParamName,
+        totalPropName: requestParamsConfig.totalPropName,
         onRequest: (data: any, headers: any) => {
           return onRequest ? onRequest(data, headers) : data;
         },
