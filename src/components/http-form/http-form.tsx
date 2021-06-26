@@ -110,7 +110,7 @@ const HttpForm = React.forwardRef<FormMethodsRef, HttpFormProps>(
     };
 
     const [
-      { data: serverData, response: loadResponse, error: loadError },
+      { loading : loadLoading, data: serverData, response: loadResponse, error: loadError },
       getServerData,
     ] = useAxios(
       loadRequest
@@ -196,12 +196,12 @@ const HttpForm = React.forwardRef<FormMethodsRef, HttpFormProps>(
         model={model ?? serverData}
       >
         {children}
-        {loading && loadingIndicator}
+        {(loading || loadLoading) && loadingIndicator}
         {submitButton && (
           <Button
             type="submit"
             primary
-            icon={loading && !loadingIndicator ? <Spinner /> : <div />}
+            icon={(loading || loadLoading) && !loadingIndicator ? <Spinner /> : <div />}
             label={
               <Box>
                 {typeof submitButton === "boolean"
