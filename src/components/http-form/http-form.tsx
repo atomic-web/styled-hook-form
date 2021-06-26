@@ -73,6 +73,14 @@ const HttpForm = React.forwardRef<FormMethodsRef, HttpFormProps>(
           if (onSaveRequest) {
             data = onSaveRequest(data, headers);
           }
+
+          if (
+            ["JSON", "AUTO"].includes(encodingMode) &&
+            !(data instanceof FormData)
+          ) {
+            data = JSON.stringify(data);
+          }
+
           return data;
         }, []),
       },
@@ -83,12 +91,12 @@ const HttpForm = React.forwardRef<FormMethodsRef, HttpFormProps>(
 
     const loadRequestOptions = {
       transformResponse: useCallback((data, headers) => {
-        if (typeof data === "string") {
-          data = JSON.parse(data);
-        }
-
         if (onLoadResponse) {
           data = onLoadResponse(data, headers);
+        }
+
+        if (typeof data === "string") {
+          data = JSON.parse(data);
         }
 
         return data;
@@ -150,12 +158,9 @@ const HttpForm = React.forwardRef<FormMethodsRef, HttpFormProps>(
         mockResponse(mockAdapter);
       }
 
-      let hasFile : boolean = fields.some((f) => f.type === FormFieldType.File);
-      let multipartEncoded : boolean = false;
+      let hasFile: boolean = fields.some((f) => f.type === FormFieldType.File);
 
-      if (
-        ["MUTIPART", "AUTO"].includes(encodingMode) && hasFile
-      ) {
+      if (["MUTIPART", "AUTO"].includes(encodingMode) && hasFile) {
         let formData = new FormData();
 
         for (let fieldName in data) {
@@ -169,11 +174,6 @@ const HttpForm = React.forwardRef<FormMethodsRef, HttpFormProps>(
           }
         }
         data = formData;
-        multipartEncoded = true;
-      }
-
-      if ( ["JSON", "AUTO"].includes(encodingMode) && !multipartEncoded){
-          data = JSON.stringify(data);
       }
 
       submitToServer({
