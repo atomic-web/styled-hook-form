@@ -91,13 +91,13 @@ const HttpForm = React.forwardRef<FormMethodsRef, HttpFormProps>(
 
     const loadRequestOptions = {
       transformResponse: useCallback((data, headers) => {
-        if (onLoadResponse) {
-          data = onLoadResponse(data, headers);
-        }
-
         if (typeof data === "string") {
           data = JSON.parse(data);
         }
+        
+        if (onLoadResponse) {
+          data = onLoadResponse(data, headers);
+        }        
 
         return data;
       }, []),
