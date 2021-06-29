@@ -9,12 +9,12 @@ export interface RemoteDataSource {
   pageKey?: string;
   pageSizeKey?: string;
   pageSize?: number;
-  extraParams? : any,
-  onResponse? : (data :any,headers :any)=> any,
-  onRequest?: (data: any , header:any)=>any,
-  listKey?: string,
-  totalKey?: string,
-  mockResponse? : (req: MockAdapter)=>void
+  extraParams?: any;
+  onResponse?: (data: any, headers: any) => any;
+  onRequest?: (data: any, header: any) => any;
+  listKey?: string;
+  totalKey?: string;
+  mockResponse?: (req: MockAdapter) => void;
 }
 
 export interface OptionProps {
@@ -30,17 +30,18 @@ export interface DropDownProps {
   itemValueKey: string;
   itemLabelKey: string;
   labelWrap?: React.ReactElement;
-  plainLabel?:boolean;
+  plainLabel?: boolean;
   renderItemLabel?: <TOption = any>(
     option: TOption,
     operations: DropDownOperations,
     index: number
   ) => React.ReactNode;
+  renderOption?: <TOption = any>(option: TOption) => React.ReactNode;
   multiple?: boolean;
   options: any[] | RemoteDataSource;
   placeholder?: React.ReactNode;
   onSearch?: (text: string, options: any[]) => any[];
   renderItem?: <TOption = any>(options: TOption) => React.ReactNode;
-  selectProps? : SelectProps,
-  searchDebounce?:number; 
+  selectProps?: SelectProps;
+  searchDebounce?: number;
 }
