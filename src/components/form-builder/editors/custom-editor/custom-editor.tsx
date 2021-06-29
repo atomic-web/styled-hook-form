@@ -15,7 +15,8 @@ const CustomEditor: React.FC<FormField<CustomEditorProps>> = (props) => {
       methods,
       required,
       editorComponent,
-      label
+      label,
+      props : componentProps
     } = props;
 
     let control = methods?.control;
@@ -35,6 +36,7 @@ const CustomEditor: React.FC<FormField<CustomEditorProps>> = (props) => {
           control={control}
           render={({ field }) => {
             let editorElement = React.cloneElement(editorComponent,{
+                ...componentProps,
                 value:field.value,
                 onChange :(e :any)=> field.onChange(e),
                 methods
