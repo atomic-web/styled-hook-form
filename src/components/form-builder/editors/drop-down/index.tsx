@@ -60,7 +60,6 @@ const DropDown = forwardRef<HTMLButtonElement, FormField<DropDownProps>>(
       labelWrap,
       renderItem,
       renderItemLabel,
-      renderOption,
       plainLabel,
       selectProps,
       defaultValue: initialValue,
@@ -210,34 +209,32 @@ const DropDown = forwardRef<HTMLButtonElement, FormField<DropDownProps>>(
       []
     );
 
-    let selectContent = multiple
-      ? (option: any) => {
-          let selectedValues = localValue;
+    let selectContent = (option: any) => {
+      let selectedValues = localValue;
 
-          let opt_value = option[itemValueKey],
-            opt_label = option[itemLabelKey];
+      let opt_value = option[itemValueKey],
+        opt_label = option[itemLabelKey];
 
-          return (
-            <Option
-              label={
-                renderItem ? (
-                  renderItem(option)
-                ) : (
-                  <DefaultOptionLabel content={opt_label} />
-                )
-              }
-              selected={
-                selectedValues && Array.isArray(selectedValues)
-                  ? selectedValues.findIndex(
-                      (v) => v[itemValueKey] === opt_value
-                    ) !== -1
-                  : selectedValues === opt_value
-              }
-            />
-          );
-        }
-      : null;
-
+      return (
+        <Option
+          label={
+            renderItem ? (
+              renderItem(option)
+            ) : (
+              <DefaultOptionLabel content={opt_label} />
+            )
+          }
+          selected={
+            selectedValues && Array.isArray(selectedValues)
+              ? selectedValues.findIndex(
+                  (v) => v[itemValueKey] === opt_value
+                ) !== -1
+              : selectedValues === opt_value
+          }
+        />
+      );
+    };
+    
     const valueLabel = () => {
       let labels = (
         <LabelBox plainLabel={plainLabel}>
@@ -287,12 +284,6 @@ const DropDown = forwardRef<HTMLButtonElement, FormField<DropDownProps>>(
       return wrapElement;
     };
 
-    const optionsViews = useMemo(
-      () =>
-        actualOptions.map((opt) => (renderOption ? renderOption(opt) : opt)),
-      [actualOptions]
-    );
-
     return (
       <Controller
         name={name}
@@ -307,7 +298,7 @@ const DropDown = forwardRef<HTMLButtonElement, FormField<DropDownProps>>(
               ref={ref as any}
               multiple={multiple}
               valueLabel={valueLabel()}
-              options={optionsViews}
+              options={actualOptions}
               option
               labelKey={itemLabelKey}
               valueKey={itemValueKey}

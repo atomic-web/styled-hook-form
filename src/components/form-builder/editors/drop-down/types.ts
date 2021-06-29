@@ -36,7 +36,6 @@ export interface DropDownProps {
     operations: DropDownOperations,
     index: number
   ) => React.ReactNode;
-  renderOption?: <TOption = any>(option: TOption) => React.ReactNode;
   multiple?: boolean;
   options: any[] | RemoteDataSource;
   placeholder?: React.ReactNode;
