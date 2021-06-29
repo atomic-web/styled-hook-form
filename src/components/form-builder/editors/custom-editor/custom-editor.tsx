@@ -36,7 +36,8 @@ const CustomEditor: React.FC<FormField<CustomEditorProps>> = (props) => {
           render={({ field }) => {
             let editorElement = React.cloneElement(editorComponent,{
                 value:field.value,
-                onChange :(e :any)=> field.onChange(e)
+                onChange :(e :any)=> field.onChange(e),
+                methods
             });
             return editorElement;
           }}
