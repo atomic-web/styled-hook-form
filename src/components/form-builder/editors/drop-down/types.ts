@@ -40,7 +40,7 @@ export interface DropDownProps {
   options: any[] | RemoteDataSource;
   placeholder?: React.ReactNode;
   onSearch?: (text: string, options: any[]) => any[];
-  renderItem?: <TOption = any>(options: TOption) => React.ReactNode;
+  renderItem?: <TOption = any>(options: TOption,selected : boolean) => React.ReactNode;
   selectProps?: SelectProps;
   searchDebounce?: number;
 }

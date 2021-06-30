@@ -75,11 +75,6 @@ const renderField = (
   ) => {
     let children: React.ReactNode, props: any;
 
-    // if (!p2 && p1){
-    //   children = p1 as React.ReactNode;
-    //   props = null;
-    // }
-
     if (!p2 && p1) {
       props = p1 as any;
       children = null;

@@ -17,11 +17,26 @@ import styled from "styled-components";
 import { inputStyle } from "grommet/utils/styles";
 import { useDebouncedCallback } from "use-debounce";
 
-const Option = memo((props: OptionProps) => {
+const MultipleOption = memo((props: OptionProps) => {
   let { label, selected } = props;
   return (
     <Box direction="row" gap="small" align="center" pad="xsmall">
       <CheckBox tabIndex={-1} checked={selected} onChange={() => {}} />
+      {label}
+    </Box>
+  );
+});
+
+const SingleOption = memo((props: OptionProps) => {
+  let { label, selected } = props;
+  return (
+    <Box
+      direction="row"
+      gap="small"
+      align="center"
+      pad="xsmall"
+      background={selected ? "brand" : "light-1"}
+    >
       {label}
     </Box>
   );
@@ -215,26 +230,30 @@ const DropDown = forwardRef<HTMLButtonElement, FormField<DropDownProps>>(
       let opt_value = option[itemValueKey],
         opt_label = option[itemLabelKey];
 
-      return (
-        <Option
+      const selected =
+        selectedValues && Array.isArray(selectedValues)
+          ? selectedValues.findIndex((v) => v[itemValueKey] === opt_value) !==
+            -1
+          : selectedValues === opt_value;
+
+      return multiple ? (
+        <MultipleOption
           label={
             renderItem ? (
-              renderItem(option)
+              renderItem(option, selected)
             ) : (
               <DefaultOptionLabel content={opt_label} />
             )
           }
-          selected={
-            selectedValues && Array.isArray(selectedValues)
-              ? selectedValues.findIndex(
-                  (v) => v[itemValueKey] === opt_value
-                ) !== -1
-              : selectedValues === opt_value
-          }
+          selected={selected}
         />
+      ) : renderItem ? (
+        renderItem(option, selected)
+      ) : (
+        <SingleOption selected={selected} label={opt_label} />
       );
     };
-    
+
     const valueLabel = () => {
       let labels = (
         <LabelBox plainLabel={plainLabel}>
