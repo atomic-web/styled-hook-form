@@ -54,7 +54,7 @@ const NumericInput = forwardRef<HTMLInputElement, FormField<NumericInputProps>>(
           <NumericBox
             {...inputProps}
             ref={ref}
-            onChange={(e: ChangeEvent<HTMLInputElement>) => field.onChange(e.currentTarget.value)}
+            onChange={(e: ChangeEvent<HTMLInputElement>) => field.onChange(parseFloat(e.currentTarget.value))}
             value={field.value}
           />
         )}
