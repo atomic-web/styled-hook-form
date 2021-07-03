@@ -8,7 +8,7 @@ import { useSHFContext } from "../../../../context";
 const NumericInput = forwardRef<HTMLInputElement, FormField<NumericInputProps>>(
   (props, ref) => {
     let vrules = props.validationRules || {};
-    const {translate : T } = useSHFContext();
+    const { translate: T } = useSHFContext();
 
     let {
       name,
@@ -18,7 +18,7 @@ const NumericInput = forwardRef<HTMLInputElement, FormField<NumericInputProps>>(
       max,
       required,
       methods,
-      inputProps
+      inputProps,
     } = props;
 
     let control = methods?.control;
@@ -43,7 +43,7 @@ const NumericInput = forwardRef<HTMLInputElement, FormField<NumericInputProps>>(
         message: T("numeric-input-max-msg", { name: label, value: max }),
       };
     }
-    
+
     return (
       <Controller
         name={name}
@@ -54,7 +54,9 @@ const NumericInput = forwardRef<HTMLInputElement, FormField<NumericInputProps>>(
           <NumericBox
             {...inputProps}
             ref={ref}
-            onChange={(e: ChangeEvent<HTMLInputElement>) => field.onChange(e.currentTarget.value)}
+            onChange={(e: ChangeEvent<HTMLInputElement>) =>
+              field.onChange(parseFloat(e.currentTarget.value || "0"))
+            }
             value={field.value}
           />
         )}
