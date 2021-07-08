@@ -58,7 +58,7 @@ const FileInput = forwardRef<HTMLInputElement, FormField<FileInputProps>>(
             <GrommetFileInput
               name={name}
               ref={ref}
-              required={required}
+              required={!field.value && required}
               multiple={multiple}
               onChange={handleChange(field)}
               messages={localizedMessages}
