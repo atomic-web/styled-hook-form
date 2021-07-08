@@ -39,7 +39,7 @@ const DataTable: React.FC<DataTableProps> = (props) => {
   );
 
   useEffect(() => {
-    if (!alreadyContextDefined) {
+    if (alreadyContextDefined) {
       tableContext.dispatch({ type: "merge-value", payload: contextOptions });
     }
   }, []);
