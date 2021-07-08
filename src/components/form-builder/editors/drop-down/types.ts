@@ -41,6 +41,6 @@ export interface DropDownProps {
   placeholder?: React.ReactNode;
   onSearch?: (text: string, options: any[]) => any[];
   renderItem?: <TOption = any>(options: TOption,selected : boolean) => React.ReactNode;
-  selectProps?: SelectProps;
+  selectProps?: Partial<SelectProps>;
   searchDebounce?: number;
 }
