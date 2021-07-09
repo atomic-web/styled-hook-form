@@ -6,5 +6,5 @@ export type TextInputProps = FormEditorPropsBase & {
     maxLength?: number,
     name: string,
     defaultValue? : string,
-    inputProps? : Partial<GrommetTextInputProps>
+    inputProps? : Omit<GrommetTextInputProps,"ref"|"onChange"|"value">
 }

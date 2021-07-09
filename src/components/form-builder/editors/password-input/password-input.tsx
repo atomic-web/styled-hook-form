@@ -1,15 +1,22 @@
 import { forwardRef, useState } from "react";
 import { Controller } from "react-hook-form";
 import { PasswordInputProps } from "./types";
-import { TextInput as GrommetTextInput } from "grommet";
+import { Box, Button, TextInput as GrommetTextInput } from "grommet";
 import { FormField } from "../../types";
 import styled from "styled-components";
 import PasswordStrength from "./password-strength";
 import { useSHFContext } from "../../../../context";
+import { View, Hide } from "grommet-icons";
+//@ts-ignore
+import { inputStyle } from "grommet/utils/styles";
 
 const PasswordBoxWrap = styled.div`
   display: flex;
   flex-direction: column;
+`;
+
+const PasswordBox = styled(Box)`
+  ${inputStyle}
 `;
 
 export const PasswordInput = forwardRef<
@@ -17,8 +24,8 @@ export const PasswordInput = forwardRef<
   FormField<PasswordInputProps>
 >((props, ref) => {
   let vrules = props.validationRules || {};
-  const {translate : T } = useSHFContext();
-  
+  const { translate: T } = useSHFContext();
+
   const [passStrength, setPassStrength] = useState<number>(0);
 
   let {
@@ -29,7 +36,11 @@ export const PasswordInput = forwardRef<
     required,
     showPasswordStrength,
     minPasswordStrength,
+    visibilityToggle = true,
+    inputProps,
   } = props;
+
+  const [reveal, setReveal] = useState<boolean>(false);
 
   let control = methods?.control;
 
@@ -42,7 +53,9 @@ export const PasswordInput = forwardRef<
 
   if (minPasswordStrength) {
     vrules.validate = () => {
-      return passStrength >= minPasswordStrength! ? true : T("password-input-weak-password");
+      return passStrength >= minPasswordStrength!
+        ? true
+        : T("password-input-weak-password");
     };
   }
 
@@ -51,27 +64,44 @@ export const PasswordInput = forwardRef<
   };
 
   return (
-      <Controller
-        name={name}
-        defaultValue={initialValue}
-        rules={vrules as any}
-        control={control}
-        render={({ field }) => (
-          <PasswordBoxWrap>
+    <Controller
+      name={name}
+      defaultValue={initialValue}
+      rules={vrules as any}
+      control={control}
+      render={({ field }) => (
+        <PasswordBoxWrap>
+          <PasswordBox
+            direction="row"
+            align="center"
+            pad={{ horizontal: "small" }}
+          >
             <GrommetTextInput
+              {...inputProps}
               ref={ref}
-              type="password"
+              type={reveal ? "text" : "password"}
               onChange={(e) => field.onChange(e)}
               defaultValue={field.value}
+              focusIndicator={false}
+              plain="full"
             />
-            {showPasswordStrength && (
-              <PasswordStrength
-                password={field.value}
-                onChange={handlePassStrengthChange}
+            {visibilityToggle && (
+              <Button
+                plain
+                focusIndicator={false}
+                icon={reveal ? <View size="medium" /> : <Hide size="medium" />}
+                onClick={() => setReveal(!reveal)}
               />
             )}
-          </PasswordBoxWrap>
-        )}
-      />
+          </PasswordBox>
+          {showPasswordStrength && (
+            <PasswordStrength
+              password={field.value}
+              onChange={handlePassStrengthChange}
+            />
+          )}
+        </PasswordBoxWrap>
+      )}
+    />
   );
 });

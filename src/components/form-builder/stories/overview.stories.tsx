@@ -65,6 +65,7 @@ const fields: FormField[] = [
     tip: "Choose as passsword",
     showPasswordStrength: true,
     minPasswordStrength: 50,
+    visibilityToggle:true,
     required: true,
     gridArea: "left",
   },
