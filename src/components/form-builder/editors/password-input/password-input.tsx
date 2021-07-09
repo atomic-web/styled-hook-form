@@ -8,15 +8,24 @@ import PasswordStrength from "./password-strength";
 import { useSHFContext } from "../../../../context";
 import { View, Hide } from "grommet-icons";
 //@ts-ignore
-import { inputStyle } from "grommet/utils/styles";
+import { inputStyle ,disabledStyle} from "grommet/utils/styles";
 
 const PasswordBoxWrap = styled.div`
   display: flex;
   flex-direction: column;
 `;
 
-const PasswordBox = styled(Box)`
+const PasswordBox = styled<any>(Box)`
   ${inputStyle}
+  ${(props) => props.theme.textInput && props.theme.textInput.extend};
+  ${(props) =>
+    props.disabled &&
+    disabledStyle(
+      props.theme.textInput.disabled && props.theme.textInput.disabled.opacity
+    )}
+  & input{
+    border:none!important;
+  }
 `;
 
 export const PasswordInput = forwardRef<
@@ -75,6 +84,7 @@ export const PasswordInput = forwardRef<
             direction="row"
             align="center"
             pad={{ horizontal: "small" }}
+            {...inputProps as any}
           >
             <GrommetTextInput
               {...inputProps}

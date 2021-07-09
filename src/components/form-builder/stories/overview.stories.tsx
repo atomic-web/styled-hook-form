@@ -67,7 +67,7 @@ const fields: FormField[] = [
     minPasswordStrength: 50,
     visibilityToggle:true,
     required: true,
-    gridArea: "left",
+    gridArea: "left" 
   },
   {
     name: "boolCheckbox",
