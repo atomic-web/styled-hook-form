@@ -5,7 +5,7 @@ import React, {
   useCallback,
   useEffect,
   useMemo,
-  useState,
+  useRef
 } from "react";
 import { HttpFormProps } from "./types";
 import { Box, Button, Spinner } from "grommet";
@@ -13,7 +13,7 @@ import { useSHFContext } from "../../context";
 import staticAxios, { AxiosRequestConfig } from "axios";
 import MockAdapter from "axios-mock-adapter";
 import { FormMethodsRef } from "components/form/types";
-import { UseFormReturn } from "react-hook-form";
+import { FieldValues, UseFormReturn } from "react-hook-form";
 
 const successCodes = [200, 201, 202];
 
@@ -43,10 +43,10 @@ const HttpForm = React.forwardRef<FormMethodsRef, HttpFormProps>(
 
     let { translate: T } = useSHFContext();
 
-    const [methods, setMethods] = useState<UseFormReturn | null>(null);
+    let methodsRef = useRef<UseFormReturn<FieldValues>>();
 
     const fallBackRef = (instance: FormMethodsRef) => {
-      setMethods(instance.methods);
+      methodsRef.current = instance.methods;
     };
 
     const proxyRef = (origRef: ForwardedRef<FormMethodsRef>) => {
@@ -126,8 +126,8 @@ const HttpForm = React.forwardRef<FormMethodsRef, HttpFormProps>(
         if (onLoadResponse) {
           data = onLoadResponse(data, headers);
         }
-        if (methods) {
-          methods.reset(data);
+        if (methodsRef?.current) {
+          methodsRef.current.reset(data);
         }
 
         return data;
