@@ -58,6 +58,14 @@ const HttpForm = React.forwardRef<FormMethodsRef, HttpFormProps>(
 
     const formRef = ref ? proxyRef(ref) : useRef<FormMethodsRef>(null);
 
+    if (formRef && typeof formRef !== "function") {
+      useEffect(() => {
+        if (formRef.current) {
+          setMethods(formRef.current.methods);
+        }
+      }, [formRef.current]);
+    }
+
     let saveRequest: AxiosRequestConfig = useMemo(() => {
       return typeof saveReqProp === "string"
         ? {
