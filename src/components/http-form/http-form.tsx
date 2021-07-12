@@ -1,12 +1,20 @@
 import useAxios from "axios-hooks";
 import { FormBuilder, FormFieldType } from "../form-builder";
-import React, { useCallback, useEffect, useMemo } from "react";
+import React, {
+  ForwardedRef,
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
 import { HttpFormProps } from "./types";
 import { Box, Button, Spinner } from "grommet";
 import { useSHFContext } from "../../context";
 import staticAxios, { AxiosRequestConfig } from "axios";
 import MockAdapter from "axios-mock-adapter";
 import { FormMethodsRef } from "components/form/types";
+import { UseFormReturn } from "react-hook-form";
 
 const successCodes = [200, 201, 202];
 
@@ -35,6 +43,20 @@ const HttpForm = React.forwardRef<FormMethodsRef, HttpFormProps>(
     } = props;
 
     let { translate: T } = useSHFContext();
+
+    const [methods, setMethods] = useState<UseFormReturn | null>(null);
+
+    const proxyRef = (origRef: ForwardedRef<FormMethodsRef>) => {
+      if (typeof origRef === "function") {
+        return (instance: FormMethodsRef) => {
+          setMethods(instance.methods);
+          origRef(instance);
+        };
+      }
+      return ref;
+    };
+
+    const formRef = ref ? proxyRef(ref) : useRef<FormMethodsRef>(null);
 
     let saveRequest: AxiosRequestConfig = useMemo(() => {
       return typeof saveReqProp === "string"
@@ -94,10 +116,13 @@ const HttpForm = React.forwardRef<FormMethodsRef, HttpFormProps>(
         if (typeof data === "string") {
           data = JSON.parse(data);
         }
-        
+
         if (onLoadResponse) {
           data = onLoadResponse(data, headers);
-        }        
+        }
+        if (methods) {
+          methods.reset(data);
+        }
 
         return data;
       }, []),
@@ -110,7 +135,12 @@ const HttpForm = React.forwardRef<FormMethodsRef, HttpFormProps>(
     };
 
     const [
-      { loading : loadLoading, data: serverData, response: loadResponse, error: loadError },
+      {
+        loading: loadLoading,
+        data: serverData,
+        response: loadResponse,
+        error: loadError,
+      },
       getServerData,
     ] = useAxios(
       loadRequest
@@ -190,7 +220,7 @@ const HttpForm = React.forwardRef<FormMethodsRef, HttpFormProps>(
     return (
       <FormBuilder
         {...rest}
-        ref={ref}
+        ref={formRef}
         fields={fields}
         onSubmit={handleSubmit}
         model={model ?? serverData}
@@ -201,7 +231,13 @@ const HttpForm = React.forwardRef<FormMethodsRef, HttpFormProps>(
           <Button
             type="submit"
             primary
-            icon={(loading || loadLoading) && !loadingIndicator ? <Spinner /> : <div />}
+            icon={
+              (loading || loadLoading) && !loadingIndicator ? (
+                <Spinner />
+              ) : (
+                <div />
+              )
+            }
             label={
               <Box>
                 {typeof submitButton === "boolean"
