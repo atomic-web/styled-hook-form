@@ -12,6 +12,7 @@ import { useSHFContext } from "../../../../context";
 const FileInput = forwardRef<HTMLInputElement, FormField<FileInputProps>>(
   (props, ref) => {
     const {translate : T } = useSHFContext();
+    let vrules = props.validationRules || {};
 
     let {
       name,
@@ -19,7 +20,15 @@ const FileInput = forwardRef<HTMLInputElement, FormField<FileInputProps>>(
       required,
       methods,
       multiple,
+      label
     } = props;
+
+    if (required) {
+      vrules.required = {
+        value: required,
+        message: T("required-msg", { name: label }),
+      };
+    }
 
     let control = methods?.control;
 
@@ -54,11 +63,11 @@ const FileInput = forwardRef<HTMLInputElement, FormField<FileInputProps>>(
           name={name}
           defaultValue={initialValue}
           control={control}
+          rules={vrules as any}
           render={({ field }) => (
             <GrommetFileInput
               name={name}
               ref={ref}
-              required={!field.value && required}
               multiple={multiple}
               onChange={handleChange(field)}
               messages={localizedMessages}
