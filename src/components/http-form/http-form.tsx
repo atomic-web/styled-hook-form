@@ -5,7 +5,6 @@ import React, {
   useCallback,
   useEffect,
   useMemo,
-  useRef,
   useState,
 } from "react";
 import { HttpFormProps } from "./types";
@@ -46,25 +45,24 @@ const HttpForm = React.forwardRef<FormMethodsRef, HttpFormProps>(
 
     const [methods, setMethods] = useState<UseFormReturn | null>(null);
 
-    const proxyRef = (origRef: ForwardedRef<FormMethodsRef>) => {
-      if (typeof origRef === "function") {
-        return (instance: FormMethodsRef) => {
-          setMethods(instance.methods);
-          origRef(instance);
-        };
-      }
-      return ref;
+    const fallBackRef = (instance: FormMethodsRef) => {
+      setMethods(instance.methods);
     };
 
-    const formRef = ref ? proxyRef(ref) : useRef<FormMethodsRef>(null);
-
-    if (formRef && typeof formRef !== "function") {
-      useEffect(() => {
-        if (formRef.current) {
-          setMethods(formRef.current.methods);
+    const proxyRef = (origRef: ForwardedRef<FormMethodsRef>) => {
+      return (instance: FormMethodsRef) => {
+        fallBackRef(instance);
+        if (origRef) {
+          if (typeof origRef === "function") {
+            origRef(instance);
+          } else {
+            origRef.current = instance;
+          }
         }
-      }, [formRef.current]);
-    }
+      };
+    };
+
+    const formRef = proxyRef(ref);
 
     let saveRequest: AxiosRequestConfig = useMemo(() => {
       return typeof saveReqProp === "string"
