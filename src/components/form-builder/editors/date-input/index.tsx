@@ -1,9 +1,14 @@
-import React from 'react';
-import { Controller } from "react-hook-form";
+import React, { useCallback } from "react";
+import {
+  Controller,
+  ControllerRenderProps,
+  FieldValues,
+} from "react-hook-form";
 import { FormField } from "../../types";
 import { DateInputProps } from "./types";
-import { Box, DateInput as DatePicker } from "grommet";
-import { useSHFContext } from '../../../../context';
+import { Box, Button, DateInput as DatePicker } from "grommet";
+import { useSHFContext } from "../../../../context";
+import { SubtractCircle } from "grommet-icons";
 
 const DateInput: React.FC<FormField<DateInputProps>> = (props) => {
   let vrules = props.validationRules || {};
@@ -11,13 +16,14 @@ const DateInput: React.FC<FormField<DateInputProps>> = (props) => {
     name,
     label,
     defaultValue: initialValue,
+    dateInputProps,
     minDate,
     maxDate,
     required,
     methods,
   } = props;
 
-  const {translate : T } = useSHFContext();
+  const { translate: T } = useSHFContext();
 
   let control = methods?.control;
 
@@ -42,26 +48,44 @@ const DateInput: React.FC<FormField<DateInputProps>> = (props) => {
     };
   }
 
+  const resetValue = useCallback(
+    (field: ControllerRenderProps<FieldValues>) => () => {
+      field.onChange("");
+    },
+    []
+  );
+  const dateFormat = dateInputProps?.format || "yyyy/mm/dd";
+
   return (
-      <Controller
-        name={name}
-        defaultValue={initialValue}
-        rules={vrules as any}
-        control={control}
-        render={({ field }) => (
-          <Box fill align="stretch" justify="stretch">
-            <Box justify="stretch">
+    <Controller
+      name={name}
+      defaultValue={initialValue}
+      rules={vrules as any}
+      control={control}
+      render={({ field }) => (
+        <Box fill align="stretch" justify="stretch">
+          <Box justify="stretch">
+            <Box direction="row">
               <DatePicker
+                {...dateInputProps}
                 value={field.value}
-                format="yyyy/mm/dd"
-                onChange={(e) => {
+                format={dateFormat}
+                onChange={(e: any) => {
                   field.onChange(e.value);
                 }}
               />
+              {field.value && (
+                <Button
+                  icon={<SubtractCircle />}
+                  focusIndicator={false}
+                  onClick={resetValue(field)}
+                />
+              )}
             </Box>
           </Box>
-        )}
-      ></Controller>
+        </Box>
+      )}
+    ></Controller>
   );
 };
 
