@@ -118,7 +118,7 @@ function updateInPath<TProp, TValue>(
   updateFunc: (prop: TProp, value: TValue) => TProp
 ): any {
   let state = Map(obj as any);
-  let new_state = state.updateIn(path, (prop) => updateFunc(prop, value));
+  let new_state = state.updateIn(path, (prop : any) => updateFunc(prop, value));
   return new_state.toObject() as any;
 }
 
