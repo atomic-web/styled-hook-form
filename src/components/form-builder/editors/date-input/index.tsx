@@ -62,29 +62,33 @@ const DateInput: React.FC<FormField<DateInputProps>> = (props) => {
       defaultValue={initialValue}
       rules={vrules as any}
       control={control}
-      render={({ field }) => (
-        <Box fill align="stretch" justify="stretch">
-          <Box justify="stretch">
-            <Box direction="row">
-              <DatePicker
-                {...dateInputProps}
-                value={field.value}
-                format={dateFormat}
-                onChange={(e: any) => {
-                  field.onChange(e.value);
-                }}
-              />
-              {field.value && (
-                <Button
-                  icon={<SubtractCircle />}
-                  focusIndicator={false}
-                  onClick={resetValue(field)}
+      render={({ field }) => {
+        console.log(field.value);
+        return (
+          <Box fill align="stretch" justify="stretch">
+            <Box justify="stretch">
+              <Box direction="row">
+                <DatePicker
+                  {...dateInputProps}
+                  defaultValue={field.value}
+                  value={field.value}
+                  format={dateFormat}
+                  onChange={(e: any) => {
+                    field.onChange(e.value ? e.value : "");
+                  }}
                 />
-              )}
+                {field.value && (
+                  <Button
+                    icon={<SubtractCircle />}
+                    focusIndicator={false}
+                    onClick={resetValue(field)}
+                  />
+                )}
+              </Box>
             </Box>
           </Box>
-        </Box>
-      )}
+        );
+      }}
     ></Controller>
   );
 };
