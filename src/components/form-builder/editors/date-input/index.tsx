@@ -4,11 +4,11 @@ import {
   ControllerRenderProps,
   FieldValues,
 } from "react-hook-form";
+import { Box, Button, DateInput as DatePicker } from "grommet";
+import { SubtractCircle } from "grommet-icons";
 import { FormField } from "../../types";
 import { DateInputProps } from "./types";
-import { Box, Button, DateInput as DatePicker } from "grommet";
 import { useSHFContext } from "../../../../context";
-import { SubtractCircle } from "grommet-icons";
 
 const DateInput: React.FC<FormField<DateInputProps>> = (props) => {
   let vrules = props.validationRules || {};
@@ -55,11 +55,16 @@ const DateInput: React.FC<FormField<DateInputProps>> = (props) => {
     []
   );
   const dateFormat = dateInputProps?.format || "yyyy/mm/dd";
+  const normalValue = !initialValue
+    ? initialValue
+    : typeof initialValue === "string"
+    ? initialValue
+    : (initialValue as Date).toISOString();
 
   return (
     <Controller
       name={name}
-      defaultValue={initialValue}
+      defaultValue={normalValue}
       rules={vrules as any}
       control={control}
       render={({ field }) => {
@@ -88,7 +93,7 @@ const DateInput: React.FC<FormField<DateInputProps>> = (props) => {
             </Box>
           </Box>
         );
-      }}
+      }} 
     ></Controller>
   );
 };
