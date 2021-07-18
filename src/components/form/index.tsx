@@ -2,8 +2,9 @@ import React, { FormEvent, useEffect, useRef } from "react";
 import { FormProvider, useForm } from "react-hook-form";
 import { useDebouncedCallback } from "use-debounce";
 import equals from "fast-deep-equal/es6";
-import { FormProps } from "./types";
+import { FormMethodsRef, FormProps } from "./types";
 import { isEmptyObject } from "../../components/utils/comp";
+import { ChangeEventStore } from "./change-event-store";
 
 const Form: React.FC<FormProps> = (props) => {
   const methods = useForm({
@@ -13,10 +14,12 @@ const Form: React.FC<FormProps> = (props) => {
 
   const { methodsRef } = props;
 
+  let refObj : FormMethodsRef = {
+    methods,
+    changeHandlers : new ChangeEventStore()
+  };
+
   if (methodsRef && methods) {
-    let refObj = {
-      methods,
-    };
     if (typeof methodsRef === "function") {
       methodsRef(refObj);
     } else {
@@ -81,15 +84,21 @@ const Form: React.FC<FormProps> = (props) => {
             debuncedSubmit(getLiveValue());
           }
 
+          const _value = getLiveValue(
+            changingName,
+            props.options.defaultValues[changingName]
+          )
+
+          if (methodsRef){
+            refObj.changeHandlers?.emitChange(changingName , _value);
+          }
+
           let listener =
             changeHandlers?.find((f) => f.name === changingName) ?? null;
 
           if (listener) {
             listener.handler(
-              getLiveValue(
-                changingName,
-                props.options.defaultValues[changingName]
-              )
+              _value
             );
           }
         }

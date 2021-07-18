@@ -1,8 +1,10 @@
 import { UseFormProps, UseFormReturn } from "react-hook-form";
+import { ChangeEventStore } from "./change-event-store";
 export type FormChildProps = UseFormReturn;
 
 export interface FormMethodsRef {
   methods: UseFormReturn;
+  changeHandlers: ChangeEventStore;
 }
 
 export interface WatchField {
