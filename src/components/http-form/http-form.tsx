@@ -14,6 +14,7 @@ import staticAxios, { AxiosRequestConfig } from "axios";
 import MockAdapter from "axios-mock-adapter";
 import { FormMethodsRef } from "components/form/types";
 import { FieldValues, UseFormReturn } from "react-hook-form";
+import equals from "fast-deep-equal/es6";
 
 const successCodes = [200, 201, 202];
 
@@ -44,6 +45,7 @@ const HttpForm = React.forwardRef<FormMethodsRef, HttpFormProps>(
     let { translate: T } = useSHFContext();
 
     let methodsRef = useRef<UseFormReturn<FieldValues>>();
+    const requestRef = useRef<AxiosRequestConfig>();
 
     const fallBackRef = (instance: FormMethodsRef) => {
       methodsRef.current = instance.methods;
@@ -219,7 +221,10 @@ const HttpForm = React.forwardRef<FormMethodsRef, HttpFormProps>(
 
     useEffect(() => {
       if (loadRequest) {
-        getServerData();
+        if (!requestRef.current || !equals(requestRef.current,loadRequest) ){
+          getServerData();
+          requestRef.current = loadRequest;
+        }
       }
     }, [loadRequest]);
 
