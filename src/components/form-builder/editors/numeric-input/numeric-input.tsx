@@ -65,4 +65,4 @@ const NumericInput = forwardRef<HTMLInputElement, FormField<NumericInputProps>>(
   }
 );
 
-export default NumericInput;
+export {NumericInput};

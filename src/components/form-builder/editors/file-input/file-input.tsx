@@ -80,4 +80,4 @@ const FileInput = forwardRef<HTMLInputElement, FormField<FileInputProps>>(
   }
 );
 
-export default FileInput;
+export {FileInput};

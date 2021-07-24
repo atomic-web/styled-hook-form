@@ -67,4 +67,4 @@ const TextInput = forwardRef<HTMLInputElement, FormField<TextInputProps>>(
   }
 );
 
-export default TextInput;
+export {TextInput};

@@ -39,4 +39,4 @@ const BoolInput = forwardRef<HTMLInputElement, FormField<BoolInputProps>>(
   }
 );
 
-export default BoolInput;
+export {BoolInput};

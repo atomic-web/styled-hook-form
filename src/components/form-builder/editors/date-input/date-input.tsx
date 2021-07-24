@@ -98,4 +98,4 @@ const DateInput: React.FC<FormField<DateInputProps>> = (props) => {
   );
 };
 
-export default DateInput;
+export {DateInput};
