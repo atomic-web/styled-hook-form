@@ -1,10 +1,10 @@
 import { forwardRef } from "react";
 import { Controller } from "react-hook-form";
-import { BoolInputProps } from "./types";
+import { BoolEditorProps } from "./types";
 import { CheckBox } from "grommet";
 import { FormField } from "../../types";
 
-const BoolInput = forwardRef<HTMLInputElement, FormField<BoolInputProps>>(
+const BoolEditor = forwardRef<HTMLInputElement, FormField<BoolEditorProps>>(
   (props, ref) => {
     let vrules = props.validationRules || {};
 
@@ -39,4 +39,4 @@ const BoolInput = forwardRef<HTMLInputElement, FormField<BoolInputProps>>(
   }
 );
 
-export {BoolInput};
+export {BoolEditor};

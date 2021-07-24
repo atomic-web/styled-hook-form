@@ -4,12 +4,12 @@ import {
   ControllerRenderProps,
   FieldValues,
 } from "react-hook-form";
-import { FileInputProps } from "./types";
+import { FileEditorProps } from "./types";
 import { FileInput as GrommetFileInput } from "grommet";
 import { FormField } from "../../types";
 import { useSHFContext } from "../../../../context";
 
-const FileInput = forwardRef<HTMLInputElement, FormField<FileInputProps>>(
+const FileEditor = forwardRef<HTMLInputElement, FormField<FileEditorProps>>(
   (props, ref) => {
     const {translate : T } = useSHFContext();
     let vrules = props.validationRules || {};
@@ -80,4 +80,4 @@ const FileInput = forwardRef<HTMLInputElement, FormField<FileInputProps>>(
   }
 );
 
-export {FileInput};
+export {FileEditor};

@@ -1,11 +1,11 @@
 import React from "react";
 import { Controller } from "react-hook-form";
-import { TimeInputProps } from "./types";
+import { TimeEditorProps } from "./types";
 import { FormField } from "../../types";
 import { TimePicker } from "../../../extension/time-picker";
 import { useSHFContext } from "../../../../context";
 
-const TimeInput: React.FC<FormField<TimeInputProps>> = (props) => {
+const TimeEditor: React.FC<FormField<TimeEditorProps>> = (props) => {
   let vrules = props.validationRules || {};
 
   const { translate: T } = useSHFContext();
@@ -40,4 +40,4 @@ const TimeInput: React.FC<FormField<TimeInputProps>> = (props) => {
   );
 };
 
-export { TimeInput };
+export { TimeEditor };

@@ -1,6 +1,6 @@
-import { TextInputProps } from "../text-input/types";
+import { TextEditorProps } from "../text-editor/types";
 
-export interface PasswordInputProps extends TextInputProps{
+export interface PasswordEditorProps extends TextEditorProps{
    showPasswordStrength? :boolean,
    minPasswordStrength?: number,
    visibilityToggle? : boolean

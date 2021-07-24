@@ -1,11 +1,11 @@
 import { forwardRef } from "react";
 import { Controller } from "react-hook-form";
-import { TextInputProps } from "./types";
+import { TextEditorProps } from "./types";
 import { TextInput as GrommetTextInput } from "grommet";
 import { FormField } from "../../types";
 import { useSHFContext } from "../../../../context";
 
-const TextInput = forwardRef<HTMLInputElement, FormField<TextInputProps>>(
+const TextEditor = forwardRef<HTMLInputElement, FormField<TextEditorProps>>(
   (props, ref) => {
     let vrules = props.validationRules || {};
 
@@ -67,4 +67,4 @@ const TextInput = forwardRef<HTMLInputElement, FormField<TextInputProps>>(
   }
 );
 
-export {TextInput};
+export {TextEditor};

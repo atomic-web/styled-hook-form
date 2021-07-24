@@ -1,6 +1,6 @@
 import { forwardRef, useState } from "react";
 import { Controller } from "react-hook-form";
-import { PasswordInputProps } from "./types";
+import { PasswordEditorProps } from "./types";
 import { Box, Button, TextInput as GrommetTextInput } from "grommet";
 import { FormField } from "../../types";
 import styled from "styled-components";
@@ -28,9 +28,9 @@ const PasswordBox = styled<any>(Box)`
   }
 `;
 
-export const PasswordInput = forwardRef<
+export const PasswordEditor = forwardRef<
   HTMLInputElement,
-  FormField<PasswordInputProps>
+  FormField<PasswordEditorProps>
 >((props, ref) => {
   let vrules = props.validationRules || {};
   const { translate: T } = useSHFContext();

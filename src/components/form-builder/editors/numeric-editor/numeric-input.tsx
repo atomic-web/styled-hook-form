@@ -1,11 +1,11 @@
 import { ChangeEvent, forwardRef } from "react";
 import { Controller } from "react-hook-form";
-import { NumericInputProps } from "./types";
+import { NumericEditorProps } from "./types";
 import { FormField } from "../../types";
 import { NumericBox } from "../../../../components/extension";
 import { useSHFContext } from "../../../../context";
 
-const NumericInput = forwardRef<HTMLInputElement, FormField<NumericInputProps>>(
+const NumericEditor = forwardRef<HTMLInputElement, FormField<NumericEditorProps>>(
   (props, ref) => {
     let vrules = props.validationRules || {};
     const { translate: T } = useSHFContext();
@@ -65,4 +65,4 @@ const NumericInput = forwardRef<HTMLInputElement, FormField<NumericInputProps>>(
   }
 );
 
-export {NumericInput};
+export {NumericEditor};

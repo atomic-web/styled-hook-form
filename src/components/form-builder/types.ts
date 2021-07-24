@@ -1,6 +1,6 @@
 import React from "react";
-import { FileInputProps } from "./editors/file-input/types";
-import { BoolInputProps } from "./editors/bool-input/types";
+import { FileEditorProps } from "./editors/file-editor/types";
+import { BoolEditorProps } from "./editors/bool-editor/types";
 import {
   FieldPathValue,
   RegisterOptions,
@@ -8,12 +8,12 @@ import {
   UseFormReturn,
   ValidateResult,
 } from "react-hook-form";
-import { DateInputProps } from "./editors/date-input/types";
-import { NumericInputProps } from "./editors/numeric-input/types";
-import { TextInputProps } from "./editors/text-input/types";
+import { DateEditorProps } from "./editors/date-editor/types";
+import { NumericEditorProps } from "./editors/numeric-editor/types";
+import { TextEditorProps } from "./editors/text-editor/types";
 import { DropDownProps } from "./editors/drop-down/types";
-import { PasswordInputProps } from "./editors/password-input/types";
-import { TimeInputProps } from "./editors/time-input/types";
+import { PasswordEditorProps } from "./editors/password-editor/types";
+import { TimeEditorProps } from "./editors/time-editor/types";
 import { PropType } from "types/utils";
 import { GridProps } from "grommet";
 import { CustomEditorProps } from "./editors/custom-editor/types";
@@ -37,28 +37,28 @@ export enum FormFieldType {
 export type FormFieldOptions =
   | ({
       type: FormFieldType.Text;
-    } & TextInputProps)
+    } & TextEditorProps)
   | ({
       type: FormFieldType.Number;
-    } & NumericInputProps)
+    } & NumericEditorProps)
   | ({
       type: FormFieldType.Date;
-    } & DateInputProps)
+    } & DateEditorProps)
   | ({
       type: FormFieldType.Boolean;
-    } & BoolInputProps)
+    } & BoolEditorProps)
   | ({
       type: FormFieldType.DropDown;
     } & DropDownProps)
   | ({
       type: FormFieldType.Password;
-    } & PasswordInputProps)
+    } & PasswordEditorProps)
   | ({
       type: FormFieldType.File;
-    } & FileInputProps)
+    } & FileEditorProps)
   | ({
       type: FormFieldType.Time;
-    } & TimeInputProps)
+    } & TimeEditorProps)
   | ({
       type: FormFieldType.Custom;
     } & CustomEditorProps)

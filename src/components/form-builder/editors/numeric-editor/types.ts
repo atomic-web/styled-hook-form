@@ -1,7 +1,7 @@
 import { TextInputProps } from "grommet";
 import { FormEditorPropsBase } from "../../types";
 
-export type NumericInputProps = FormEditorPropsBase & {
+export type NumericEditorProps = FormEditorPropsBase & {
   min?: number;
   max?: number;
   defaultValue?: number;

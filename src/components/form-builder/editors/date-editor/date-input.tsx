@@ -7,10 +7,10 @@ import {
 import { Box, Button, DateInput as DatePicker } from "grommet";
 import { SubtractCircle } from "grommet-icons";
 import { FormField } from "../../types";
-import { DateInputProps } from "./types";
+import { DateEditorProps } from "./types";
 import { useSHFContext } from "../../../../context";
 
-const DateInput: React.FC<FormField<DateInputProps>> = (props) => {
+const DateEditor: React.FC<FormField<DateEditorProps>> = (props) => {
   let vrules = props.validationRules || {};
   let {
     name,
@@ -98,4 +98,4 @@ const DateInput: React.FC<FormField<DateInputProps>> = (props) => {
   );
 };
 
-export {DateInput};
+export {DateEditor};

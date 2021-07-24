@@ -1,6 +1,6 @@
 import { FormEditorPropsBase } from '../../types';
 
-export type BoolInputProps = FormEditorPropsBase & {
+export type BoolEditorProps = FormEditorPropsBase & {
     defaultValue? : boolean,
     controlType : "checkbox" | "switch"
 }
