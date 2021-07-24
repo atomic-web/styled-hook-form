@@ -38,7 +38,7 @@ export function useFormMethods(): UseFormMethodsReturn {
     if (ref.current) {
       setMethods(ref.current?.methods);
     }
-  }, [ref]);
+  }, [ref.current]);
 
   return {
     methods,
