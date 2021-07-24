@@ -20,7 +20,8 @@ const FileInput = forwardRef<HTMLInputElement, FormField<FileInputProps>>(
       required,
       methods,
       multiple,
-      label
+      label,
+      fileInputProps
     } = props;
 
     if (required) {
@@ -66,6 +67,7 @@ const FileInput = forwardRef<HTMLInputElement, FormField<FileInputProps>>(
           rules={vrules as any}
           render={({ field }) => (
             <GrommetFileInput
+              {...fileInputProps}
               name={name}
               ref={ref}
               multiple={multiple}
