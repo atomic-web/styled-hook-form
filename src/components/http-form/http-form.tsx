@@ -236,7 +236,7 @@ const HttpForm = React.forwardRef<FormMethodsRef, HttpFormProps>(
         ref={formRef}
         fields={fields}
         onSubmit={handleSubmit}
-        model={model ?? serverData}
+        model={model}
       >
         {children}
         {(loading || loadLoading) && loadingIndicator}
