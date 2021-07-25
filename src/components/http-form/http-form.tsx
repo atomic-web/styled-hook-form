@@ -5,7 +5,7 @@ import React, {
   useCallback,
   useEffect,
   useMemo,
-  useRef
+  useRef,
 } from "react";
 import { HttpFormProps } from "./types";
 import { Box, Button, Spinner } from "grommet";
@@ -14,7 +14,6 @@ import staticAxios, { AxiosRequestConfig } from "axios";
 import MockAdapter from "axios-mock-adapter";
 import { FormMethodsRef } from "components/form/types";
 import { FieldValues, UseFormReturn } from "react-hook-form";
-import equals from "fast-deep-equal/es6";
 
 const successCodes = [200, 201, 202];
 
@@ -221,7 +220,10 @@ const HttpForm = React.forwardRef<FormMethodsRef, HttpFormProps>(
 
     useEffect(() => {
       if (loadRequest) {
-        if (!requestRef.current || !equals(requestRef.current,loadRequest) ){
+        if (
+          !requestRef.current ||
+          JSON.stringify(requestRef.current) !== JSON.stringify(loadRequest)
+        ) {
           getServerData();
           requestRef.current = loadRequest;
         }
@@ -234,7 +236,7 @@ const HttpForm = React.forwardRef<FormMethodsRef, HttpFormProps>(
         ref={formRef}
         fields={fields}
         onSubmit={handleSubmit}
-        model={model ?? serverData}
+        model={model}
       >
         {children}
         {(loading || loadLoading) && loadingIndicator}
