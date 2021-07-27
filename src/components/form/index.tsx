@@ -7,16 +7,27 @@ import { isEmptyObject } from "../../components/utils/comp";
 import { ChangeEventStore } from "./change-event-store";
 
 const Form: React.FC<FormProps> = (props) => {
+  
+  const {
+    methodsRef,
+    onSubmit,
+    children,
+    changeHandlers,
+    submitTreshould,
+    autoSubmit,
+    autoSubmitFields,
+    options,
+    ...rest
+  } = props;
+
   const methods = useForm({
     mode: "onTouched",
-    ...props.options,
-  });
+    ...options,
+  });  
 
-  const { methodsRef } = props;
-
-  let refObj : FormMethodsRef = {
+  let refObj: FormMethodsRef = {
     methods,
-    changeHandlers : new ChangeEventStore()
+    changeHandlers: new ChangeEventStore(),
   };
 
   if (methodsRef && methods) {
@@ -33,22 +44,14 @@ const Form: React.FC<FormProps> = (props) => {
     reset,
     control,
   } = methods;
-  const {
-    onSubmit,
-    children,
-    changeHandlers,
-    submitTreshould,
-    autoSubmit,
-    autoSubmitFields,
-  } = props;
+
   const valuesRef = useRef<any | null>(null);
 
   useEffect(() => {
     if (
       !methods.formState.isDirty &&
       (isEmptyObject(valuesRef.current) ||
-        (
-          Object.keys(valuesRef.current ?? {}).length ===
+        (Object.keys(valuesRef.current ?? {}).length ===
           Object.keys(props.options.defaultValues ?? {}).length &&
           !equals(valuesRef.current, props.options.defaultValues)))
     ) {
@@ -87,19 +90,17 @@ const Form: React.FC<FormProps> = (props) => {
           const _value = getLiveValue(
             changingName,
             props.options.defaultValues[changingName]
-          )
+          );
 
-          if (methodsRef){
-            refObj.changeHandlers?.emitChange(changingName , _value);
+          if (methodsRef) {
+            refObj.changeHandlers?.emitChange(changingName, _value);
           }
 
           let listener =
             changeHandlers?.find((f) => f.name === changingName) ?? null;
 
           if (listener) {
-            listener.handler(
-              _value
-            );
+            listener.handler(_value);
           }
         }
       },
@@ -113,7 +114,7 @@ const Form: React.FC<FormProps> = (props) => {
   };
 
   return (
-    <form onSubmit={handleFormSubmit}>
+    <form onSubmit={handleFormSubmit} {...rest}>
       <FormProvider {...methods}>
         {children && children({ ...methods })}
       </FormProvider>

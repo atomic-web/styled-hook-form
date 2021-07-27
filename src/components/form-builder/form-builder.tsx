@@ -127,6 +127,7 @@ const FormBuilder = forwardRef<FormMethodsRef | null, FormBuilderProps>(
       options,
       layout = "GRID",
       editorComponent,
+      ...rest
     } = props;
 
     let fields = useMemo(
@@ -304,6 +305,7 @@ const FormBuilder = forwardRef<FormMethodsRef | null, FormBuilderProps>(
     return (
       <StyledFormBuilder className={className}>
         <Form
+          {...rest as object}
           options={{
             ...(options ?? {}),
             defaultValues,
