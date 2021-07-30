@@ -1,5 +1,6 @@
 import { FormMethodsRef } from "components/form/types";
-import { MutableRefObject, useEffect, useRef, useState } from "react";
+import { useLayoutEffect } from "react";
+import { MutableRefObject, useRef, useState } from "react";
 import { UseFormReturn } from "react-hook-form";
 
 export interface UseFormMethodsReturn {
@@ -19,7 +20,7 @@ export function useFormMethods(): UseFormMethodsReturn {
 
     const [value, setValue] = useState(defaultValue);
 
-    useEffect(() => {
+    useLayoutEffect(() => {
       if (ref.current) {
         ref.current.changeHandlers.addListener(name, handleValueChange);
       }
@@ -34,7 +35,7 @@ export function useFormMethods(): UseFormMethodsReturn {
     return value;
   };
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     if (ref.current) {
       setMethods(ref.current?.methods);
     }
