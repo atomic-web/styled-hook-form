@@ -74,12 +74,7 @@ const DataTableImpl: React.FC<DataTableProps> = (props) => {
     },
     dispatch,
   } = useDataTableContext();
-
-  dispatch({
-    type: "set-order",
-    payload: { param: props.primaryKey, dir: "desc" },
-  });
-
+ 
   let defaultPaging = {
     enabled: false,
     pageSize: 50,
