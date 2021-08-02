@@ -187,6 +187,12 @@ const DataTableImpl: React.FC<DataTableProps> = (props) => {
     }
   }, [dataProp]);
 
+  const sortValue = useMemo(()=>({
+    direction : orderDir,
+    property : orderParam,
+    external: request ? true : false,
+  }),[orderDir,orderParam,request]);
+
   return (
     <>
       {toolbar && <Box>{toolbar}</Box>}
@@ -206,11 +212,7 @@ const DataTableImpl: React.FC<DataTableProps> = (props) => {
                 columns={columns}
                 data={globalData}
                 paginate={false}
-                sort={{
-                  direction : orderDir,
-                  property : orderParam,
-                  external: request ? true : false,
-                }}
+                sort={sortValue}
                 onSort={handleSort}
                 step={paginate?.pageSize ?? props.step ?? Number.MAX_VALUE}
               ></GrommetDataTable>
