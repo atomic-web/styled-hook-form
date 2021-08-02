@@ -3,8 +3,8 @@ import React from "react";
 export interface DataTableContextModel {
   data?: any[];
   primaryKey: string;
-  orderParam?: string;
-  orderDir?: string;
+  orderParam: string;
+  orderDir: "asc" | "desc";
   currentPage?: number;
   pageSize?: number;
   totalRecords: number;
@@ -54,7 +54,15 @@ export type DataTableContextReducerAction =
   | {
       type: "merge-value";
       payload: Partial<DataTableContextModel>;
-    };
+    }
+  | {
+    type :"set-order",
+    payload : {
+      param : string ,
+      dir : "asc" | "desc"
+    }
+  }
+
 export interface DataTableContextProviderValue {
   state: DataTableContextModel;
   dispatch: React.Dispatch<DataTableContextReducerAction>;

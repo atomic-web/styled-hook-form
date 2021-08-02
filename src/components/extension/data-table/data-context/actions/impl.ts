@@ -118,7 +118,7 @@ function updateInPath<TProp, TValue>(
   updateFunc: (prop: TProp, value: TValue) => TProp
 ): any {
   let state = Map(obj as any);
-  let new_state = state.updateIn(path, (prop : any) => updateFunc(prop, value));
+  let new_state = state.updateIn(path, (prop: any) => updateFunc(prop, value));
   return new_state.toObject() as any;
 }
 
@@ -161,7 +161,17 @@ const updateDataInPath = (
       )
     : [];
 
+const setOrder = (state: DataTableContextModel, payload: {
+  param : string,
+  dir : "asc" | "desc"
+}) => ({
+  ...state,
+  orderParam : payload.param,
+  orderDir  : payload.dir
+});
+
 const actionsMap: Record<any, any> = {
+  "set-order": setOrder,
   "remove-data": removeData,
   "update-data": updateData,
   "add-data": addData,

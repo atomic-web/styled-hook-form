@@ -11,7 +11,6 @@ import DataTableLoader from "./loader";
 import React, { Fragment, useEffect, useMemo, useState } from "react";
 import { DataTableContextProvider, useDataTableContext } from "./data-context";
 import { usePagedData } from "../../utils/paged-data-source";
-import { PropType } from "../../../types/utils";
 
 const DataTable: React.FC<DataTableProps> = (props) => {
   let { data, paginate, primaryKey, wrap } = props;
@@ -64,9 +63,21 @@ const DataTableImpl: React.FC<DataTableProps> = (props) => {
     ...rest
   } = props;
 
-  let [sort, setSort] = useState<PropType<DataTableProps, "sort">>({
-    direction: "desc",
-    property: props.primaryKey,
+  let {
+    state: {
+      currentPage,
+      totalRecords: globalTotalRecords,
+      data: globalData,
+      syncKey,
+      orderDir,
+      orderParam,
+    },
+    dispatch,
+  } = useDataTableContext();
+
+  dispatch({
+    type: "set-order",
+    payload: { param: props.primaryKey, dir: "desc" },
   });
 
   let defaultPaging = {
@@ -84,16 +95,6 @@ const DataTableImpl: React.FC<DataTableProps> = (props) => {
     config: { ssr: globalSSR },
   } = useSHFContext();
 
-  let {
-    state: {
-      currentPage,
-      totalRecords: globalTotalRecords,
-      data: globalData,
-      syncKey,
-    },
-    dispatch,
-  } = useDataTableContext();
-
   let ssrEnabled = perSsr !== undefined ? perSsr : globalSSR;
 
   let internalReqParams = useMemo(() => {
@@ -102,21 +103,17 @@ const DataTableImpl: React.FC<DataTableProps> = (props) => {
     };
   }, [requestParams]);
 
-  let {
-    error,
-    refresh: refreshCurrentPage,
-    loading,
-  } = request
+  let { error, refresh: refreshCurrentPage, loading } = request
     ? usePagedData({
         request,
         params: internalReqParams,
-        orderDir: sort?.direction,
-        orderProp: sort?.property,
+        orderDir: orderDir,
+        orderProp: orderParam,
         orderDirParamName: requestParamsConfig.orderDirParamName,
         orderPropParamName: requestParamsConfig.orderPropParamName,
-        listPropName:requestParamsConfig.listPropName,
-        pageParamName : requestParamsConfig.pageNumParamName,
-        pageSizeParamName : requestParamsConfig.pageSizeParamName,
+        listPropName: requestParamsConfig.listPropName,
+        pageParamName: requestParamsConfig.pageNumParamName,
+        pageSizeParamName: requestParamsConfig.pageSizeParamName,
         totalPropName: requestParamsConfig.totalPropName,
         onRequest: (data: any, headers: any) => {
           return onRequest ? onRequest(data, headers) : data;
@@ -132,7 +129,7 @@ const DataTableImpl: React.FC<DataTableProps> = (props) => {
           let cdata = onResponse ? onResponse(_data, headers) : _data;
           dispatch({
             type: "set-data",
-            payload: cdata[reqParams?.listPropName ?? "list"]
+            payload: cdata[reqParams?.listPropName ?? "list"],
           });
           return cdata;
         },
@@ -163,20 +160,19 @@ const DataTableImpl: React.FC<DataTableProps> = (props) => {
   }, [paginate?.currentPage]);
 
   useEffect(() => {
-    if (!sort) {
-      setSort({
-        direction: "desc",
-        property: props.primaryKey,
-      });
-    }
+    dispatch({
+      type: "set-order",
+      payload: { param: props.primaryKey, dir: "desc" },
+    });
   }, [props.primaryKey]);
 
-  const handleSort = (_sort: any) => {
-    _sort.external = request ? true : false;
-    setSort(_sort);
+  const handleSort = (_sort: {
+    property: string;
+    direction: "asc" | "desc";
+  }) => {
     dispatch({
-      type: "merge-value",
-      payload: { orderParam: _sort.property, orderDir: _sort.direction },
+      type: "set-order",
+      payload: { param: _sort.property, dir: _sort.direction },
     });
   };
 
@@ -215,7 +211,11 @@ const DataTableImpl: React.FC<DataTableProps> = (props) => {
                 columns={columns}
                 data={globalData}
                 paginate={false}
-                sort={sort}
+                sort={{
+                  direction : orderDir,
+                  property : orderParam,
+                  external: request ? true : false,
+                }}
                 onSort={handleSort}
                 step={paginate?.pageSize ?? props.step ?? Number.MAX_VALUE}
               ></GrommetDataTable>
