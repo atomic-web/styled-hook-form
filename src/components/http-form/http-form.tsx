@@ -14,7 +14,7 @@ import staticAxios, { AxiosRequestConfig } from "axios";
 import MockAdapter from "axios-mock-adapter";
 import { FormMethodsRef } from "components/form/types";
 import { FieldValues, UseFormReturn } from "react-hook-form";
-import { isPrimitive } from "components/utils/types";
+import { isPrimitive } from "../utils/types";
 
 const successCodes = [200, 201, 202];
 
