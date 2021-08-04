@@ -89,6 +89,11 @@ const HttpForm = React.forwardRef<FormMethodsRef, HttpFormProps>(
       {
         ...saveRequest,
         transformResponse: useCallback((data, headers) => {
+
+          if (!data){
+              return data;
+          }
+
           if (typeof data === "string") {
             data = JSON.parse(data);
           }
@@ -121,6 +126,11 @@ const HttpForm = React.forwardRef<FormMethodsRef, HttpFormProps>(
 
     const loadRequestOptions = {
       transformResponse: useCallback((data, headers) => {
+
+        if (!data){
+          return data;
+        }
+
         if (typeof data === "string") {
           data = JSON.parse(data);
         }
