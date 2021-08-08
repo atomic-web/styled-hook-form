@@ -12,6 +12,7 @@ import DataTableLoader from "./loader";
 import React, { Fragment, useEffect, useMemo, useState } from "react";
 import { DataTableContextProvider, useDataTableContext } from "./data-context";
 import { usePagedData } from "../../utils/paged-data-source";
+import DataTableWrap from "./data-table-wrap";
 
 const DataTable: React.FC<DataTableProps> = (props) => {
   let { data, paginate, primaryKey, wrap } = props;
@@ -219,6 +220,7 @@ const DataTableImpl: React.FC<DataTableProps> = (props) => {
 
   const btnPagingEnabled =
     paginate && (paginate.type === "button-based" || !paginate.type);
+  const isInfiniteScroll = paginate?.type === "infinite-scroll";
 
   const defaultPageSizeOptions = [pageSize, 10, 20, 50, 100];
   const pageSizeOptions = Array.from(
@@ -286,16 +288,18 @@ const DataTableImpl: React.FC<DataTableProps> = (props) => {
               (pagerPosition === "top" || pagerPosition === "both") &&
               PaginationView}
             {
-              <GrommetDataTable
-                {...rest}
-                columns={columns}
-                data={globalData}
-                paginate={false}
-                sort={sortValue}
-                onSort={handleSort}
-                onMore={handleMoreData}
-                step={paginate?.pageSize ?? props.step ?? Number.MAX_VALUE}
-              ></GrommetDataTable>
+              <DataTableWrap isInfiniteScroll={isInfiniteScroll} fill="horizontal">
+                <GrommetDataTable
+                  {...rest}
+                  columns={columns}
+                  data={globalData}
+                  paginate={false}
+                  sort={sortValue}
+                  onSort={handleSort}
+                  onMore={isInfiniteScroll ? handleMoreData : undefined}
+                  step={paginate?.pageSize ?? props.step ?? Number.MAX_VALUE}
+                ></GrommetDataTable>
+              </DataTableWrap>
             }
             {btnPagingEnabled &&
               (pagerPosition === "bottom" || pagerPosition === "both") &&
