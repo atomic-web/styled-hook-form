@@ -98,7 +98,7 @@ const DataTableImpl: React.FC<DataTableProps> = (props) => {
     };
   }, [requestParams]);
 
-  let { error, refresh: refreshCurrentPage, loading } = request
+  let { error, refresh: refreshCurrentPage, loading ,nextPage } = request
     ? usePagedData({
         request,
         params: internalReqParams,
@@ -137,6 +137,7 @@ const DataTableImpl: React.FC<DataTableProps> = (props) => {
           data: [],
           refresh: () => 0,
           loading: false,
+          nextPage : ()=> 0
         }),
         []
       );
@@ -218,6 +219,10 @@ const DataTableImpl: React.FC<DataTableProps> = (props) => {
 
   const pagerPosition = btnPagingEnabled ? paginate?.pagerPosition : "bottom";
 
+  const handleMoreData = ()=>{
+    nextPage();
+  }
+
   return (
     <>
       {toolbar && <Box>{toolbar}</Box>}
@@ -242,6 +247,7 @@ const DataTableImpl: React.FC<DataTableProps> = (props) => {
                 paginate={false}
                 sort={sortValue}
                 onSort={handleSort}
+                onMore={handleMoreData}
                 step={paginate?.pageSize ?? props.step ?? Number.MAX_VALUE}
               ></GrommetDataTable>
             }
