@@ -196,27 +196,27 @@ const DataTableImpl: React.FC<DataTableProps> = (props) => {
     [orderDir, orderParam, request]
   );
 
-  const btnPagingEnabled = paginate && (paginate.type === "button-based" || !paginate.type);
+  const btnPagingEnabled =
+    paginate && (paginate.type === "button-based" || !paginate.type);
 
-  const PaginationView =
-    btnPagingEnabled ? (
-      <Pagination
-        onChange={(e) => {
-          dispatch({
-            type: "merge-value",
-            payload: { currentPage: e.page },
-          });
-        }}
-        {...defaultPaging}
-        {...paginate?.pagerOptions}
-        step={paginate?.pageSize}
-        numberItems={totalRecords}
-        page={currentPage}
-        key={currentPage}
-      />
-    ) : null;
+  const PaginationView = btnPagingEnabled ? (
+    <Pagination
+      onChange={(e) => {
+        dispatch({
+          type: "merge-value",
+          payload: { currentPage: e.page },
+        });
+      }}
+      {...defaultPaging}
+      {...paginate?.pagerOptions}
+      step={paginate?.pageSize}
+      numberItems={totalRecords}
+      page={currentPage}
+      key={currentPage}
+    />
+  ) : null;
 
-    const pagerPosition = btnPagingEnabled ? paginate?.pagerPosition : "bottom";
+  const pagerPosition = btnPagingEnabled ? paginate?.pagerPosition : "bottom";
 
   return (
     <>
@@ -231,9 +231,9 @@ const DataTableImpl: React.FC<DataTableProps> = (props) => {
                 </Box>
               </Layer>
             )}
-            {
-              (pagerPosition === "top" || pagerPosition === "both") && PaginationView              
-            }
+            {btnPagingEnabled &&
+              (pagerPosition === "top" || pagerPosition === "both") &&
+              PaginationView}
             {
               <GrommetDataTable
                 {...rest}
@@ -245,9 +245,9 @@ const DataTableImpl: React.FC<DataTableProps> = (props) => {
                 step={paginate?.pageSize ?? props.step ?? Number.MAX_VALUE}
               ></GrommetDataTable>
             }
-            {
-              (pagerPosition === "bottom" || pagerPosition === "both") && PaginationView
-            }
+            {btnPagingEnabled &&
+              (pagerPosition === "bottom" || pagerPosition === "both") &&
+              PaginationView}
           </Box>
         )}
         {(!ssrEnabled || !globalData) && <DataTableLoader />}
