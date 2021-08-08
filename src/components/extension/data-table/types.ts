@@ -28,6 +28,7 @@ export type DataTableProps<
     enabled:boolean,
     pageSize?:number,
     currentPage?: number,
+    showPageSizeOptions? : boolean,
     pageSizeOptions? : number[],
     pagerOptions?:Omit<PaginationProps,'numberItems'>
     pagerPosition? : "top" | "bottom" | "both" | "none"

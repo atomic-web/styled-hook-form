@@ -157,7 +157,7 @@ const DataTableImpl: React.FC<DataTableProps> = (props) => {
           refresh: () => 0,
           loading: false,
           nextPage: () => 0,
-          hasMore : false
+          hasMore: false,
         }),
         []
       );
@@ -241,19 +241,21 @@ const DataTableImpl: React.FC<DataTableProps> = (props) => {
         page={currentPage}
         key={currentPage}
       />
-      <Box width="6em">
-        <Select
-          //@ts-ignore
-          value={pageSize}
-          options={pageSizeOptions}
-          onChange={(e) => {
-            dispatch({
-              type: "merge-value",
-              payload: { pageSize: parseInt(e.target.value) },
-            });
-          }}
-        />
-      </Box>
+      {paginate?.showPageSizeOptions && (
+        <Box width="6em">
+          <Select
+            //@ts-ignore
+            value={pageSize}
+            options={pageSizeOptions}
+            onChange={(e) => {
+              dispatch({
+                type: "merge-value",
+                payload: { pageSize: parseInt(e.target.value) },
+              });
+            }}
+          />
+        </Box>
+      )}
     </Box>
   ) : null;
 
