@@ -264,7 +264,6 @@ const DataTableImpl: React.FC<DataTableProps> = (props) => {
     : "none";
 
   const handleMoreData = () => {
-    debugger;
     if (paginate?.type === "infinite-scroll" && hasMore) {
       nextPage();
     }
