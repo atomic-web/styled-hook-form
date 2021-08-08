@@ -226,17 +226,6 @@ const FormBuilder = forwardRef<FormMethodsRef | null, FormBuilderProps>(
       );
     };
 
-    if (
-      layout === "GRID" &&
-      ((rows && (!columns || !areas)) ||
-        (columns && (!rows || !areas)) ||
-        (areas && (!columns || !rows)))
-    ) {
-      throw new Error(
-        "`columns` , `rows` and `areas` should be defined together!"
-      );
-    }
-
     const renderChildren = (
       children:
         | React.ReactChild
