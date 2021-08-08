@@ -100,7 +100,13 @@ const DataTableImpl: React.FC<DataTableProps> = (props) => {
     };
   }, [requestParams]);
 
-  let { error, refresh: refreshCurrentPage, loading, nextPage } = request
+  let {
+    error,
+    refresh: refreshCurrentPage,
+    loading,
+    nextPage,
+    hasMore,
+  } = request
     ? usePagedData({
         request,
         params: internalReqParams,
@@ -125,10 +131,20 @@ const DataTableImpl: React.FC<DataTableProps> = (props) => {
           });
 
           let cdata = onResponse ? onResponse(_data, headers) : _data;
-          dispatch({
-            type: "set-data",
-            payload: cdata[reqParams?.listPropName ?? "list"],
-          });
+          const dataList = cdata[reqParams?.listPropName ?? "list"];
+
+          if (paginate?.type === "infinite-scroll") {
+            dispatch({
+              type: "set-data",
+              payload: [...(globalData || []), ...dataList],
+            });
+          } else {
+            dispatch({
+              type: "set-data",
+              payload: dataList,
+            });
+          }
+
           return cdata;
         },
         mockResponse,
@@ -141,6 +157,7 @@ const DataTableImpl: React.FC<DataTableProps> = (props) => {
           refresh: () => 0,
           loading: false,
           nextPage: () => 0,
+          hasMore : false
         }),
         []
       );
@@ -245,7 +262,8 @@ const DataTableImpl: React.FC<DataTableProps> = (props) => {
     : "none";
 
   const handleMoreData = () => {
-    if (paginate?.type === "infinite-scroll") {
+    debugger;
+    if (paginate?.type === "infinite-scroll" && hasMore) {
       nextPage();
     }
   };

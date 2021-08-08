@@ -56,7 +56,7 @@ const getId = () => {
 
 const ID = getId();
 
-const pageSize = 5;
+const pageSize = 20;
 
 export const Default = () => {
   return (
@@ -71,8 +71,9 @@ export const Default = () => {
           mockResponse={(m) => {
             m.onGet("/api/employee/list").reply((req) => {
               return new Promise((resolve) => {
-                debugger
-                let data = new Array(parseInt(req.params.pageSize))
+                let data = new Array(
+                  req.params.page === 5 ? 5 : parseInt(req.params.pageSize)
+                )
                   .fill(0)
                   .map((_) => ({
                     id: ID() + 1,
@@ -96,13 +97,12 @@ export const Default = () => {
             });
           }}
           paginate={{
-            enabled:true,
-            pageSize:pageSize,
-            type:"button-based"
+            enabled: true,
+            pageSize: pageSize,
+            type: "infinite-scroll",
           }}
           onRequestError={() => {}}
           columns={columns}
-        
         />
       </DataTableContextProvider>
     </SHFContextProvider>

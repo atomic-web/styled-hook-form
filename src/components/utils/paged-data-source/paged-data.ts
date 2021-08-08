@@ -156,6 +156,7 @@ const usePagedData = <
 
     let totalRecords = (result as any)[totalPropName];
     setTotal(totalRecords);
+    
     setHasMore(list.length === pageSize);
     setData(result);
     return true;
