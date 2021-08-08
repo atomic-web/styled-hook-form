@@ -30,6 +30,7 @@ export type DataTableProps<
     currentPage?: number,
     pageSizeOptions? : number[],
     pagerOptions?:Omit<PaginationProps,'numberItems'>
+    pagerPosition? : "top" | "bottom" | "both"
   },
   toolbar? : React.ReactNode,
   wrap?: React.ReactElement

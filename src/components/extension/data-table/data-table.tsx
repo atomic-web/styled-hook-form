@@ -74,7 +74,7 @@ const DataTableImpl: React.FC<DataTableProps> = (props) => {
     },
     dispatch,
   } = useDataTableContext();
- 
+
   let defaultPaging = {
     enabled: false,
     pageSize: 50,
@@ -187,11 +187,36 @@ const DataTableImpl: React.FC<DataTableProps> = (props) => {
     }
   }, [dataProp]);
 
-  const sortValue = useMemo(()=>({
-    direction : orderDir,
-    property : orderParam,
-    external: request ? true : false,
-  }),[orderDir,orderParam,request]);
+  const sortValue = useMemo(
+    () => ({
+      direction: orderDir,
+      property: orderParam,
+      external: request ? true : false,
+    }),
+    [orderDir, orderParam, request]
+  );
+
+  const btnPagingEnabled = paginate && (paginate.type === "button-based" || !paginate.type);
+
+  const PaginationView =
+    btnPagingEnabled ? (
+      <Pagination
+        onChange={(e) => {
+          dispatch({
+            type: "merge-value",
+            payload: { currentPage: e.page },
+          });
+        }}
+        {...defaultPaging}
+        {...paginate?.pagerOptions}
+        step={paginate?.pageSize}
+        numberItems={totalRecords}
+        page={currentPage}
+        key={currentPage}
+      />
+    ) : null;
+
+    const pagerPosition = btnPagingEnabled ? paginate?.pagerPosition : "bottom";
 
   return (
     <>
@@ -207,6 +232,9 @@ const DataTableImpl: React.FC<DataTableProps> = (props) => {
               </Layer>
             )}
             {
+              (pagerPosition === "top" || pagerPosition === "both") && PaginationView              
+            }
+            {
               <GrommetDataTable
                 {...rest}
                 columns={columns}
@@ -217,22 +245,9 @@ const DataTableImpl: React.FC<DataTableProps> = (props) => {
                 step={paginate?.pageSize ?? props.step ?? Number.MAX_VALUE}
               ></GrommetDataTable>
             }
-            {paginate && (paginate.type === "button-based" || !paginate.type) && (
-              <Pagination
-                onChange={(e) => {
-                  dispatch({
-                    type: "merge-value",
-                    payload: { currentPage: e.page },
-                  });
-                }}
-                {...defaultPaging}
-                {...paginate.pagerOptions}
-                step={paginate.pageSize}
-                numberItems={totalRecords}
-                page={currentPage}
-                key={currentPage}
-              />
-            )}
+            {
+              (pagerPosition === "bottom" || pagerPosition === "both") && PaginationView
+            }
           </Box>
         )}
         {(!ssrEnabled || !globalData) && <DataTableLoader />}
