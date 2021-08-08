@@ -4,6 +4,7 @@ import {
   DataTable as GrommetDataTable,
   Layer,
   Pagination,
+  Select,
   Spinner,
 } from "grommet";
 import { DataTableProps } from "./types";
@@ -66,6 +67,7 @@ const DataTableImpl: React.FC<DataTableProps> = (props) => {
   let {
     state: {
       currentPage,
+      pageSize,
       totalRecords: globalTotalRecords,
       data: globalData,
       syncKey,
@@ -98,7 +100,7 @@ const DataTableImpl: React.FC<DataTableProps> = (props) => {
     };
   }, [requestParams]);
 
-  let { error, refresh: refreshCurrentPage, loading ,nextPage } = request
+  let { error, refresh: refreshCurrentPage, loading, nextPage } = request
     ? usePagedData({
         request,
         params: internalReqParams,
@@ -109,6 +111,7 @@ const DataTableImpl: React.FC<DataTableProps> = (props) => {
         listPropName: requestParamsConfig.listPropName,
         pageParamName: requestParamsConfig.pageNumParamName,
         pageSizeParamName: requestParamsConfig.pageSizeParamName,
+        pageSize,
         totalPropName: requestParamsConfig.totalPropName,
         onRequest: (data: any, headers: any) => {
           return onRequest ? onRequest(data, headers) : data;
@@ -137,7 +140,7 @@ const DataTableImpl: React.FC<DataTableProps> = (props) => {
           data: [],
           refresh: () => 0,
           loading: false,
-          nextPage : ()=> 0
+          nextPage: () => 0,
         }),
         []
       );
@@ -200,28 +203,52 @@ const DataTableImpl: React.FC<DataTableProps> = (props) => {
   const btnPagingEnabled =
     paginate && (paginate.type === "button-based" || !paginate.type);
 
+  const defaultPageSizeOptions = [pageSize, 10, 20, 50, 100];
+  const pageSizeOptions = Array.from(
+    new Set(paginate?.pageSizeOptions || defaultPageSizeOptions)
+  ) as number[];
+
   const PaginationView = btnPagingEnabled ? (
-    <Pagination
-      onChange={(e) => {
-        dispatch({
-          type: "merge-value",
-          payload: { currentPage: e.page },
-        });
-      }}
-      {...defaultPaging}
-      {...paginate?.pagerOptions}
-      step={paginate?.pageSize}
-      numberItems={totalRecords}
-      page={currentPage}
-      key={currentPage}
-    />
+    <Box direction="row" align="center" fill="horizontal">
+      <Pagination
+        onChange={(e) => {
+          dispatch({
+            type: "merge-value",
+            payload: { currentPage: e.page },
+          });
+        }}
+        {...defaultPaging}
+        {...paginate?.pagerOptions}
+        step={pageSize}
+        numberItems={totalRecords}
+        page={currentPage}
+        key={currentPage}
+      />
+      <Box width="6em">
+        <Select
+          //@ts-ignore
+          value={pageSize}
+          options={pageSizeOptions}
+          onChange={(e) => {
+            dispatch({
+              type: "merge-value",
+              payload: { pageSize: parseInt(e.target.value) },
+            });
+          }}
+        />
+      </Box>
+    </Box>
   ) : null;
 
-  const pagerPosition = btnPagingEnabled ? paginate?.pagerPosition : "bottom";
+  const pagerPosition = btnPagingEnabled
+    ? paginate?.pagerPosition || "bottom"
+    : "none";
 
-  const handleMoreData = ()=>{
-    nextPage();
-  }
+  const handleMoreData = () => {
+    if (paginate?.type === "infinite-scroll") {
+      nextPage();
+    }
+  };
 
   return (
     <>
