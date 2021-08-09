@@ -44,9 +44,10 @@ const FileEditor = forwardRef<HTMLInputElement, FormField<FileEditorProps>>(
 
     const handleChange = useCallback(
       (field: ControllerRenderProps<FieldValues>) => (
-        e: ChangeEvent<HTMLInputElement>
+        _: ChangeEvent<HTMLInputElement>,
+        nextFiles:any
       ) => {
-        field.onChange(e.target.files);
+        field.onChange(nextFiles);
       },
       []
     );
@@ -71,6 +72,7 @@ const FileEditor = forwardRef<HTMLInputElement, FormField<FileEditorProps>>(
               name={name}
               ref={ref}
               multiple={multiple}
+              //@ts-ignore
               onChange={handleChange(field)}
               messages={localizedMessages}
             />
