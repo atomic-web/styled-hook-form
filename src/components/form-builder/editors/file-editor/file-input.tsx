@@ -47,7 +47,7 @@ const FileEditor = forwardRef<HTMLInputElement, FormField<FileEditorProps>>(
         _: ChangeEvent<HTMLInputElement>,
         nextFiles:any
       ) => {
-        field.onChange(nextFiles);
+        field.onChange(nextFiles.files);
       },
       []
     );
