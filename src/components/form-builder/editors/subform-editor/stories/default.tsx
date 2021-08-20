@@ -24,25 +24,11 @@ export const Default = () => {
             name: "subText",
             label: "Sub Text",
             type: FormFieldType.Text,
-          },
-          {
-            name: "subText2",
-            label: "Sub Text",
-            type: FormFieldType.Text,
           }
         ],
       },
     },
-  ];
-
-  useEffect(() => {
-    setTimeout(() => {
-      ref.current?.methods?.reset({
-        topLevel: "topLevel",
-        subText: "subText",
-      });
-    }, 1000);
-  }, []);
+  ]; 
 
   return (
     <Box width="medium">
