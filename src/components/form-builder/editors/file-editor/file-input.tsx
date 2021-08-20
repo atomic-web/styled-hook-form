@@ -62,7 +62,7 @@ const FileEditor = forwardRef<HTMLInputElement, FormField<FileEditorProps>>(
 
     return (
         <Controller
-          name={name}
+          name={name!}
           defaultValue={initialValue}
           control={control}
           rules={vrules as any}

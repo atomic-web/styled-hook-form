@@ -29,7 +29,7 @@ const TimeEditor: React.FC<FormField<TimeEditorProps>> = (props) => {
 
   return (
     <Controller
-      name={name}
+      name={name!}
       defaultValue={initialValue}
       rules={vrules as any}
       control={control}

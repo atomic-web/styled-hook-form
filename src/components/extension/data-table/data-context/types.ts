@@ -22,7 +22,7 @@ export interface DataTableContextProviderProps {
     | "pageSize"
     | "contextData"
   >;
-  children: React.ReactNode;
+  children?: React.ReactNode;
 }
 
 export type DataTableContextReducerAction =

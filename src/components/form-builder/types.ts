@@ -2,7 +2,9 @@ import React from "react";
 import { FileEditorProps } from "./editors/file-editor/types";
 import { BoolEditorProps } from "./editors/bool-editor/types";
 import {
+  FieldPath,
   FieldPathValue,
+  FieldValues,
   RegisterOptions,
   UseFormProps,
   UseFormReturn,
@@ -82,7 +84,6 @@ export interface FieldValidationRules
 }
 
 export interface FormFieldBase {
-  name: string;
   tip?: React.ReactNode;
   defaultValue?: any;
   label: string;
@@ -103,14 +104,26 @@ export interface FormFieldBase {
   order?: number;
   visible?: boolean;
   shouldUnregister?: boolean;
-  wrapComponent? : React.ReactElement
+  wrapComponent?: React.ReactElement;
 }
 
 export type FormField<TProps extends {} = {}> = FormFieldBase &
   FormFieldOptions &
   TProps & {
     methods?: UseFormReturn;
-  };
+  } & (
+    | {
+      name: FieldPath<FieldValues>;
+    }
+    | {
+        type: FormFieldType.SubForm;
+        name?: FieldPath<FieldValues>;
+      }
+    | {
+        type: FormFieldType.Custom;
+        name?: FieldPath<FieldValues>;
+      }
+  );
 
 export type FormBuilderProps<TModel = any> = Partial<
   Omit<HTMLDivElement, "children">
@@ -127,6 +140,7 @@ export type FormBuilderProps<TModel = any> = Partial<
   columns?: PropType<GridProps, "columns">;
   areas?: PropType<GridProps, "areas">;
   editorComponent?: React.ReactElement;
+  autoSubmitTreshould?: number;
 };
 
 export type FormEditorPropsBase = Pick<FormFieldBase, "validationRules"> & {};

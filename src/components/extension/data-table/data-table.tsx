@@ -35,7 +35,7 @@ const DataTable: React.FC<DataTableProps> = (props) => {
 
   const children = React.createElement(
     !alreadyContextDefined ? DataTableContextProvider : Fragment,
-    !alreadyContextDefined ? contextOptions : {},
+    !alreadyContextDefined ? { options: contextOptions } : {},
     childrenWrap
   );
 
@@ -288,7 +288,10 @@ const DataTableImpl: React.FC<DataTableProps> = (props) => {
               (pagerPosition === "top" || pagerPosition === "both") &&
               PaginationView}
             {
-              <DataTableWrap isInfiniteScroll={isInfiniteScroll} fill="horizontal">
+              <DataTableWrap
+                isInfiniteScroll={isInfiniteScroll}
+                fill="horizontal"
+              >
                 <GrommetDataTable
                   {...rest}
                   columns={columns}
