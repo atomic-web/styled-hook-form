@@ -36,21 +36,30 @@ const CustomEditor: React.FC<FormField<CustomEditorProps>> = (props) => {
   }, [componentProps]);
 
   return (
-    <Controller
-      name={name}
-      defaultValue={initialValue}
-      rules={vrules as any}
-      control={control}
-      render={({ field }) => {
-        let editorElement = React.cloneElement(editorComponent, {
+    <>
+      {!name &&
+        React.cloneElement(editorComponent, {
           ...customProps,
-          value: field.value,
-          onChange: (e: any) => field.onChange(e),
           methods,
-        });
-        return editorElement;
-      }}
-    />
+        })}
+      {name && (
+        <Controller
+          name={name}
+          defaultValue={initialValue}
+          rules={vrules as any}
+          control={control}
+          render={({ field }) => {
+            let editorElement = React.cloneElement(editorComponent, {
+              ...customProps,
+              value: field.value,
+              onChange: (e: any) => field.onChange(e),
+              methods,
+            });
+            return editorElement;
+          }}
+        />
+      )}
+    </>
   );
 };
 

@@ -117,6 +117,10 @@ export type FormField<TProps extends {} = {}> = FormFieldBase &
         name?: FieldPath<FieldValues>;
       }
     | {
+        type: FormFieldType.Custom;
+        name?: FieldPath<FieldValues>;
+      }
+    | {
         name: FieldPath<FieldValues>;
       }
   );
@@ -136,7 +140,7 @@ export type FormBuilderProps<TModel = any> = Partial<
   columns?: PropType<GridProps, "columns">;
   areas?: PropType<GridProps, "areas">;
   editorComponent?: React.ReactElement;
-  autoSubmitTreshould? : number;
+  autoSubmitTreshould?: number;
 };
 
 export type FormEditorPropsBase = Pick<FormFieldBase, "validationRules"> & {};
