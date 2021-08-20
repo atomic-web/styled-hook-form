@@ -3,7 +3,6 @@ import { FormBuilder } from "components/form-builder/form-builder";
 import { FormField, FormFieldType } from "components/form-builder/types";
 import { useFormMethods } from "components/hooks";
 import { Box, Button } from "grommet";
-import { useEffect } from "react";
 
 export const Default = () => {
   const { ref, methods } = useFormMethods();
