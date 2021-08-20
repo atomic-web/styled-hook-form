@@ -20,7 +20,7 @@ const BoolEditor = forwardRef<HTMLInputElement, FormField<BoolEditorProps>>(
 
     return (
       <Controller
-        name={name}
+        name={name!}
         defaultValue={initialValue}
         rules={vrules as any}
         control={control}

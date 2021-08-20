@@ -63,7 +63,7 @@ const DateEditor: React.FC<FormField<DateEditorProps>> = (props) => {
 
   return (
     <Controller
-      name={name}
+      name={name!}
       defaultValue={normalValue}
       rules={vrules as any}
       control={control}

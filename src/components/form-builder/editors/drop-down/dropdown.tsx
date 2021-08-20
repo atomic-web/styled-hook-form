@@ -141,7 +141,7 @@ const DropDown = forwardRef<HTMLButtonElement, FormField<DropDownProps>>(
     }, [options]);
 
     let liveValue = useWatch({
-      name: name,
+      name: name!,
       control: methods!.control,
       defaultValue: initialValue,
     });
@@ -268,7 +268,7 @@ const DropDown = forwardRef<HTMLButtonElement, FormField<DropDownProps>>(
                         setter: (prev: any[] | any) => any[] | any
                       ) => {
                         let _value = setter(localValue);
-                        methods!.setValue(name, _value);
+                        methods!.setValue(name!, _value);
                         setLocalValue(_value);
                       },
                     },
@@ -305,7 +305,7 @@ const DropDown = forwardRef<HTMLButtonElement, FormField<DropDownProps>>(
 
     return (
       <Controller
-        name={name}
+        name={name!}
         defaultValue={initialValue}
         rules={vrules as any}
         control={control}

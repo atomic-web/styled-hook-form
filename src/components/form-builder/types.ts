@@ -113,15 +113,15 @@ export type FormField<TProps extends {} = {}> = FormFieldBase &
     methods?: UseFormReturn;
   } & (
     | {
+      name: FieldPath<FieldValues>;
+    }
+    | {
         type: FormFieldType.SubForm;
         name?: FieldPath<FieldValues>;
       }
     | {
         type: FormFieldType.Custom;
         name?: FieldPath<FieldValues>;
-      }
-    | {
-        name: FieldPath<FieldValues>;
       }
   );
 

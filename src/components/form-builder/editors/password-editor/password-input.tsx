@@ -74,7 +74,7 @@ export const PasswordEditor = forwardRef<
 
   return (
     <Controller
-      name={name}
+      name={name!}
       defaultValue={initialValue}
       rules={vrules as any}
       control={control}

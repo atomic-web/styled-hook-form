@@ -50,7 +50,7 @@ const TextEditor = forwardRef<HTMLInputElement, FormField<TextEditorProps>>(
 
     return (
       <Controller        
-        name={name}
+        name={name!}
         defaultValue={initialValue}
         rules={vrules as any}
         control={control}
