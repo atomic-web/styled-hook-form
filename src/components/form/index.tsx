@@ -110,6 +110,7 @@ const Form: React.FC<FormProps> = (props) => {
 
     return () => watchSubscriptions.unsubscribe();
   }, []);
+  
   const handleFormSubmit = (e: FormEvent) => {
     e.stopPropagation();
     handleSubmit(onFormSubmit)(e);
@@ -127,7 +128,7 @@ const Form: React.FC<FormProps> = (props) => {
 Form.defaultProps = {
   autoSubmit: false,
   autoSubmitFields: [],
-  submitTreshould: 1000,
+  submitTreshould: 500,
 };
 
 export { Form as default };

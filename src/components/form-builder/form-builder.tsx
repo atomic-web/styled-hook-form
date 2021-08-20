@@ -31,11 +31,13 @@ const renderField = (
   field: FormField,
   methods: UseFormReturn<any>,
   editorComponent: React.ReactElement | undefined,
+  model: Record<string, any>,
   shouldUnregister?: boolean
 ) => {
   field.methods = methods;
   let component = React.createElement(EditorMap[field.type], {
     ...((field as unknown) as any),
+    model,
     shouldUnregister: field.shouldUnregister ?? shouldUnregister,
     key: field.name,
   });
@@ -127,6 +129,7 @@ const FormBuilder = forwardRef<FormMethodsRef | null, FormBuilderProps>(
       options,
       layout = "GRID",
       editorComponent,
+      autoSubmitTreshould = 500,
       ...rest
     } = props;
 
@@ -141,7 +144,9 @@ const FormBuilder = forwardRef<FormMethodsRef | null, FormBuilderProps>(
 
     const getAggValues = () => ({
       ...fields.reduce((p: any, c: FormField) => {
-        p[c.name] = c.defaultValue;
+        if (c.name) {
+          p[c.name] = c.defaultValue;
+        }
         return p;
       }, {}),
       ...model,
@@ -198,6 +203,7 @@ const FormBuilder = forwardRef<FormMethodsRef | null, FormBuilderProps>(
             field,
             methods,
             editorComponent,
+            model,
             options?.shouldUnregister
           );
           if (field.gridArea) {
@@ -222,7 +228,7 @@ const FormBuilder = forwardRef<FormMethodsRef | null, FormBuilderProps>(
       }
 
       return sortedItems.map((field) =>
-        renderField(field, methods, editorComponent, options?.shouldUnregister)
+        renderField(field, methods, editorComponent,model, options?.shouldUnregister)
       );
     };
 
@@ -294,11 +300,12 @@ const FormBuilder = forwardRef<FormMethodsRef | null, FormBuilderProps>(
     return (
       <StyledFormBuilder className={className}>
         <Form
-          {...rest as object}
+          {...(rest as object)}
           options={{
             ...(options ?? {}),
             defaultValues,
           }}
+          submitTreshould={autoSubmitTreshould}
           methodsRef={ref}
           onSubmit={handleSubmit}
           autoSubmit={submitTriggers?.length > 0 ? true : false}
