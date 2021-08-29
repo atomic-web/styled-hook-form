@@ -45,7 +45,10 @@ const HttpForm = React.forwardRef<FormMethodsRef, HttpFormProps>(
     let { translate: T } = useSHFContext();
 
     let methodsRef = useRef<UseFormReturn<FieldValues>>();
-    const requestRef = useRef<AxiosRequestConfig>();
+    const requestRef = useRef<{
+      config: AxiosRequestConfig;
+      completed: boolean;
+    }>();
 
     const fallBackRef = (instance: FormMethodsRef) => {
       methodsRef.current = instance.methods;
@@ -89,9 +92,8 @@ const HttpForm = React.forwardRef<FormMethodsRef, HttpFormProps>(
       {
         ...saveRequest,
         transformResponse: useCallback((data, headers) => {
-
-          if (!data){
-              return data;
+          if (!data) {
+            return data;
           }
 
           if (typeof data === "string") {
@@ -126,8 +128,7 @@ const HttpForm = React.forwardRef<FormMethodsRef, HttpFormProps>(
 
     const loadRequestOptions = {
       transformResponse: useCallback((data, headers) => {
-
-        if (!data){
+        if (!data) {
           return data;
         }
 
@@ -160,17 +161,9 @@ const HttpForm = React.forwardRef<FormMethodsRef, HttpFormProps>(
         error: loadError,
       },
       getServerData,
-    ] = useAxios(
-      loadRequest
-        ? {
-            ...loadRequest,
-            ...loadRequestOptions,
-          }
-        : { url: "/", ...loadRequestOptions }, // to make hook call order identical
-      {
-        manual: true,
-      }
-    );
+    ] = useAxios("", {
+      manual: true,
+    });
 
     useEffect(() => {
       if (
@@ -230,14 +223,30 @@ const HttpForm = React.forwardRef<FormMethodsRef, HttpFormProps>(
     };
 
     useEffect(() => {
-      if (loadRequest) {
-        if (
+
+      const aggConfig = loadRequest ? {
+        ...loadRequest,
+        ...loadRequestOptions,
+      } : undefined;
+
+      const request = aggConfig || requestRef?.current?.config;
+
+      if (
+        request &&
+        ((requestRef.current && !requestRef.current.completed) ||
           !requestRef.current ||
-          JSON.stringify(requestRef.current) !== JSON.stringify(loadRequest)
-        ) {
-          getServerData();
-          requestRef.current = loadRequest;
-        }
+          JSON.stringify(requestRef.current) !== JSON.stringify(loadRequest))
+      ) {
+        requestRef.current = {
+          config: request,
+          completed: false,
+        };
+
+        getServerData(request).then(() => {
+          if (requestRef.current) {
+            requestRef.current.completed = true;
+          }
+        });
       }
     }, [loadRequest]);
 
