@@ -90,7 +90,7 @@
     "@hookform/error-message": "^2.0.0",
     "@types/faker": "^5.5.3",
     "axios": "^0.21.1",
-    "axios-hooks": "^2.6.1",
+    "axios-hooks": "^2.6.7",
     "axios-mock-adapter": "^1.19.0",
     "faker": "^5.5.3",
     "fast-deep-equal": "^3.1.3",

@@ -101,7 +101,7 @@ const usePagedData = <
       })
     : useAxios;
 
-  const [{ loading, error }, refetch] = actualUseAxios(
+  const [{ loading, error }, refetch,cancelRequest] = actualUseAxios(
     {
       ...request,
       transformRequest: useCallback((data: any, headers: any) => {
@@ -123,7 +123,7 @@ const usePagedData = <
       },
       []),
     },
-    { manual: true }
+    { manual: true , autoCancel : false }
   );
 
   const handleServerData = (
@@ -183,9 +183,14 @@ const usePagedData = <
   };
 
   const loadPage = (pNum: number) => {
-    setCurrentFetch({
-      page: pNum,
-      status: DataFecthStatus.Pending,
+    setCurrentFetch(_currentFetch=>{
+      if(_currentFetch || currentFetch?.status === DataFecthStatus.Pending){
+        return _currentFetch;
+      }
+      return {
+        page: pNum,
+        status: DataFecthStatus.Pending,
+      }
     });
   };
 
@@ -241,6 +246,10 @@ const usePagedData = <
       loadPage(1);
     }
     reqRef.current = request;
+
+    return ()=>{
+      cancelRequest();
+    }
   }, [request]);
 
   return {
