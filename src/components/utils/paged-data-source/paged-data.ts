@@ -1,7 +1,7 @@
 import useAxios, { makeUseAxios } from "axios-hooks";
 import MockAdapter from "axios-mock-adapter";
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import StaticAxios, { AxiosRequestConfig } from "axios";
+import { useCallback, useEffect, useMemo, useState } from "react";
+import StaticAxios from "axios";
 
 import {
   DataFecthStatus,
@@ -53,7 +53,6 @@ const usePagedData = <
   let [total, setTotal] = useState<number>(0);
   let [hasMore, setHasMore] = useState<boolean>(false);
   let [isFirstLoad, setIsFirstLoad] = useState(true);
-  let reqRef = useRef<string | AxiosRequestConfig | null>(null);
 
   let [currentFetch, setCurrentFetch] = useState<DataFetchInfo<
     TServerData,
@@ -156,7 +155,7 @@ const usePagedData = <
 
     let totalRecords = (result as any)[totalPropName];
     setTotal(totalRecords);
-    
+
     setHasMore(list.length === pageSize);
     setData(result);
     return true;
@@ -164,7 +163,7 @@ const usePagedData = <
 
   const nextPage = () => {
     setPage((p) => {
-      loadPage(lazy && isFirstLoad ? p : p + 1);
+      loadPage(lazy && isFirstLoad ? p || 1 : p + 1);
       return p;
     });
   };
@@ -176,6 +175,9 @@ const usePagedData = <
   };
 
   const refresh = () => {
+    if (isFirstLoad) {
+      return;
+    }
     setPage((p) => {
       loadPage(p);
       return p;
@@ -190,12 +192,8 @@ const usePagedData = <
   };
 
   useEffect(() => {
-    if (lazy || request === null) {
+    if (lazy || request === null || isFirstLoad || !_page) {
       return;
-    }
-
-    if (!_page) {
-      _page = 1;
     }
 
     loadPage(_page);
@@ -204,9 +202,6 @@ const usePagedData = <
   useEffect(() => {
     if (currentFetch) {
       if (currentFetch.status === DataFecthStatus.Pending) {
-        if (loading && !mockResponse) {
-          return;
-        }
         refetch({
           params: {
             ...requestParams,
@@ -237,10 +232,9 @@ const usePagedData = <
   }, [requestParams]);
 
   useEffect(() => {
-    if (reqRef.current === null && request != null && !lazy) {
+    if (isFirstLoad && request != null && !lazy) {
       loadPage(1);
     }
-    reqRef.current = request;
   }, [request]);
 
   return {
