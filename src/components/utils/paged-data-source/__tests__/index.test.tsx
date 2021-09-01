@@ -11,6 +11,7 @@ describe("remote data source", () => {
           request: { url: "/api/test" },
           page: 1,
           pageSize: 5,
+          lazy:true,
           onResponse: (d) => {
             return d;
           },
