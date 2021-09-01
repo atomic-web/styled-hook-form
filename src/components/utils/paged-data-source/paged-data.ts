@@ -100,7 +100,7 @@ const usePagedData = <
       })
     : useAxios;
 
-  const [{ loading, error }, refetch,cancelRequest] = actualUseAxios(
+  const [{ loading, error }, refetch] = actualUseAxios(
     {
       ...request,
       transformRequest: useCallback((data: any, headers: any) => {
