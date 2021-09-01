@@ -122,7 +122,7 @@ const usePagedData = <
       },
       []),
     },
-    { manual: true , autoCancel : false }
+    { manual: true }
   );
 
   const handleServerData = (
@@ -185,14 +185,9 @@ const usePagedData = <
   };
 
   const loadPage = (pNum: number) => {
-    setCurrentFetch(_currentFetch=>{
-      if(_currentFetch || currentFetch?.status === DataFecthStatus.Pending){
-        return _currentFetch;
-      }
-      return {
-        page: pNum,
-        status: DataFecthStatus.Pending,
-      }
+    setCurrentFetch({
+      page: pNum,
+      status: DataFecthStatus.Pending,
     });
   };
 
