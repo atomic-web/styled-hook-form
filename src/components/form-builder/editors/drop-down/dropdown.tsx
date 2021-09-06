@@ -84,7 +84,6 @@ const DropDown = forwardRef<HTMLButtonElement, FormField<DropDownProps>>(
 
     let [localValue, setLocalValue] = useState<any[] | null>(null);
     let [localOptions, setLocalOptions] = useState<any[]>([]);
-    let [hasSelection, setHasSelection] = useState<boolean>(false);
     let [remoteOptions, setRemoteOptions] = useState<any[]>([]);
     let [remoteSearchKey, setRemoteSearchKey] = useState<string>("");
 
@@ -160,19 +159,17 @@ const DropDown = forwardRef<HTMLButtonElement, FormField<DropDownProps>>(
           : value === o[itemValueKey] || value === o
       );
     };
-
-    let computedValue = useMemo(() => {
-      return getOptionsByValue(
-        actualOptions,
-        hasSelection ? localValue : liveValue ?? initialValue
-      );
-    }, [hasSelection, initialValue, liveValue, actualOptions]);
+    useEffect(()=>{
+      if (actualOptions){
+        setLocalValue(getOptionsByValue(actualOptions,liveValue));
+      }
+    },[liveValue]);
 
     useEffect(() => {
-      if (actualOptions) {
-        setLocalValue(computedValue);
+      if (actualOptions && initialValue) {
+        setLocalValue(getOptionsByValue(actualOptions,initialValue));
       }
-    }, [computedValue, actualOptions]);
+    }, [actualOptions]);
 
     const handleSearch = useDebouncedCallback((text: string) => {
       if (!dataSourceOptions && text.length === 0) {
@@ -218,7 +215,6 @@ const DropDown = forwardRef<HTMLButtonElement, FormField<DropDownProps>>(
             ? e.value.map((v: any) => v[itemValueKey])
             : e.value[itemValueKey]
         );
-        setHasSelection(true);
       },
       []
     );
@@ -257,7 +253,6 @@ const DropDown = forwardRef<HTMLButtonElement, FormField<DropDownProps>>(
     const valueLabel = () => {
       const handleClear = (e: MouseEvent<SVGSVGElement>) => {
         e.stopPropagation();
-        setHasSelection(true);
         setLocalValue(null);
         if (methods) {
           methods.setValue(name!, null);
