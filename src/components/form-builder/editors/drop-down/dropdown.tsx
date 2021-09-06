@@ -1,4 +1,4 @@
-import React, { Fragment, useMemo } from "react";
+import React, { Fragment, useMemo, MouseEvent } from "react";
 import { forwardRef, useCallback, useEffect, useState, memo } from "react";
 import {
   Controller,
@@ -7,7 +7,7 @@ import {
   useWatch,
 } from "react-hook-form";
 import { DropDownProps, OptionProps, RemoteDataSource } from "./types";
-import { Box, BoxProps, CheckBox, Select, Text } from "grommet";
+import { Box, BoxProps, Button, CheckBox, Select, Text } from "grommet";
 import { FormField } from "../../types";
 import { Spinner } from "grommet";
 import { usePagedData } from "../../../utils/paged-data-source";
@@ -16,6 +16,7 @@ import styled from "styled-components";
 // @ts-ignore
 import { inputStyle } from "grommet/utils/styles";
 import { useDebouncedCallback } from "use-debounce";
+import { Close } from "grommet-icons";
 
 const MultipleOption = memo((props: OptionProps) => {
   let { label, selected } = props;
@@ -119,8 +120,6 @@ const DropDown = forwardRef<HTMLButtonElement, FormField<DropDownProps>>(
         }
         setRemoteOptions((oldOptions) => {
           let newOptions = [...(page > 1 ? oldOptions : []), ...data];
-          let option = getOptionsByValue(newOptions, computedValue);
-          setLocalValue(option);
           return newOptions;
         });
         return data;
@@ -230,11 +229,12 @@ const DropDown = forwardRef<HTMLButtonElement, FormField<DropDownProps>>(
       let opt_value = option[itemValueKey],
         opt_label = option[itemLabelKey];
 
-      const selected =
-        selectedValues && Array.isArray(selectedValues)
+      const selected = selectedValues
+        ? Array.isArray(selectedValues)
           ? selectedValues.findIndex((v) => v[itemValueKey] === opt_value) !==
             -1
-          : selectedValues === opt_value;
+          : selectedValues[itemValueKey] === opt_value
+        : false;
 
       return multiple ? (
         <MultipleOption
@@ -255,37 +255,57 @@ const DropDown = forwardRef<HTMLButtonElement, FormField<DropDownProps>>(
     };
 
     const valueLabel = () => {
+      const handleClear = (e: MouseEvent<SVGSVGElement>) => {
+        e.stopPropagation();
+        setHasSelection(true);
+        setLocalValue(null);
+        if (methods) {
+          methods.setValue(name!, null);
+        }
+      };
+
+      const isEmpty = (value: any) =>
+        Array.isArray(value) ? !value.length : !value;
+
       let labels = (
-        <LabelBox plainLabel={plainLabel}>
-          {localValue && localValue.length ? (
-            localValue.map((val: any, idx: number) => (
-              <Fragment key={val[itemValueKey]}>
-                {renderItemLabel ? (
-                  renderItemLabel!(
-                    val,
-                    {
-                      setValue: (
-                        setter: (prev: any[] | any) => any[] | any
-                      ) => {
-                        let _value = setter(localValue);
-                        methods!.setValue(name!, _value);
-                        setLocalValue(_value);
+        <Box direction="row" justify="between" align="center" fill="horizontal">
+          <LabelBox plainLabel={plainLabel} fill="horizontal">
+            {localValue && localValue.length ? (
+              localValue.map((val: any, idx: number) => (
+                <Fragment key={val[itemValueKey]}>
+                  {renderItemLabel ? (
+                    renderItemLabel!(
+                      val,
+                      {
+                        setValue: (
+                          setter: (prev: any[] | any) => any[] | any
+                        ) => {
+                          let _value = setter(localValue);
+                          methods!.setValue(name!, _value);
+                          setLocalValue(_value);
+                        },
                       },
-                    },
-                    idx
-                  )
-                ) : (
-                  <>
-                    <Text children={val[itemLabelKey]} />
-                    {localValue!.length - 1 > idx && <span>,</span>}
-                  </>
-                )}
-              </Fragment>
-            ))
-          ) : (
-            <Text>{placeholder ?? T("drop-down-plcaholder")}</Text>
+                      idx
+                    )
+                  ) : (
+                    <>
+                      <Text children={val[itemLabelKey]} />
+                      {localValue!.length - 1 > idx && <span>,</span>}
+                    </>
+                  )}
+                </Fragment>
+              ))
+            ) : (
+              <Text>{placeholder ?? T("drop-down-plcaholder")}</Text>
+            )}
+          </LabelBox>
+          {selectProps?.clear && !isEmpty(localValue) && (
+            <Button
+              focusIndicator={false}
+              icon={<Close size="small" onClick={handleClear} />}
+            />
           )}
-        </LabelBox>
+        </Box>
       );
 
       let wrapElement = labelWrap
@@ -295,6 +315,7 @@ const DropDown = forwardRef<HTMLButtonElement, FormField<DropDownProps>>(
             {
               direction: "row",
               overflow: "hidden",
+              fill: "horizontal",
               wrap: true,
             } as BoxProps,
             labels
@@ -326,6 +347,7 @@ const DropDown = forwardRef<HTMLButtonElement, FormField<DropDownProps>>(
               onChange={handleChange(field)}
               value={localValue ?? []}
               emptySearchMessage={T("drop-down-search-empty-msg")}
+              clear={false}
               {...selectDynamicProps}
               children={selectContent}
             />
@@ -336,4 +358,4 @@ const DropDown = forwardRef<HTMLButtonElement, FormField<DropDownProps>>(
   }
 );
 
-export {DropDown};
+export { DropDown };
