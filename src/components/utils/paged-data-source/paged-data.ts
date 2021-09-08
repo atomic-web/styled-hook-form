@@ -238,7 +238,7 @@ const usePagedData = <
       loadPage(1);
       reqRef.current = request;
     }
-  }, []);
+  }, [request]);
 
   useEffect(() => {
     if (
