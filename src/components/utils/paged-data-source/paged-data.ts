@@ -2,7 +2,6 @@ import useAxios, { makeUseAxios } from "axios-hooks";
 import MockAdapter from "axios-mock-adapter";
 import { useCallback, useEffect, useMemo, useState, useRef } from "react";
 import StaticAxios from "axios";
-import equals from "fast-deep-equal/es6";
 import { AxiosRequestConfig } from "axios";
 
 import {
@@ -242,7 +241,10 @@ const usePagedData = <
   }, []);
 
   useEffect(() => {
-    if (reqRef.current !== null && !equals(reqRef.current, request)) {
+    if (
+      reqRef.current !== null &&
+      JSON.stringify(reqRef.current) != JSON.stringify(request)
+    ) {
       reqRef.current = request;
       reset();
     }
