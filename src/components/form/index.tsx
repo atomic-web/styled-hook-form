@@ -75,10 +75,11 @@ const Form: React.FC<FormProps> = (props) => {
   }, submitTreshould);
 
   useEffect(() => {
-    let watchSubscriptions = control.subjectsRef.current.watch.subscribe({
+    debugger
+    let watchSubscriptions = control._subjects.watch.subscribe({
       next: ({ name: changingName }: any) => {
         const getLiveValue = (name?: string | string[], defaultValues?: any) =>
-          control.watchInternal(name, defaultValues, false);
+          control._getWatch(name, defaultValues, false);
         if (changingName) {
           if (
             autoSubmit &&

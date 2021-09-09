@@ -98,7 +98,7 @@
     "grommet-icons": "^4.6.2",
     "immutable": "^4.0.0-rc.12",
     "react-content-loader": "^6.0.3",
-    "react-hook-form": "7.8.3",
+    "react-hook-form": "7.15.1",
     "use-debounce": "^6.0.1"
   }
 }
