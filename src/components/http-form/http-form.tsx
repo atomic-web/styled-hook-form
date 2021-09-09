@@ -223,19 +223,22 @@ const HttpForm = React.forwardRef<FormMethodsRef, HttpFormProps>(
     };
 
     useEffect(() => {
-
-      const aggConfig = loadRequest ? {
-        ...loadRequest,
-        ...loadRequestOptions,
-      } : undefined;
+      const aggConfig = loadRequest
+        ? {
+            ...loadRequest,
+            ...loadRequestOptions,
+          }
+        : undefined;
 
       const request = aggConfig || requestRef?.current?.config;
 
       if (
         request &&
-        ((requestRef.current && !requestRef.current.completed) ||
-          !requestRef.current ||
-          JSON.stringify(requestRef.current) !== JSON.stringify(loadRequest))
+        ((requestRef.current &&
+          (!requestRef.current.completed ||
+            JSON.stringify(requestRef.current.config) !==
+              JSON.stringify(loadRequest))) ||
+          !requestRef.current)
       ) {
         requestRef.current = {
           config: request,
