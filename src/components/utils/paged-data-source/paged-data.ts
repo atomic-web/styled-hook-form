@@ -1,7 +1,8 @@
 import useAxios, { makeUseAxios } from "axios-hooks";
 import MockAdapter from "axios-mock-adapter";
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState, useRef } from "react";
 import StaticAxios from "axios";
+import { AxiosRequestConfig } from "axios";
 
 import {
   DataFecthStatus,
@@ -53,6 +54,7 @@ const usePagedData = <
   let [total, setTotal] = useState<number>(0);
   let [hasMore, setHasMore] = useState<boolean>(false);
   let [isFirstLoad, setIsFirstLoad] = useState(true);
+  const reqRef = useRef<string | AxiosRequestConfig | null>(null);
 
   let [currentFetch, setCurrentFetch] = useState<DataFetchInfo<
     TServerData,
@@ -234,6 +236,17 @@ const usePagedData = <
   useEffect(() => {
     if (isFirstLoad && request != null && !lazy) {
       loadPage(1);
+      reqRef.current = request;
+    }
+  }, [request]);
+
+  useEffect(() => {
+    if (
+      reqRef.current !== null &&
+      JSON.stringify(reqRef.current) != JSON.stringify(request)
+    ) {
+      reqRef.current = request;
+      reset();
     }
   }, [request]);
 

@@ -183,7 +183,7 @@ const TimePicker: React.FC<TimePickerProps> = (props) => {
               <Box>
                 <NumericUpDown
                   value={hour}
-                  minValue={1}
+                  minValue={0}
                   maxValue={23}
                   changeTreshold={80}
                   onChange={handleHourChange}
@@ -198,14 +198,14 @@ const TimePicker: React.FC<TimePickerProps> = (props) => {
                   value={min}
                   onChange={handleMinChange}
                   changeTreshold={80}
-                  minValue={1}
+                  minValue={0}
                   maxValue={59}
                 />
               </Box>
               <Box>
                 <NumericUpDown
                   value={second}
-                  minValue={1}
+                  minValue={0}
                   maxValue={59}
                   changeTreshold={80}
                   onChange={handleSecondChange}
