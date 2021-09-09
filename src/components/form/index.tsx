@@ -75,7 +75,6 @@ const Form: React.FC<FormProps> = (props) => {
   }, submitTreshould);
 
   useEffect(() => {
-    debugger
     let watchSubscriptions = control._subjects.watch.subscribe({
       next: ({ name: changingName }: any) => {
         const getLiveValue = (name?: string | string[], defaultValues?: any) =>

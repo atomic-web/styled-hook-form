@@ -233,21 +233,39 @@ const usePagedData = <
     }
   }, [requestParams]);
 
+  const checkPendingRequest = () => {
+    return new Promise((res) => {
+      setCurrentFetch((_cf) => {
+        if (_cf && _cf.status === DataFecthStatus.Pending) {
+          res(true);
+        } else {
+          res(false);
+        }
+        return _cf;
+      });
+    });
+  };
+
   useEffect(() => {
-    if (isFirstLoad && request != null && !lazy) {
-      loadPage(1);
-      reqRef.current = request;
-    }
+    checkPendingRequest().then((pending) => {
+      if (!pending && isFirstLoad && request != null && !lazy) {
+        loadPage(1);
+        reqRef.current = request;
+      }
+    });
   }, [request]);
 
   useEffect(() => {
-    if (
-      reqRef.current !== null &&
-      JSON.stringify(reqRef.current) != JSON.stringify(request)
-    ) {
-      reqRef.current = request;
-      reset();
-    }
+    checkPendingRequest().then((pending) => {
+      if (
+        !pending &&
+        reqRef.current !== null &&
+        JSON.stringify(reqRef.current) != JSON.stringify(request)
+      ) {
+        reqRef.current = request;
+        reset();
+      }
+    });
   }, [request]);
 
   return {

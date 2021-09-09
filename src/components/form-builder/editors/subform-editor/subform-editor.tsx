@@ -98,7 +98,7 @@ const SubFormEditor: React.FC<FormField<SubFormEditorProps>> = (props) => {
     let formActualProps = {
       ...formProps,
       model: subFormModel ?? field?.value,
-      onSubmit: (values: any) => {debugger
+      onSubmit: (values: any) => {
         if (mergeToParent) {
           updateRef.current = false;
           mergeValues(methods!, values);
