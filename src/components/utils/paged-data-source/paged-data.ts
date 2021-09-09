@@ -209,6 +209,8 @@ const usePagedData = <
             ...requestParams,
             [pageParamName]: currentFetch.page,
           },
+        }).catch(() => {
+          setCurrentFetch((cf)=>({...cf as any, status: DataFecthStatus.Failed }));
         });
       }
 
