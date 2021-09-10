@@ -89,8 +89,6 @@ const usePagedData = <
     params,
   ]);
 
-  // let loading  = false,error = "", refetch = ()=>{};
-
   if (mockResponse) {
     let mock = new MockAdapter(StaticAxios);
     mockResponse(mock);
@@ -187,10 +185,11 @@ const usePagedData = <
   };
 
   const loadPage = (pNum: number) => {
-    setCurrentFetch({
+    const newFetch = {
       page: pNum,
       status: DataFecthStatus.Pending,
-    });
+    }; 
+    setCurrentFetch(newFetch);
   };
 
   useEffect(() => {
@@ -201,16 +200,34 @@ const usePagedData = <
     loadPage(_page);
   }, [_page]);
 
+  const isCancel = (value :any) => {
+    return !!(value && value.__CANCEL__);
+  };
+
   useEffect(() => {
     if (currentFetch) {
       if (currentFetch.status === DataFecthStatus.Pending) {
+        setCurrentFetch((cf: any) => ({
+          ...cf,
+          status: DataFecthStatus.InProgress,
+        }));
         refetch({
           params: {
             ...requestParams,
             [pageParamName]: currentFetch.page,
           },
-        }).catch(() => {
-          setCurrentFetch((cf)=>({...cf as any, status: DataFecthStatus.Failed }));
+        }).catch((err) => {
+          if (isCancel(err)) {
+            setCurrentFetch((cf) => ({
+              ...(cf as any),
+              status: DataFecthStatus.Pending,
+            }));
+          } else {
+            setCurrentFetch((cf) => ({
+              ...(cf as any),
+              status: DataFecthStatus.Failed,
+            }));
+          }
         });
       }
 
@@ -235,39 +252,22 @@ const usePagedData = <
     }
   }, [requestParams]);
 
-  const checkPendingRequest = () => {
-    return new Promise((res) => {
-      setCurrentFetch((_cf) => {
-        if (_cf && _cf.status === DataFecthStatus.Pending) {
-          res(true);
-        } else {
-          res(false);
-        }
-        return _cf;
-      });
-    });
-  };
+  useEffect(() => {
+    if (isFirstLoad && request != null && !lazy) {
+      loadPage(1);
+      reqRef.current = request;
+    }
+  }, []);
 
   useEffect(() => {
-    checkPendingRequest().then((pending) => {
-      if (!pending && isFirstLoad && request != null && !lazy) {
-        loadPage(1);
-        reqRef.current = request;
-      }
-    });
-  }, [request]);
-
-  useEffect(() => {
-    checkPendingRequest().then((pending) => {
-      if (
-        !pending &&
-        reqRef.current !== null &&
-        JSON.stringify(reqRef.current) != JSON.stringify(request)
-      ) {
-        reqRef.current = request;
-        reset();
-      }
-    });
+    if (
+      (!reqRef.current && request) ||
+      (reqRef.current &&
+        JSON.stringify(reqRef.current) != JSON.stringify(request))
+    ) {
+      reqRef.current = request;
+      reset();
+    }
   }, [request]);
 
   return {

@@ -44,8 +44,9 @@ export interface PageDataResult<
 
 export enum DataFecthStatus {
   Pending = 0,
-  Done = 1,
-  Failed = 2,
+  InProgress = 1,
+  Done = 2,
+  Failed = 3,
 }
 
 export interface DataFetchInfo<TServerData, TError> {
