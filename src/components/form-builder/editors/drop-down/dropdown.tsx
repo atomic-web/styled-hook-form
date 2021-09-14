@@ -251,6 +251,7 @@ const DropDown = forwardRef<HTMLButtonElement, FormField<DropDownProps>>(
     };
 
     const valueLabel = () => {
+      
       const handleClear = (e: MouseEvent<SVGSVGElement>) => {
         e.stopPropagation();
         setLocalValue(null);
@@ -262,11 +263,15 @@ const DropDown = forwardRef<HTMLButtonElement, FormField<DropDownProps>>(
       const isEmpty = (value: any) =>
         Array.isArray(value) ? !value.length : !value;
 
+      let _value : any[] = localValue ? (
+        Array.isArray(localValue) ? localValue : [localValue]
+      ) : [];
+
       let labels = (
         <Box direction="row" justify="between" align="center" fill="horizontal">
           <LabelBox plainLabel={plainLabel} fill="horizontal">
-            {localValue && localValue.length ? (
-              localValue.map((val: any, idx: number) => (
+            {_value && _value.length ? (
+              _value.map((val: any, idx: number) => (
                 <Fragment key={val[itemValueKey]}>
                   {renderItemLabel ? (
                     renderItemLabel!(
@@ -275,9 +280,9 @@ const DropDown = forwardRef<HTMLButtonElement, FormField<DropDownProps>>(
                         setValue: (
                           setter: (prev: any[] | any) => any[] | any
                         ) => {
-                          let _value = setter(localValue);
-                          methods!.setValue(name!, _value);
-                          setLocalValue(_value);
+                          let transformedValue = setter(_value);
+                          methods!.setValue(name!, transformedValue);
+                          setLocalValue(transformedValue);
                         },
                       },
                       idx
