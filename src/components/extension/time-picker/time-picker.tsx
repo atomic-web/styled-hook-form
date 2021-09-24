@@ -111,7 +111,7 @@ const TimePicker: React.FC<TimePickerProps> = (props) => {
 
   const handleSecondChange = (s: number) => {
     if(s >=0 && s < 60){
-      setMin(s);
+      setSecond(s);
     }
   };
 
