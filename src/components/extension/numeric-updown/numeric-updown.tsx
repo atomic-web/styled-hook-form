@@ -1,6 +1,6 @@
 import React from 'react';
 import { Box } from "grommet";
-import { ChangeEvent, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { NumericBox } from "../numeric-box";
 import { NumericUpDownProps } from "./types";
 import { FormUp, FormDown } from "grommet-icons";
