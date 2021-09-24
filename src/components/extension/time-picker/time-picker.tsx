@@ -216,7 +216,7 @@ const TimePicker: React.FC<TimePickerProps> = (props) => {
               <Box>
                 <RadioButtonGroup
                   direction="row"
-                  name={"sdsd"}
+                  name={"ampm"}
                   value={AMPM as string}
                   options={["AM", "PM"]}
                   onChange={(e: ChangeEvent<HTMLInputElement>) =>
