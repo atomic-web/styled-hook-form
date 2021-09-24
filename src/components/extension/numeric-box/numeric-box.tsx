@@ -8,7 +8,7 @@ const NumericBox: React.FC<NumericBoxProps> = (props) => {
   const [localValue, updateLocalValue] = useState(value);
 
   useEffect(() => {
-    if (value) {
+    if (value !== null && value !== undefined) {
       updateLocalValue(value);
     }
   }, [value]);
