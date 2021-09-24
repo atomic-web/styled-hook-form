@@ -98,15 +98,21 @@ const TimePicker: React.FC<TimePickerProps> = (props) => {
   }, [min, hour, second, AMPM]);
 
   const handleHourChange = (h: number) => {
-    setHour(h);
+    if (h > 0 && h < 12) {
+      setHour(h);
+    }
   };
 
   const handleMinChange = (m: number) => {
-    setMin(m);
+    if(m >=0 && m < 60){
+      setMin(m);
+    }
   };
 
   const handleSecondChange = (s: number) => {
-    setSecond(s);
+    if(s >=0 && s < 60){
+      setMin(s);
+    }
   };
 
   const handleFocus = useCallback(() => {
@@ -183,7 +189,7 @@ const TimePicker: React.FC<TimePickerProps> = (props) => {
               <Box>
                 <NumericUpDown
                   value={hour}
-                  minValue={0}
+                  minValue={1}
                   maxValue={23}
                   changeTreshold={80}
                   onChange={handleHourChange}

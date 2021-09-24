@@ -64,8 +64,7 @@ const NumericUpDown: React.FC<NumericUpDownProps> = (props) => {
     });
   };
 
-  const handleInputChage = (e: ChangeEvent<HTMLInputElement>) => {
-    let valStr = e.target.value;
+  const handleInputChage = (valStr:string) => {
     let val = 0;
     if (!valStr) {
       val = 0;
@@ -96,6 +95,7 @@ const NumericUpDown: React.FC<NumericUpDownProps> = (props) => {
       </Box>
       <NumericBox
         value={value}
+        //@ts-ignore
         onChange={handleInputChage}
         textAlign="center"
       />
