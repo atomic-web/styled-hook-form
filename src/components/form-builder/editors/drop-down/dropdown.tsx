@@ -1,4 +1,4 @@
-import React, { Fragment, useMemo, MouseEvent } from "react";
+import React, { Fragment, useMemo, MouseEvent, useRef } from "react";
 import { forwardRef, useCallback, useEffect, useState, memo } from "react";
 import {
   Controller,
@@ -159,15 +159,23 @@ const DropDown = forwardRef<HTMLButtonElement, FormField<DropDownProps>>(
           : value === o[itemValueKey] || value === o
       );
     };
-    useEffect(()=>{
-      if (actualOptions){
-        setLocalValue(getOptionsByValue(actualOptions,liveValue));
+
+    const liveValueRef = useRef(null);
+
+    useEffect(() => {
+      if (
+        actualOptions &&
+        (!liveValueRef.current ||
+          JSON.stringify(liveValueRef.current) != JSON.stringify(liveValue))
+      ) {
+        setLocalValue(getOptionsByValue(actualOptions, liveValue));
+        liveValueRef.current = liveValue;
       }
-    },[liveValue,actualOptions]);
+    }, [liveValue, actualOptions]);
 
     useEffect(() => {
       if (actualOptions && initialValue) {
-        setLocalValue(getOptionsByValue(actualOptions,initialValue));
+        setLocalValue(getOptionsByValue(actualOptions, initialValue));
       }
     }, [actualOptions]);
 
@@ -251,7 +259,6 @@ const DropDown = forwardRef<HTMLButtonElement, FormField<DropDownProps>>(
     };
 
     const valueLabel = () => {
-      
       const handleClear = (e: MouseEvent<SVGSVGElement>) => {
         e.stopPropagation();
         setLocalValue(null);
@@ -263,9 +270,11 @@ const DropDown = forwardRef<HTMLButtonElement, FormField<DropDownProps>>(
       const isEmpty = (value: any) =>
         Array.isArray(value) ? !value.length : !value;
 
-      let _value : any[] = localValue ? (
-        Array.isArray(localValue) ? localValue : [localValue]
-      ) : [];
+      let _value: any[] = localValue
+        ? Array.isArray(localValue)
+          ? localValue
+          : [localValue]
+        : [];
 
       let labels = (
         <Box direction="row" justify="between" align="center" fill="horizontal">

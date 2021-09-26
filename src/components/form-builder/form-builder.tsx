@@ -2,9 +2,10 @@ import React, { forwardRef, useEffect, useMemo, useState } from "react";
 import { FormMethodsRef, WatchField } from "../form/types";
 import Form from "../form";
 import styled from "styled-components";
-import { FormBuilderProps, FormField } from "./types";
-import { useFormContext, UseFormReturn } from "react-hook-form";
+import { FormBuilderProps, FormField, FormFieldType } from "./types";
+import { useFormContext, UseFormReturn, set } from "react-hook-form";
 import { customLayout, gridLayout } from "./layouts";
+import { SubFormEditorProps } from "./editors";
 
 const StyledFormBuilder = styled.div``;
 
@@ -40,12 +41,22 @@ const FormBuilder = forwardRef<FormMethodsRef | null, FormBuilderProps>(
     );
 
     const getAggValues = () => ({
-      ...fields.reduce((p: any, c: FormField) => {
-        if (c.name) {
-          p[c.name] = c.defaultValue;
-        }
-        return p;
-      }, {}),
+      ...fields
+        .reduce(
+          (p: FormField[], c: FormField) => [
+            ...p,
+            ...(c.type === FormFieldType.SubForm
+              ? (c as SubFormEditorProps).formProps.fields
+              : [c]),
+          ],
+          []
+        )
+        .reduce((p: any, c: FormField) => {
+          if (c.name) {
+            set(p, c.name, c.defaultValue);
+          }
+          return p;
+        }, {}),
       ...model,
     });
 

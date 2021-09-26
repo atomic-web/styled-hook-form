@@ -25,11 +25,31 @@ export const Default = () => {
             required:true,
           },
           {
-            name: "sub.Text2",
+            name: "sub.sub2.text",
             label: "Sub Text",
             type: FormFieldType.Text,
+            defaultValue:"asdasdsad",
             required:true,
-          }
+          },
+          {
+            name: "currency",
+            label: "sdfsdf",
+            type: FormFieldType.DropDown,
+            itemLabelKey: "name",
+            itemValueKey: "id",
+            options: [
+              {
+                name: "DOLLAR",
+                id: "DOLLAR",
+              },
+              {
+                name: "EURO",
+                id: "EURO",
+              },
+            ],
+            defaultValue: "EURO",
+            required: true,
+          },
         ],
       },
     },
