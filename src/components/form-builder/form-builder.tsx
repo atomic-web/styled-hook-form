@@ -220,9 +220,9 @@ const FormBuilder = forwardRef<FormMethodsRef | null, FormBuilderProps>(
 
         return Object.keys(groupedEditors).map((k) => (
           <Box gridArea={k} key={k} pad="small">
-            {groupedEditors[k].map((field) => (
-              <Box key={field.key}>{field}</Box>
-            ))}
+            {groupedEditors[k].map((field,i) => {
+              return <Box key={i}>{field}</Box>
+            })}
           </Box>
         ));
       }
