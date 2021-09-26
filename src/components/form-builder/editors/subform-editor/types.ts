@@ -1,9 +1,9 @@
 import {
-  FormBuilderProps,
+  FormBuilderProps, FormEditorPropsBase,
 } from "../../../form-builder/types";
 import React from "react";
 
-export interface SubFormEditorProps {
+export interface SubFormEditorProps extends FormEditorPropsBase {
   formProps: FormBuilderProps;
   content?: React.ReactNode;
   plain?: boolean;

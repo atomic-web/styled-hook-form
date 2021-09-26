@@ -144,3 +144,4 @@ export type FormBuilderProps<TModel = any> = Partial<
   partialForm? : boolean
 };
 
+export type FormEditorPropsBase = Pick<FormFieldBase, "validationRules"> & {};
