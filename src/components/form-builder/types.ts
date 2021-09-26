@@ -139,8 +139,9 @@ export type FormBuilderProps<TModel = any> = Partial<
   rows?: PropType<GridProps, "rows">;
   columns?: PropType<GridProps, "columns">;
   areas?: PropType<GridProps, "areas">;
-  editorComponent?: React.ReactElement;
+  editorWrapComponent?: React.ReactElement;
   autoSubmitTreshould?: number;
+  partialForm? : boolean
 };
 
 export type FormEditorPropsBase = Pick<FormFieldBase, "validationRules"> & {};

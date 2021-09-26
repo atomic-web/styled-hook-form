@@ -38,7 +38,7 @@ export const Default = () => {
           alert(JSON.stringify(values));
         }}
       >
-        {methods?.control && <DevTool control={methods.control} placement="top-right" />}
+         
         <Button label="submit" type="submit" />
       </FormBuilder>
     </Box>

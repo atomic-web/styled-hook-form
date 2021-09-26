@@ -46,11 +46,14 @@ const SubFormEditor: React.FC<FormField<SubFormEditorProps>> = (props) => {
 
   const updateRef = useRef<boolean>(true);
 
-  const mergeValues = (_methods : UseFormReturn, values : Record<string,any>)=>{
+  const mergeValues = (
+    _methods: UseFormReturn,
+    values: Record<string, any>
+  ) => {
     for (const key of Object.keys(values)) {
       _methods?.setValue(key, values[key]);
     }
-  }
+  };
 
   let subFormModel = mergeToParent
     ? null
@@ -87,23 +90,26 @@ const SubFormEditor: React.FC<FormField<SubFormEditorProps>> = (props) => {
         ),
         {}
       );
-      
-      if (updateRef.current){
-        mergeValues(subFormMethods,values);
+
+      if (updateRef.current) {
+        mergeValues(subFormMethods, values);
+      } else {
+        updateRef.current = true;
       }
     }
-  }, [parentValues]);
+  }, [parentValues]); 
 
   const formBuilder = (field?: ControllerRenderProps) => {
     let formActualProps = {
       ...formProps,
+      partialForm: mergeToParent,
       model: subFormModel ?? field?.value,
       onSubmit: (values: any) => {
         if (mergeToParent) {
           updateRef.current = false;
           mergeValues(methods!, values);
-          updateRef.current = true;
         } else {
+          subFormMethods?.trigger();
           field?.onChange(values);
         }
         onSubmit && onSubmit(values);

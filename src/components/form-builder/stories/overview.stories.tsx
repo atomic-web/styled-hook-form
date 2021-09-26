@@ -196,7 +196,7 @@ const Template: Story<FormBuilderProps> = (args) => (
       layout={<ResponsiveFlex></ResponsiveFlex>}
       rows={["flex", "flex", "5em"]}
       columns={["50%", "50%"]}
-      editorComponent={<ResponsiveFlexCol />}
+      editorWrapComponent={<ResponsiveFlexCol />}
       devMode
       areas={[
         {

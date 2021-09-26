@@ -2,117 +2,13 @@ import React, { forwardRef, useEffect, useMemo, useState } from "react";
 import { FormMethodsRef, WatchField } from "../form/types";
 import Form from "../form";
 import styled from "styled-components";
-import { FormBuilderProps, FormField, ValidateWithMethods } from "./types";
-import { EditorMap } from "./editor-map";
-import { UseFormReturn, ValidateResult } from "react-hook-form";
-import WidthEditorWrap from "./editors/shared/editor-wrap";
-import { Box, Grid, GridProps } from "grommet";
-import { PropType } from "types/utils";
+import { FormBuilderProps, FormField } from "./types";
+import { useFormContext, UseFormReturn } from "react-hook-form";
+import { customLayout, gridLayout } from "./layouts";
 
 const StyledFormBuilder = styled.div``;
 
-const getValidateFuncWithMethods = (
-  validateFunc: ValidateWithMethods<any>,
-  values: any,
-  methods: UseFormReturn
-): ValidateResult | Promise<any> => {
-  let result = validateFunc(values, methods);
-  if (result instanceof Promise) {
-    return new Promise(async (res, rej) => {
-      (result as Promise<any>).then((v) => res(v)).catch((e) => rej(e));
-    });
-  } else {
-    return result;
-  }
-};
 export type FormChildProps = UseFormReturn;
-
-const renderField = (
-  field: FormField,
-  methods: UseFormReturn<any>,
-  editorComponent: React.ReactElement | undefined,
-  model: Record<string, any>,
-  shouldUnregister?: boolean
-) => {
-  field.methods = methods;
-  let component = React.createElement(EditorMap[field.type], {
-    ...((field as unknown) as any),
-    model,
-    shouldUnregister: field.shouldUnregister ?? shouldUnregister,
-    key: field.name,
-  });
-
-  if (field.renderLabel === undefined) {
-    field.renderLabel = true;
-  }
-
-  if (field.validationRules && field.validationRules.validate) {
-    if (typeof field.validationRules.validate === "function") {
-      let userDefFunc = field.validationRules!
-        .validate as ValidateWithMethods<any>;
-      field.validationRules.validate = (values: any) => {
-        return getValidateFuncWithMethods(userDefFunc, values, methods);
-      };
-    } else {
-      let rules = field.validationRules.validate as Record<string, any>;
-      field.validationRules.validate = Object.keys(
-        field.validationRules.validate!
-      )
-        .map((k) => [
-          k,
-          (values: any) =>
-            getValidateFuncWithMethods(
-              rules[k] as ValidateWithMethods<any>,
-              values,
-              methods
-            ),
-        ])
-        .reduce((p: any, c: any) => ((p[c[0]] = c[1]), p), {});
-    }
-  }
-
-  const wrapWithComponent = (component: React.ReactElement) => (
-    p1?: any,
-    p2?: any
-  ) => {
-    let children: React.ReactNode, props: any;
-
-    if (!p2 && p1) {
-      props = p1 as any;
-      children = null;
-    }
-
-    if (p2) {
-      props = p2 as any;
-      children = p1 as React.ReactNode;
-    }
-
-    if (!children && !props) {
-      return component;
-    }
-
-    let clone = React.cloneElement(component, props ?? {}, children);
-    return clone;
-  };
-
-  const EditorView = React.cloneElement(
-    field.wrapComponent ?? editorComponent ?? <React.Fragment />,
-    {},
-    <WidthEditorWrap
-      key={field.name}
-      {...(field as any)}
-      editorType={field.type}
-    >
-      <>
-        {field.render !== undefined &&
-          field.render(wrapWithComponent(component), methods)}
-        {field.render === undefined && component}
-      </>
-    </WidthEditorWrap>
-  );
-
-  return EditorView;
-};
 
 const FormBuilder = forwardRef<FormMethodsRef | null, FormBuilderProps>(
   (props, ref) => {
@@ -128,8 +24,9 @@ const FormBuilder = forwardRef<FormMethodsRef | null, FormBuilderProps>(
       areas,
       options,
       layout = "GRID",
-      editorComponent,
+      editorWrapComponent,
       autoSubmitTreshould = 500,
+      partialForm,
       ...rest
     } = props;
 
@@ -187,138 +84,60 @@ const FormBuilder = forwardRef<FormMethodsRef | null, FormBuilderProps>(
           } as WatchField)
       );
 
-    const renderFieldEditors = (items: FormField[], methods: any) => {
-      let groupedEditors: Record<string, any[]> = {};
+    const items = fields.map((item, index) => ({
+      ...item,
+      order: item.order ?? index,
+    }));
 
-      items = items.map((item, index) => ({
-        ...item,
-        order: item.order ?? index,
-      }));
+    items.sort((a, b) => a.order! - b.order!);
 
-      let sortedItems = items.sort((a, b) => a.order! - b.order!);
+    const isPartialForm = partialForm === true;
 
-      if (layout === "GRID") {
-        sortedItems.forEach((field) => {
-          let fieldEditor = renderField(
-            field,
+    const renderLayout = (methods: UseFormReturn) =>
+      layout === "GRID"
+        ? gridLayout({
+            fields: items,
             methods,
-            editorComponent,
+            rows,
+            columns,
+            areas,
+            children,
+            options,
             model,
-            options?.shouldUnregister
-          );
-          if (field.gridArea) {
-            let existingArea = groupedEditors[field.gridArea];
-            groupedEditors[field.gridArea] = existingArea
-              ? [...existingArea, fieldEditor]
-              : [fieldEditor];
-          } else {
-            groupedEditors["no-area"] = groupedEditors["no-area"]
-              ? [...groupedEditors["no-area"], fieldEditor]
-              : [fieldEditor];
-          }
-        });
+            editorWrapComponent,
+          })
+        : customLayout({
+            layout,
+            children,
+            options,
+            model,
+            editorWrapComponent,
+            fields: items,
+            methods,
+          });
 
-        return Object.keys(groupedEditors).map((k) => (
-          <Box gridArea={k} key={k} pad="small">
-            {groupedEditors[k].map((field,i) => {
-              return <Box key={i}>{field}</Box>
-            })}
-          </Box>
-        ));
-      }
-
-      return sortedItems.map((field) =>
-        renderField(field, methods, editorComponent,model, options?.shouldUnregister)
-      );
-    };
-
-    const renderChildren = (
-      children:
-        | React.ReactChild
-        | ((methods: UseFormReturn) => React.ReactNode),
-      methods: UseFormReturn
-    ) => (typeof children === "function" ? children(methods) : children);
-
-    const renderCustomLayout = (methods: UseFormReturn) => {
-      let layoutComponent = React.cloneElement(
-        layout as React.ReactElement,
-        {},
-        <>
-          {renderFieldEditors(fields, methods)}
-          {renderChildren(children as any, methods)}
-        </>
-      );
-
-      return layoutComponent;
-    };
-
-    const renderGrid = (
-      methods: UseFormReturn,
-      rows: PropType<GridProps, "rows">,
-      columns: PropType<GridProps, "columns">,
-      areas: PropType<GridProps, "areas">
-    ) => {
-      let gridDefined: boolean = true;
-
-      if (!rows) {
-        gridDefined = false;
-        rows = ["flex", "xsmall"];
-        columns = ["flex"];
-        areas = [
+    const formBody = isPartialForm
+      ? React.createElement(React.Fragment, {}, renderLayout(useFormContext()))
+      : React.createElement(
+          Form,
           {
-            name: "body",
-            start: [0, 0],
-            end: [0, 0],
+            ...(rest as object),
+            options: {
+              ...(options ?? {}),
+              defaultValues,
+            },
+            submitTreshould: autoSubmitTreshould,
+            methodsRef: ref,
+            onSubmit: handleSubmit,
+            autoSubmit: submitTriggers?.length > 0 ? true : false,
+            autoSubmitFields: submitTriggers || [],
+            changeHandlers: changeHandlers,
           },
-          {
-            name: "actions",
-            start: [0, 1],
-            end: [0, 1],
-          },
-        ];
-      }
-
-      return (
-        <Grid rows={rows} columns={columns} areas={areas} fill>
-          {gridDefined ? (
-            renderFieldEditors(fields, methods)
-          ) : (
-            <Box gridArea="body">{renderFieldEditors(fields, methods)}</Box>
-          )}
-          {children &&
-            (gridDefined ? (
-              renderChildren(children as any, methods)
-            ) : (
-              <Box gridArea="actions">
-                {renderChildren(children as any, methods)}
-              </Box>
-            ))}
-        </Grid>
-      );
-    };
+          ({ ...methods }: UseFormReturn) => renderLayout(methods)
+        );
 
     return (
-      <StyledFormBuilder className={className}>
-        <Form
-          {...(rest as object)}
-          options={{
-            ...(options ?? {}),
-            defaultValues,
-          }}
-          submitTreshould={autoSubmitTreshould}
-          methodsRef={ref}
-          onSubmit={handleSubmit}
-          autoSubmit={submitTriggers?.length > 0 ? true : false}
-          autoSubmitFields={submitTriggers || []}
-          changeHandlers={changeHandlers}
-        >
-          {({ ...methods }) => {
-            return layout === "GRID"
-              ? renderGrid(methods, rows, columns, areas)
-              : renderCustomLayout(methods);
-          }}
-        </Form>
-      </StyledFormBuilder>
+      <StyledFormBuilder className={className}>{formBody}</StyledFormBuilder>
     );
   }
 );
