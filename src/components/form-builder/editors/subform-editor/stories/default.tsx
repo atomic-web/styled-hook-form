@@ -20,9 +20,16 @@ export const Default = () => {
       formProps: {
         fields: [
           {
-            name: "subText",
+            name: "sub.Text",
             label: "Sub Text",
             type: FormFieldType.Text,
+            required:true,
+          },
+          {
+            name: "sub.Text2",
+            label: "Sub Text",
+            type: FormFieldType.Text,
+            required:true,
           }
         ],
       },

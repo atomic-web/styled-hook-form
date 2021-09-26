@@ -44,7 +44,7 @@
     "@babel/preset-env": "7.14.0",
     "@babel/preset-react": "7.13.13",
     "@babel/preset-typescript": "7.13.0",
-    "@hookform/devtools": "^3.1.0",
+    "@hookform/devtools": "^4.0.1",
     "@storybook/addon-actions": "6.2.9",
     "@storybook/addon-essentials": "6.2.9",
     "@storybook/addon-links": "6.2.9",
