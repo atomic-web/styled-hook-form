@@ -40,8 +40,6 @@ const Form: React.FC<FormProps> = (props) => {
 
   const {
     handleSubmit,
-    formState: { isValid},
-    trigger,
     reset,
     control,
   } = methods;
@@ -64,11 +62,6 @@ const Form: React.FC<FormProps> = (props) => {
   }, [defaultValues]);
 
   const onFormSubmit = (values: any) => {
-    debugger
-    if (!isValid) {
-      trigger();
-      return;
-    }
     onSubmit && onSubmit(values);
     return true;
   };
