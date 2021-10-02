@@ -13,7 +13,7 @@ const CustomEditor: React.FC<FormField<CustomEditorProps>> = (props) => {
     defaultValue: initialValue,
     methods,
     required,
-    editorWrapComponent,
+    editorComponent,
     label,
     props: componentProps,
   } = props;
@@ -38,7 +38,7 @@ const CustomEditor: React.FC<FormField<CustomEditorProps>> = (props) => {
   return (
     <>
       {!name &&
-        React.cloneElement(editorWrapComponent, {
+        React.cloneElement(editorComponent, {
           ...customProps,
           methods,
         })}
@@ -49,7 +49,7 @@ const CustomEditor: React.FC<FormField<CustomEditorProps>> = (props) => {
           rules={vrules as any}
           control={control}
           render={({ field }) => {
-            let editorElement = React.cloneElement(editorWrapComponent, {
+            let editorElement = React.cloneElement(editorComponent, {
               ...customProps,
               value: field.value,
               onChange: (e: any) => field.onChange(e),
