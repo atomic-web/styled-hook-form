@@ -16,6 +16,7 @@ const NumericEditor = forwardRef<
     name,
     label,
     defaultValue: initialValue,
+    shouldUnregister,
     min,
     max,
     required,
@@ -50,6 +51,7 @@ const NumericEditor = forwardRef<
     <Controller
       name={name!}
       defaultValue={initialValue}
+      shouldUnregister={shouldUnregister}
       rules={vrules as any}
       control={control}
       render={({ field }) => (

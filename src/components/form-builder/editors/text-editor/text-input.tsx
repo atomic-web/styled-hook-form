@@ -15,6 +15,7 @@ const TextEditor = forwardRef<HTMLInputElement, FormField<TextEditorProps>>(
       name,
       label,
       defaultValue: initialValue,
+      shouldUnregister,
       minLength,
       maxLength,
       required,
@@ -52,6 +53,7 @@ const TextEditor = forwardRef<HTMLInputElement, FormField<TextEditorProps>>(
       <Controller        
         name={name!}
         defaultValue={initialValue}
+        shouldUnregister={shouldUnregister}
         rules={vrules as any}
         control={control}
         render={({ field }) => (

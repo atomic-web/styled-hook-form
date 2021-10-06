@@ -16,6 +16,7 @@ const CustomEditor: React.FC<FormField<CustomEditorProps>> = (props) => {
     editorComponent,
     label,
     props: componentProps,
+    shouldUnregister
   } = props;
 
   let control = methods?.control;
@@ -45,6 +46,7 @@ const CustomEditor: React.FC<FormField<CustomEditorProps>> = (props) => {
       {name && (
         <Controller
           name={name}
+          shouldUnregister={shouldUnregister}
           defaultValue={initialValue}
           rules={vrules as any}
           control={control}

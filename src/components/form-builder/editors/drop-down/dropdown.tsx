@@ -78,6 +78,7 @@ const DropDown = forwardRef<HTMLButtonElement, FormField<DropDownProps>>(
       renderItemLabel,
       plainLabel,
       selectProps,
+      shouldUnregister,
       defaultValue: initialValue,
       searchDebounce = 500,
     } = props;
@@ -337,6 +338,7 @@ const DropDown = forwardRef<HTMLButtonElement, FormField<DropDownProps>>(
       <Controller
         name={name!}
         defaultValue={initialValue}
+        shouldUnregister={shouldUnregister}
         rules={vrules as any}
         control={control}
         render={({ field }) => (

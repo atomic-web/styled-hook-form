@@ -14,6 +14,7 @@ const TimeEditor: React.FC<FormField<TimeEditorProps>> = (props) => {
     name,
     label,
     defaultValue: initialValue,
+    shouldUnregister,
     required,
     methods,
   } = props;
@@ -31,6 +32,7 @@ const TimeEditor: React.FC<FormField<TimeEditorProps>> = (props) => {
     <Controller
       name={name!}
       defaultValue={initialValue}
+      shouldUnregister={shouldUnregister}
       rules={vrules as any}
       control={control}
       render={({ field }) => (

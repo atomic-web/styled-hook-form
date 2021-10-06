@@ -47,6 +47,7 @@ export const PasswordEditor = forwardRef<
     minPasswordStrength,
     visibilityToggle = true,
     inputProps,
+    shouldUnregister
   } = props;
 
   const [reveal, setReveal] = useState<boolean>(false);
@@ -76,6 +77,7 @@ export const PasswordEditor = forwardRef<
     <Controller
       name={name!}
       defaultValue={initialValue}
+      shouldUnregister={shouldUnregister}
       rules={vrules as any}
       control={control}
       render={({ field }) => (

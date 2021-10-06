@@ -11,6 +11,7 @@ const BoolEditor = forwardRef<HTMLInputElement, FormField<BoolEditorProps>>(
     let {
       name,
       defaultValue: initialValue,
+      shouldUnregister,
       controlType,
       methods,
       label,
@@ -24,6 +25,7 @@ const BoolEditor = forwardRef<HTMLInputElement, FormField<BoolEditorProps>>(
         defaultValue={initialValue}
         rules={vrules as any}
         control={control}
+        shouldUnregister={shouldUnregister}
         render={({ field }) => (
           <CheckBox
             ref={ref}

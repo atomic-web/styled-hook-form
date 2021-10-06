@@ -16,6 +16,7 @@ const DateEditor: React.FC<FormField<DateEditorProps>> = (props) => {
     name,
     label,
     defaultValue: initialValue,
+    shouldUnregister,
     dateInputProps,
     minDate,
     maxDate,
@@ -67,6 +68,7 @@ const DateEditor: React.FC<FormField<DateEditorProps>> = (props) => {
       defaultValue={normalValue}
       rules={vrules as any}
       control={control}
+      shouldUnregister={shouldUnregister}
       render={({ field }) => {
         console.log(field.value);
         return (

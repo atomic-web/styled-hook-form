@@ -17,6 +17,7 @@ const FileEditor = forwardRef<HTMLInputElement, FormField<FileEditorProps>>(
     let {
       name,
       defaultValue: initialValue,
+      shouldUnregister,
       required,
       methods,
       multiple,
@@ -64,6 +65,7 @@ const FileEditor = forwardRef<HTMLInputElement, FormField<FileEditorProps>>(
         <Controller
           name={name!}
           defaultValue={initialValue}
+          shouldUnregister={shouldUnregister}
           control={control}
           rules={vrules as any}
           render={({ field }) => (
