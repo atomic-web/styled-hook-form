@@ -60,7 +60,7 @@ const FormBuilder = forwardRef<FormMethodsRef | null, FormBuilderProps>(
       ...model,
     });
 
-    let [defaultValues, setDefautValues] = useState(getAggValues);
+    let [defaultValues, setDefautValues] = useState(getAggValues());
 
     useEffect(() => {
       setDefautValues(getAggValues());
