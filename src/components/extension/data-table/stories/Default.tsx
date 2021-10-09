@@ -1,7 +1,7 @@
 import { DataTable } from "..";
 import { name, address, phone, image, datatype } from "faker";
 import { Avatar, Box, ColumnConfig, Meter, Stack, Text } from "grommet";
-import { SHFContextProvider } from "styled-hook-form";
+import { FormBuilderContextProvider } from "styled-hook-form";
 import { DataTableContextProvider } from "../data-context";
 
 const columns: ColumnConfig<any>[] = [
@@ -60,7 +60,7 @@ const pageSize = 20;
 
 export const Default = () => {
   return (
-    <SHFContextProvider>
+    <FormBuilderContextProvider>
       <DataTableContextProvider>
         <DataTable
           primaryKey="id"
@@ -105,7 +105,7 @@ export const Default = () => {
           columns={columns}
         />
       </DataTableContextProvider>
-    </SHFContextProvider>
+    </FormBuilderContextProvider>
   );
 };
 

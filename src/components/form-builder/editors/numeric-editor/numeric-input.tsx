@@ -3,14 +3,14 @@ import { Controller } from "react-hook-form";
 import { NumericEditorProps } from "./types";
 import { FormField } from "../../types";
 import { NumericBox } from "../../../../components/extension";
-import { useSHFContext } from "../../../../context";
+import { useFormBuilderContext } from "../../../../context";
 
 const NumericEditor = forwardRef<
   HTMLInputElement,
   FormField<NumericEditorProps>
 >((props, ref) => {
   let vrules = props.validationRules || {};
-  const { translate: T } = useSHFContext();
+  const { translate: T } = useFormBuilderContext();
 
   let {
     name,

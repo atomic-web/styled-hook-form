@@ -7,11 +7,11 @@ import {
 import { FileEditorProps } from "./types";
 import { FileInput as GrommetFileInput } from "grommet";
 import { FormField } from "../../types";
-import { useSHFContext } from "../../../../context";
+import { useFormBuilderContext } from "../../../../context";
 
 const FileEditor = forwardRef<HTMLInputElement, FormField<FileEditorProps>>(
   (props, ref) => {
-    const {translate : T } = useSHFContext();
+    const {translate : T } = useFormBuilderContext();
     let vrules = props.validationRules || {};
 
     let {

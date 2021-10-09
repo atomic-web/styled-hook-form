@@ -2,12 +2,12 @@ import { ChangeEvent, forwardRef, useCallback } from "react";
 import { Controller } from "react-hook-form";
 import { HiddenEditorProps } from "./types";
 import { FormField } from "../../types";
-import { useSHFContext } from "../../../../context";
+import { useFormBuilderContext } from "../../../../context";
 
 const HiddenEditor = forwardRef<HTMLInputElement, FormField<HiddenEditorProps>>(
   (props, ref) => {
     let vrules = props.validationRules || {};
-    const { translate: T } = useSHFContext();
+    const { translate: T } = useFormBuilderContext();
 
     let {
       name,

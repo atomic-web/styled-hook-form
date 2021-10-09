@@ -1,4 +1,4 @@
-import { useSHFContext } from "../../../context";
+import { useFormBuilderContext } from "../../../context";
 import {
   Box,
   DataTable as GrommetDataTable,
@@ -91,7 +91,7 @@ const DataTableImpl: React.FC<DataTableProps> = (props) => {
 
   let {
     config: { ssr: globalSSR },
-  } = useSHFContext();
+  } = useFormBuilderContext();
 
   let ssrEnabled = perSsr !== undefined ? perSsr : globalSSR;
 

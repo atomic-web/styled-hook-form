@@ -1,4 +1,4 @@
-import { useSHFContext } from "../../../../context";
+import { useFormBuilderContext } from "../../../../context";
 import { useState, useEffect } from "react";
 import styled from "styled-components";
 import { PasswordStrengthProps } from "./types";
@@ -45,7 +45,7 @@ const scorePassword = (pass: string) => {
 };
 
 const usePasswordStrength = (password: string) => {
-  const {translate : T } = useSHFContext();
+  const {translate : T } = useFormBuilderContext();
 
   const getStrengthText = (s:number) => {
     if (s > 80) return T("password-input-strength-strong");
@@ -95,7 +95,7 @@ const PasswordStrength: React.FC<PasswordStrengthProps> = (
   props: PasswordStrengthProps
 ) => {
   let { password, onChange } = props;
-  const {translate : T } = useSHFContext();
+  const {translate : T } = useFormBuilderContext();
 
   let [
     passStrengthText,

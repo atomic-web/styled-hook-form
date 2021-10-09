@@ -9,7 +9,7 @@ import React, {
 } from "react";
 import { HttpFormProps } from "./types";
 import { Box, Button, Spinner } from "grommet";
-import { useSHFContext } from "../../context";
+import { useFormBuilderContext } from "../../context";
 import staticAxios, { AxiosRequestConfig } from "axios";
 import MockAdapter from "axios-mock-adapter";
 import { FormMethodsRef } from "components/form/types";
@@ -42,7 +42,7 @@ const HttpForm = React.forwardRef<FormMethodsRef, HttpFormProps>(
       ...rest
     } = props;
 
-    let { translate: T } = useSHFContext();
+    let { translate: T } = useFormBuilderContext();
 
     let methodsRef = useRef<UseFormReturn<FieldValues>>();
     const requestRef = useRef<{
