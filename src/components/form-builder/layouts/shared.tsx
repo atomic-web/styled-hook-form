@@ -1,5 +1,5 @@
 import { UseFormReturn, ValidateResult } from "react-hook-form";
-import { FormField, ValidateWithMethods } from "../types";
+import { FormField, FormFieldType, ValidateWithMethods } from "../types";
 import { EditorMap } from "../editor-map";
 import React from "react";
 import WithEditorWrap from "../editors/shared/editor-wrap";
@@ -22,6 +22,12 @@ const getValidateFuncWithMethods = (
   } else {
     return result;
   }
+};
+
+const hiddenFieldTypes = [FormFieldType.Hidden];
+
+const isHidden = (field: FormField) => {
+  return hiddenFieldTypes.includes(field.type);
 };
 
 export const renderField = (
@@ -92,7 +98,13 @@ export const renderField = (
     return clone;
   };
 
-  const EditorView = React.cloneElement(
+  const editorBody =
+      field.render !== undefined ?
+        field.render(wrapWithComponent(component), methods)
+      : component;   
+
+
+  const EditorView = isHidden(field) ? editorBody : React.cloneElement(
     field.wrapComponent ?? editorWrapComponent ?? <React.Fragment />,
     {},
     <WithEditorWrap
@@ -100,11 +112,7 @@ export const renderField = (
       {...(field as any)}
       editorType={field.type}
     >
-      <>
-        {field.render !== undefined &&
-          field.render(wrapWithComponent(component), methods)}
-        {field.render === undefined && component}
-      </>
+      {editorBody}
     </WithEditorWrap>
   );
 
