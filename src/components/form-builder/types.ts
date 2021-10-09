@@ -1,3 +1,4 @@
+import { HiddenEditorProps } from "./editors/hidden-editor/types";
 import React from "react";
 import { FileEditorProps } from "./editors/file-editor/types";
 import { BoolEditorProps } from "./editors/bool-editor/types";
@@ -34,6 +35,7 @@ export enum FormFieldType {
   Time = 10,
   Custom = 11,
   SubForm = 12,
+  Hidden = 13,
 }
 
 export type FormFieldOptions =
@@ -66,7 +68,10 @@ export type FormFieldOptions =
     } & CustomEditorProps)
   | ({
       type: FormFieldType.SubForm;
-    } & SubFormEditorProps);
+    } & SubFormEditorProps)
+  | ({
+      type: FormFieldType.Hidden;
+    } & HiddenEditorProps);
 
 export declare type ValidateWithMethods<TFieldValue> = (
   value: TFieldValue,
@@ -113,8 +118,8 @@ export type FormField<TProps extends {} = {}> = FormFieldBase &
     methods?: UseFormReturn;
   } & (
     | {
-      name: FieldPath<FieldValues>;
-    }
+        name: FieldPath<FieldValues>;
+      }
     | {
         type: FormFieldType.SubForm;
         name?: FieldPath<FieldValues>;
@@ -141,7 +146,7 @@ export type FormBuilderProps<TModel = any> = Partial<
   areas?: PropType<GridProps, "areas">;
   editorWrapComponent?: React.ReactElement;
   autoSubmitTreshould?: number;
-  partialForm? : boolean
+  partialForm?: boolean;
 };
 
 export type FormEditorPropsBase = Pick<FormFieldBase, "validationRules"> & {};

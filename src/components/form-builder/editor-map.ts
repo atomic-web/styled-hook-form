@@ -9,16 +9,18 @@ import { FileEditor } from "./editors/file-editor";
 import { TimeEditor } from "./editors/time-editor";
 import { CustomEditor } from "./editors/custom-editor";
 import { SubFormEditor } from "./editors/subform-editor";
+import { HiddenEditor } from "./editors/hidden-editor";
 
 export const EditorMap: Partial<{ [K in keyof typeof FormFieldType]: any }> = {
   [FormFieldType.Text]: TextEditor,
   [FormFieldType.Number]: NumericEditor,
   [FormFieldType.Date]: DateEditor,
-  [FormFieldType.Boolean]: BoolEditor,  
+  [FormFieldType.Boolean]: BoolEditor,
   [FormFieldType.DropDown]: DropDown,
   [FormFieldType.Password]: PasswordEditor,
   [FormFieldType.File]: FileEditor,
   [FormFieldType.Time]: TimeEditor,
   [FormFieldType.Custom]: CustomEditor,
   [FormFieldType.SubForm]: SubFormEditor,
+  [FormFieldType.Hidden]: HiddenEditor,
 };
