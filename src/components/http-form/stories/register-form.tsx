@@ -2,12 +2,6 @@ import { FormField, FormFieldType } from "../../form-builder";
 import { FormBuilderContextProvider } from "../../../context";
 import { Box, Text } from "grommet";
 import { HttpForm } from "../http-form";
-interface MyModel {
-  username: string;
-  email: string;
-  password: string;
-  agree: boolean;
-}
 
 export const LoginForm = () => {
   let fields: FormField[] = [
@@ -65,7 +59,7 @@ export const LoginForm = () => {
         >
           <HttpForm
             fields={fields}
-            beforeSubmit={(data: MyModel) => data.agree}
+            beforeSubmit={(data: any) => data.agree}
             submitButton={<Text> Register </Text>}
             onSaveError={(err) => {
               alert(JSON.stringify(err));
@@ -75,7 +69,7 @@ export const LoginForm = () => {
             }}
             mockResponse={(mock) => {
               mock.onPost("/api/user/signup").reply((req) => {
-                alert(JSON.stringify(req.data))
+                alert(JSON.stringify(req.data));
                 return new Promise((res) => {
                   setTimeout(() => {
                     res([
@@ -90,7 +84,7 @@ export const LoginForm = () => {
             }}
             saveRequest={{
               url: "api/user/signup",
-              method: "POST"
+              method: "POST",
             }}
           ></HttpForm>
         </Box>

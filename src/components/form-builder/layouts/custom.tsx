@@ -1,67 +1,60 @@
 import React from "react";
 import { UseFormReturn } from "react-hook-form";
 import { PropType } from "types/utils";
-import { FormBuilderProps, FormField } from "../types";
+import { FormBuilderOptions, FormBuilderProps, FormField } from "../types";
 import { renderChildren, renderField } from "./shared";
 
 const renderFieldEditors = ({
-    items,
-    methods,
-    editorWrapComponent,
-    model,
-    shouldUnregister,
-  }: {
-    items: FormField[];
-    methods: any;
-    editorWrapComponent: PropType<FormBuilderProps, "editorWrapComponent">;
-    model: any;
-    shouldUnregister: boolean | undefined;
-  }) => {
-
+  items,
+  methods,
+  editorWrapComponent,
+  model,
+  shouldUnregister,
+}: {
+  items: FormField[];
+  methods: any;
+  editorWrapComponent: PropType<FormBuilderOptions, "editorWrapComponent">;
+  model: any;
+  shouldUnregister: boolean | undefined;
+}) => {
   return items.map((field) =>
-    renderField(
-        field,
-        methods,
-        editorWrapComponent,
-        model,
-        shouldUnregister
-    )
+    renderField(field, methods, editorWrapComponent, model, shouldUnregister)
   );
 };
 
-const renderCustomLayout = ({
-  fields,  
+const renderCustomLayout = function <TModel>({
+  fields,
   methods,
   layout,
   options,
   children,
   editorWrapComponent,
-  model
+  model,
 }: {
   fields: FormField[];
   methods: UseFormReturn;
   layout: React.ReactElement;
-  children : PropType<FormBuilderProps, "children">,
-  editorWrapComponent: PropType<FormBuilderProps, "editorWrapComponent">;
-  options: PropType<FormBuilderProps, "options">;
-  model : any
-}) => {
+  children: PropType<FormBuilderProps<TModel>, "children">;
+  editorWrapComponent: PropType<FormBuilderProps<TModel>, "editorWrapComponent">;
+  options?: PropType<FormBuilderOptions<TModel>, "options">;
+  model?: TModel;
+}) {
   let layoutComponent = React.cloneElement(
     layout as React.ReactElement,
     {},
     <>
       {renderFieldEditors({
-          items: fields, 
-          methods,
-          editorWrapComponent,
-          model,
-          shouldUnregister : options?.shouldUnregister
+        items: fields,
+        methods,
+        editorWrapComponent,
+        model,
+        shouldUnregister: options?.shouldUnregister,
       })}
       {renderChildren(children as any, methods)}
     </>
   );
 
-  return layoutComponent;
+  return <> {layoutComponent} </>;
 };
 
 export { renderCustomLayout as default };

@@ -1,7 +1,7 @@
 import { Box, Grid, GridProps } from "grommet";
 import { UseFormReturn } from "react-hook-form";
 import { PropType } from "types/utils";
-import { FormBuilderProps, FormField } from "../types";
+import { FormBuilderOptions, FormBuilderProps, FormField } from "../types";
 import { renderChildren, renderField } from "./shared";
 
 const renderFieldEditors = ({
@@ -48,7 +48,7 @@ const renderFieldEditors = ({
   ));
 };
 
-const gridLayout = ({
+const gridLayout = function <TModel>({
   fields,
   methods,
   rows,
@@ -64,11 +64,14 @@ const gridLayout = ({
   rows: PropType<GridProps, "rows">;
   columns: PropType<GridProps, "columns">;
   areas: PropType<GridProps, "areas">;
-  children:  PropType<FormBuilderProps, "children">;
-  editorWrapComponent: PropType<FormBuilderProps, "editorWrapComponent">;
-  options: PropType<FormBuilderProps, "options">;
-  model: any;
-}) => {
+  children: PropType<FormBuilderProps<TModel>, "children">;
+  editorWrapComponent: PropType<
+    FormBuilderProps<TModel>,
+    "editorWrapComponent"
+  >;
+  options?: PropType<FormBuilderOptions<TModel>, "options"> | undefined;
+  model?: TModel;
+}) {
   let gridDefined: boolean = true;
 
   if (!rows) {

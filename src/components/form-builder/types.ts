@@ -1,5 +1,6 @@
+import { FormMethodsRef } from "./../form/types";
 import { HiddenEditorProps } from "./editors/hidden-editor/types";
-import React from "react";
+import React, { ForwardedRef } from "react";
 import { FileEditorProps } from "./editors/file-editor/types";
 import { BoolEditorProps } from "./editors/bool-editor/types";
 import {
@@ -130,23 +131,46 @@ export type FormField<TProps extends {} = {}> = FormFieldBase &
       }
   );
 
-export type FormBuilderProps<TModel = any> = Partial<
-  Omit<HTMLDivElement, "children">
-> & {
+export type FormEditorPropsBase = Pick<FormFieldBase, "validationRules"> & {};
+
+export type FormChildren =
+  | React.ReactNode
+  | ((methods: UseFormReturn) => React.ReactNode);
+
+export type FormBuilderOptions<TModel extends FieldValues = FieldValues> = {
   fields: FormField[];
-  children?: React.ReactNode | ((methods: UseFormReturn) => React.ReactNode);
   model?: TModel;
-  devMode?: boolean;
   onSubmit?: (values: any) => void;
   beforeSubmit?: (values: TModel) => boolean | Promise<boolean>;
+  autoSubmitTreshould?: number;
+  partialForm?: boolean;
   options?: Omit<UseFormProps<TModel, any>, "defaultValues">;
   layout?: "GRID" | React.ReactElement | undefined;
   rows?: PropType<GridProps, "rows">;
   columns?: PropType<GridProps, "columns">;
   areas?: PropType<GridProps, "areas">;
   editorWrapComponent?: React.ReactElement;
-  autoSubmitTreshould?: number;
-  partialForm?: boolean;
+  devMode?: boolean;
+  ref?: ForwardedRef<FormMethodsRef>;
 };
 
-export type FormEditorPropsBase = Pick<FormFieldBase, "validationRules"> & {};
+export type UseFormBuilderOptions<
+  TModel extends FieldValues = FieldValues
+> = FormBuilderOptions<TModel>;
+
+export type UseFormBuilderInternalOptions<
+  TModel extends FieldValues = FieldValues
+> = UseFormBuilderOptions<TModel> & {
+  autoRender: boolean;
+};
+
+export type UseFormBuilderReturn = {
+  Form: JSX.Element;
+};
+
+export type FormBuilderProps<
+  TModel extends FieldValues = FieldValues
+> = Partial<Omit<HTMLDivElement, "children">> &
+  FormBuilderOptions<TModel> & {
+    children?: FormChildren;
+  };

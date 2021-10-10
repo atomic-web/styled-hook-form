@@ -4,7 +4,7 @@ import { Dispatch } from "react";
 import { DeepMap } from "react-hook-form";
 import { FormBuilderContextReducerAction } from "./actions/types";
 
-export type FormBuilderContextModel = FormBuilderOptions & DeepMap<any, any> & {
+export type FormBuilderContextModel = FormBuilderContextOptions & DeepMap<any, any> & {
   ssr:boolean
 };
 
@@ -23,12 +23,12 @@ export interface FormBuilderContextProviderValue {
   dispatch: Dispatch<FormBuilderContextReducerAction>;
 }
 
-export interface FormBuilderOptions {
+export interface FormBuilderContextOptions {
   translator?: TranslatorFunc;
 }
 
 export interface FormBuilderContextProviderProps {
   children: React.ReactChild;
-  options?: FormBuilderOptions;
+  options?: FormBuilderContextOptions;
 }
  
