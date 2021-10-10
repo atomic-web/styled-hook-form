@@ -13,9 +13,13 @@ export function useFormMethods(): UseFormMethodsReturn {
   const ref = useRef<FormMethodsRef>(null);
   const [methods, setMethods] = useState<UseFormReturn>();
 
-  const watchValue = (name: string, defaultValue?: any) => {
+  const watchValue = (
+    name: string,
+    defaultValue?: any,
+    transform?: (value: any) => any
+  ) => {
     const handleValueChange = (_value: any) => {
-      setValue(_value);
+      setValue(transform ? transform(_value) : value);
     };
 
     const [value, setValue] = useState(defaultValue);
