@@ -1,3 +1,5 @@
+import { FormField } from "components";
+import { renderField } from "./layouts/shared";
 import { UseFormBuilderOptions } from "./types";
 import { useFormBuilderInternal } from "./use-form-builder-internal";
 
@@ -20,10 +22,17 @@ const useFormBuilder = function <TModel>(
     ref: ref,
   } = options;
 
+  const plainFields = Object.values<FormField>(fieldsProp);
+
+  let fieldEloements = Object.keys(fieldsProp).reduce((p : Record<string,JSX.Element>,c : string)=>{
+      const field = fieldsProp[c];
+      const elements = renderField(field,);
+  } , {});
+
   return useFormBuilderInternal({
     editorWrapComponent,
     autoSubmitTreshould,
-    fields: fieldsProp,
+    fields: plainFields,
     autoRender: true,
     beforeSubmit,
     partialForm,

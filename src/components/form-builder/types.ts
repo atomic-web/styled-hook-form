@@ -138,7 +138,6 @@ export type FormChildren =
   | ((methods: UseFormReturn) => React.ReactNode);
 
 export type FormBuilderOptions<TModel extends FieldValues = FieldValues> = {
-  fields: FormField[];
   model?: TModel;
   onSubmit?: (values: any) => void;
   beforeSubmit?: (values: TModel) => boolean | Promise<boolean>;
@@ -154,18 +153,19 @@ export type FormBuilderOptions<TModel extends FieldValues = FieldValues> = {
   ref?: ForwardedRef<FormMethodsRef>;
 };
 
+export type FormFieldMap<TModel> = Record<keyof TModel, FormField>;
+
 export type UseFormBuilderOptions<
   TModel extends FieldValues = FieldValues
-> = FormBuilderOptions<TModel>;
+> = FormBuilderOptions<TModel> & {
+  fields: FormFieldMap<TModel>;
+};
 
 export type UseFormBuilderInternalOptions<
   TModel extends FieldValues = FieldValues
-> = UseFormBuilderOptions<TModel> & {
+> = FormBuilderOptions<TModel> & {
   autoRender: boolean;
-};
-
-export type UseFormBuilderReturn = {
-  Form: JSX.Element;
+  fields: FormField[];
 };
 
 export type FormBuilderProps<
@@ -173,4 +173,9 @@ export type FormBuilderProps<
 > = Partial<Omit<HTMLDivElement, "children">> &
   FormBuilderOptions<TModel> & {
     children?: FormChildren;
+    fields: FormField[];
   };
+
+export type UseFormBuilderReturn = {
+  Form: JSX.Element;
+};

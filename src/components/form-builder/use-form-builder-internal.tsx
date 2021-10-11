@@ -70,7 +70,7 @@ const useFormBuilderInternal = function <TModel>(
 
   items.sort((a, b) => a.order! - b.order!);
 
-  const renderLayout = (methods: UseFormReturn,children : FormChildren) =>
+  const renderLayout = (methods: UseFormReturn, children: FormChildren) =>
     layout === "GRID"
       ? gridLayout<TModel>({
           fields: items,
@@ -129,17 +129,41 @@ const useFormBuilderInternal = function <TModel>(
   const isPartialForm = partialForm === true;
 
   const Form = (_props: FormBuilderProps) => {
-    const { children, ..._rest } = _props;
+    const fixedProps: string[] = [
+      "fields",
+      "model",
+      "onSubmit",
+      "beforeSubmit",
+      "autoSubmitTreshould",
+      "partialForm",
+      "options",
+      "layout",
+      "rows",
+      "columns",
+      "areas",
+      "editorWrapComponent",
+      "devMode",
+      "ref",
+    ];
+
+    const { children } = _props;
+
+    const rest = Object.keys(_props).reduce(
+      (p: any, c: string) => (
+        !fixedProps.includes(c) && (p[c] = fixedProps.find((x) => x === c)), p
+      ),
+      {}
+    );
 
     const getChildren = (_methods: UseFormReturn) =>
-      autoRender && renderLayout ? renderLayout(_methods,children) : children;
+      autoRender && renderLayout ? renderLayout(_methods, children) : children;
 
     const formBody = isPartialForm
       ? React.createElement(React.Fragment, {}, getChildren(useFormContext()))
       : React.createElement(
           InternalForm,
           {
-            ...(_rest as object),
+            ...(rest as object),
             options: {
               ...(formOptions ?? {}),
               defaultValues,

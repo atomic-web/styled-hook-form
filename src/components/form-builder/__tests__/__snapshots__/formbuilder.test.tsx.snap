@@ -198,9 +198,7 @@ exports[`FormBuilder renders default value 1`] = `
 <div
   class=""
 >
-  <form
-    fields="[object Object]"
-  >
+  <form>
     <div
       class="c0"
     >
