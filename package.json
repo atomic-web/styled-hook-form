@@ -15,7 +15,7 @@
     "build:sb": "build-storybook",
     "test": "jest --runInBand",
     "type-check": "npx tsc --noEmit",
-     
+    "prepare": "husky install"
   },
   "engines": {
     "node": ">= 12"

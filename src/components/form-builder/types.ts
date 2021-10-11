@@ -113,9 +113,8 @@ export interface FormFieldBase {
   wrapComponent?: React.ReactElement;
 }
 
-export type FormField<TProps extends {} = {}> = FormFieldBase &
-  FormFieldOptions &
-  TProps & {
+export type FormField = FormFieldBase &
+  FormFieldOptions & {
     methods?: UseFormReturn;
   } & (
     | {
@@ -153,9 +152,13 @@ export type FormBuilderOptions<TModel extends FieldValues = FieldValues> = {
   ref?: ForwardedRef<FormMethodsRef>;
 };
 
-export type FormFieldMap<TModel extends FieldValues = FieldValues> = {
-  [K in keyof TModel]: FormField;
-};
+export type FormFieldMap<
+  TModel extends FieldValues = never
+> = TModel extends never
+  ? {
+      [K in keyof TModel]: FormField;
+    }
+  : any;
 
 export type FormFieldViews<TModel extends FieldValues = FieldValues> = {
   [K in keyof TModel]: React.ReactNode;
@@ -164,7 +167,7 @@ export type FormFieldViews<TModel extends FieldValues = FieldValues> = {
 export type UseFormBuilderOptions<
   TModel extends FieldValues = FieldValues
 > = FormBuilderOptions<TModel> & {
-  fields: FormFieldMap<TModel>;
+  fields: FormFieldMap<TModel> | FormField[];
   autoRender?: boolean;
 };
 
@@ -183,7 +186,7 @@ export type FormBuilderProps<
     fields: FormField[];
   };
 
-export type UseFormBuilderReturn = {
-  Form: JSX.Element;
-  fieldViews: FormFieldViews;
+export type UseFormBuilderReturn<TModel> = {
+  Form: React.ComponentType<Partial<FormBuilderProps>>;
+  fieldViews: FormFieldViews<TModel>;
 };

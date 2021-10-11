@@ -19,7 +19,7 @@ type FormBuilderInternalProps = Partial<FormBuilderProps>;
 
 const useFormBuilderInternal = function <TModel>(
   options: UseFormBuilderInternalOptions<TModel>
-) {
+){
   const Form = (_internalProps: FormBuilderInternalProps) => {
     const _props = { ...options, ..._internalProps };
 
@@ -40,6 +40,7 @@ const useFormBuilderInternal = function <TModel>(
       ref,
       ...rest
     } = _props;
+    
     let fields = useMemo(
       () =>
         fieldsProp.filter(
@@ -85,15 +86,15 @@ const useFormBuilderInternal = function <TModel>(
             columns,
             areas,
             children,
-            options: formOptions,
-            model,
+            options: options.options,
+            model : options.model,
             editorWrapComponent,
           })
         : customLayout<TModel>({
             layout,
             children,
-            options: formOptions,
-            model,
+            options: options.options,
+            model : options.model,
             editorWrapComponent,
             fields: items,
             methods,

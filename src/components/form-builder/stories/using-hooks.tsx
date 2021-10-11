@@ -1,10 +1,10 @@
 import { Story, Meta } from "@storybook/react/types-6-0";
 import { FormBuilder } from "../form-builder";
 import { FormBuilderContextProvider } from "../../../index";
-import { FormBuilderProps, FormField, FormFieldType } from "../types";
-import styled from "styled-components";
+import { FormBuilderProps, FormFieldType } from "../types";
 import { Box, Button } from "grommet";
 import { useFormBuilder } from "../use-form-builder";
+import { FormField } from "components";
 
 const meta: Meta = {
   title: "Form Builder/Using Hooks",
@@ -14,46 +14,49 @@ const meta: Meta = {
 
 export default meta;
 
-const fields: FormField[] = [
-  {
-    name: "textInput",
-    label: "Text Input:",
-    defaultValue: "",
-    type: FormFieldType.Text,
-  },
-  {
-    name: "textInput2",
-    label: "Text Input:",
-    defaultValue: "",
-    type: FormFieldType.Text,
-  },
-  {
-    name: "textInput3",
-    label: "Text Input:",
-    defaultValue: "",
-    type: FormFieldType.Text,
-  },
-];
-
-const StyledFormBuilder = styled(FormBuilder)`
-  background-color: #f1f1f1;
-  padding: 2em;
-  border-radius: 4px;
-  border: solid 1px #aaa;
-`;
+type Model = {
+  textInput: string;
+  textInput2: string;
+  textInput3: string;
+};
 
 const Template: Story<FormBuilderProps> = () => {
-  
-  const { Form, fieldViews } = useFormBuilder({ fields });
+  const fields: FormField[] = [
+    {
+      name: "textInput",
+      label: "Text Input:",
+      defaultValue: "",
+      type: FormFieldType.Text,
+    },
+    {
+      name: "textInput2",
+      label: "Text Input:",
+      defaultValue: "",
+      type: FormFieldType.Text,
+    },
+    {
+      name: "textInput3",
+      label: "Text Input:",
+      defaultValue: "",
+      type: FormFieldType.Text,
+    },
+  ];
+
+  const {
+    Form,
+    fieldViews: { textInput3 },
+  } = useFormBuilder<Model>({ fields });
 
   return (
     <FormBuilderContextProvider>
       <Form
-        onSubmit={(data) => {debugger;alert(JSON.stringify(data))}}
+        onSubmit={(data) => {
+          alert(JSON.stringify(data));
+        }}
         devMode
       >
         <Box fill>
-          {Object.values(fieldViews)}
+          {textInput3}
           <Button
             gridArea="foot"
             type="submit"
@@ -69,7 +72,3 @@ const Template: Story<FormBuilderProps> = () => {
 };
 
 export const UsingHooks = Template.bind({});
-
-UsingHooks.args = {
-  fields: fields,
-};
