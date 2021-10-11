@@ -62,6 +62,7 @@ const Form: React.FC<FormProps> = (props) => {
   }, [defaultValues]);
 
   const onFormSubmit = (values: any) => {
+    debugger
     onSubmit && onSubmit(values);
     return true;
   };

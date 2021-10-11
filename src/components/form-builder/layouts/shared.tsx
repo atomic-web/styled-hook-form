@@ -1,4 +1,4 @@
-import { UseFormReturn, ValidateResult } from "react-hook-form";
+import { useFormContext, UseFormReturn, ValidateResult } from "react-hook-form";
 import { FormField, FormFieldType, ValidateWithMethods } from "../types";
 import { EditorMap } from "../editor-map";
 import React from "react";
@@ -32,12 +32,13 @@ const isHidden = (field: FormField) => {
 
 export const renderField = (
   field: FormField,
-  methods: UseFormReturn<any>,
+  methods: UseFormReturn<any> | null,
   editorWrapComponent: React.ReactElement | undefined,
-  model: Record<string, any>,
+  model?: Record<string, any>,
   shouldUnregister?: boolean | undefined
 ) => {
-  field.methods = methods;
+  const _methods = methods ?? useFormContext();
+  field.methods = _methods;
   let component = React.createElement(EditorMap[field.type], {
     ...((field as unknown) as any),
     model,
@@ -54,7 +55,7 @@ export const renderField = (
       let userDefFunc = field.validationRules!
         .validate as ValidateWithMethods<any>;
       field.validationRules.validate = (values: any) => {
-        return getValidateFuncWithMethods(userDefFunc, values, methods);
+        return getValidateFuncWithMethods(userDefFunc, values, _methods);
       };
     } else {
       let rules = field.validationRules.validate as Record<string, any>;
@@ -67,7 +68,7 @@ export const renderField = (
             getValidateFuncWithMethods(
               rules[k] as ValidateWithMethods<any>,
               values,
-              methods
+              _methods
             ),
         ])
         .reduce((p: any, c: any) => ((p[c[0]] = c[1]), p), {});
@@ -99,22 +100,23 @@ export const renderField = (
   };
 
   const editorBody =
-      field.render !== undefined ?
-        field.render(wrapWithComponent(component), methods)
-      : component;   
+    field.render !== undefined
+      ? field.render(wrapWithComponent(component), _methods)
+      : component;
 
-
-  const EditorView = isHidden(field) ? editorBody : React.cloneElement(
-    field.wrapComponent ?? editorWrapComponent ?? <React.Fragment />,
-    {},
-    <WithEditorWrap
-      key={field.name}
-      {...(field as any)}
-      editorType={field.type}
-    >
-      {editorBody}
-    </WithEditorWrap>
-  );
+  const EditorView = isHidden(field)
+    ? editorBody
+    : React.cloneElement(
+        field.wrapComponent ?? editorWrapComponent ?? <React.Fragment />,
+        {},
+        <WithEditorWrap
+          key={field.name}
+          {...(field as any)}
+          editorType={field.type}
+        >
+          {editorBody}
+        </WithEditorWrap>
+      );
 
   return EditorView;
 };

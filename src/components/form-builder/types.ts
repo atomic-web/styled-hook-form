@@ -153,12 +153,19 @@ export type FormBuilderOptions<TModel extends FieldValues = FieldValues> = {
   ref?: ForwardedRef<FormMethodsRef>;
 };
 
-export type FormFieldMap<TModel> = Record<keyof TModel, FormField>;
+export type FormFieldMap<TModel extends FieldValues = FieldValues> = {
+  [K in keyof TModel]: FormField;
+};
+
+export type FormFieldViews<TModel extends FieldValues = FieldValues> = {
+  [K in keyof TModel]: React.ReactNode;
+};
 
 export type UseFormBuilderOptions<
   TModel extends FieldValues = FieldValues
 > = FormBuilderOptions<TModel> & {
   fields: FormFieldMap<TModel>;
+  autoRender?: boolean;
 };
 
 export type UseFormBuilderInternalOptions<
@@ -178,4 +185,5 @@ export type FormBuilderProps<
 
 export type UseFormBuilderReturn = {
   Form: JSX.Element;
+  fieldViews: FormFieldViews;
 };
