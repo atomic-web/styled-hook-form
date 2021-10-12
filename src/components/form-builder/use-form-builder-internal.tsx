@@ -1,5 +1,5 @@
 import React, { useEffect, useMemo, useState } from "react";
-import { WatchField } from "../form/types";
+import { FormMethodsRef, WatchField } from "../form/types";
 import InternalForm from "../form";
 import {
   FormBuilderProps,
@@ -20,7 +20,8 @@ type FormBuilderInternalProps = Partial<FormBuilderProps>;
 const useFormBuilderInternal = function <TModel>(
   options: UseFormBuilderInternalOptions<TModel>
 ){
-  const Form = (_internalProps: FormBuilderInternalProps) => {
+  
+  const Form = React.forwardRef<FormMethodsRef | null>((_internalProps: FormBuilderInternalProps,ref) => {
     const _props = { ...options, ..._internalProps };
 
     const {
@@ -37,7 +38,6 @@ const useFormBuilderInternal = function <TModel>(
       model,
       areas,
       rows,
-      ref,
       ...rest
     } = _props;
     
@@ -167,7 +167,7 @@ const useFormBuilderInternal = function <TModel>(
         );
 
     return <StyledFormBuilder>{formBody}</StyledFormBuilder>;
-  };
+  });
 
   return { Form };
 };

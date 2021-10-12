@@ -1,11 +1,11 @@
 import { useFormContext, UseFormReturn, ValidateResult } from "react-hook-form";
-import { FormField, FormFieldType, ValidateWithMethods } from "../types";
+import { FormChildren, FormField, FormFieldType, ValidateWithMethods } from "../types";
 import { EditorMap } from "../editor-map";
 import React from "react";
 import WithEditorWrap from "../editors/shared/editor-wrap";
 
 export const renderChildren = (
-  children: React.ReactChild | ((methods: UseFormReturn) => React.ReactNode),
+  children: FormChildren,
   methods: UseFormReturn
 ) => (typeof children === "function" ? children(methods) : children);
 
@@ -37,6 +37,7 @@ export const renderField = (
   model?: Record<string, any>,
   shouldUnregister?: boolean | undefined
 ) => {
+  debugger
   const _methods = methods ?? useFormContext();
   field.methods = _methods;
   let component = React.createElement(EditorMap[field.type], {

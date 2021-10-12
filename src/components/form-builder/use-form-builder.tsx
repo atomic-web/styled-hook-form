@@ -1,9 +1,22 @@
 import { FormField, UseFormBuilderReturn } from "components";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { FieldValues } from "react-hook-form";
 import { renderField } from "./layouts/shared";
 import { FormFieldViews, UseFormBuilderOptions } from "./types";
 import { useFormBuilderInternal } from "./use-form-builder-internal";
+
+const LAZY = ({children})=>{
+
+  const [show,setShow] = useState(false);
+
+  useEffect(()=>{
+    setShow(true);
+  },[]);
+
+  return<>
+   {show && children}
+  </>
+}
 
 const useFormBuilder = function <TModel extends FieldValues = FieldValues>(
   options: UseFormBuilderOptions<TModel>
@@ -56,7 +69,7 @@ const useFormBuilder = function <TModel extends FieldValues = FieldValues>(
         model,
         formOptions?.shouldUnregister
       );
-      return fieldView;
+      return <LAZY> {fieldView} </LAZY> ;
     }
     return React.Fragment;
   });

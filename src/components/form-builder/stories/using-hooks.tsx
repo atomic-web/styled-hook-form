@@ -5,6 +5,9 @@ import { FormBuilderProps, FormFieldType } from "../types";
 import { Box, Button } from "grommet";
 import { useFormBuilder } from "../use-form-builder";
 import { FormField } from "components";
+import { useFormMethods } from "components/hooks";
+import { DevTool } from "@hookform/devtools";
+import { useFormContext } from "react-hook-form";
 
 const meta: Meta = {
   title: "Form Builder/Using Hooks",
@@ -33,6 +36,7 @@ const Template: Story<FormBuilderProps> = () => {
       label: "Text Input:",
       defaultValue: "",
       type: FormFieldType.Text,
+    
     },
     {
       name: "textInput3",
@@ -44,19 +48,24 @@ const Template: Story<FormBuilderProps> = () => {
 
   const {
     Form,
-    fieldViews: { textInput3 },
+    fieldViews: { textInput3, textInput2 },
   } = useFormBuilder<Model>({ fields });
 
+  const { ref, methods, watchValue } = useFormMethods();
+
   return (
-    <FormBuilderContextProvider>
+    <div>
+     
+      {watchValue("textInput3", 464654)}
       <Form
         onSubmit={(data) => {
           alert(JSON.stringify(data));
         }}
-        devMode
+        ref={ref}
       >
-        <Box fill>
-          {textInput3}
+         {methods && <DevTool control={methods.control} placement="top-right" />}
+        <Box fill> 
+          {textInput2}
           <Button
             gridArea="foot"
             type="submit"
@@ -67,7 +76,7 @@ const Template: Story<FormBuilderProps> = () => {
           />
         </Box>
       </Form>
-    </FormBuilderContextProvider>
+    </div>
   );
 };
 
