@@ -1,9 +1,9 @@
-import { UseFormProps, UseFormReturn } from "react-hook-form";
+import { FieldValues, UseFormProps, UseFormReturn } from "react-hook-form";
 import { ChangeEventStore } from "./change-event-store";
 export type FormChildProps = UseFormReturn;
 
-export interface FormMethodsRef {
-  methods: UseFormReturn;
+export interface FormMethodsRef<TModel extends FieldValues = FieldValues> {
+  methods: UseFormReturn<TModel>;
   changeHandlers: ChangeEventStore;
 }
 
@@ -22,7 +22,7 @@ export interface FormProps {
   children?: (props: FormChildProps) => React.ReactNode;
   options: UseFormProps<any, any>;
   methodsRef?: React.ForwardedRef<FormMethodsRef|null>;
-  methods? : UseFormReturn<any>
+  methods : UseFormReturn<any>
 }
 
 export type FormOptions<TModel> = Omit<

@@ -61,14 +61,14 @@ export const LoginForm = () => {
             fields={fields}
             beforeSubmit={(data: any) => data.agree}
             submitButton={<Text> Register </Text>}
-            onSaveError={(err) => {
+            onSaveError={(err : any) => {
               alert(JSON.stringify(err));
             }}
-            onSaveSuccess={(data) => {
+            onSaveSuccess={(data : any) => {
               alert(JSON.stringify(data));
             }}
-            mockResponse={(mock) => {
-              mock.onPost("/api/user/signup").reply((req) => {
+            mockResponse={(mock : any) => {
+              mock.onPost("/api/user/signup").reply((req : any) => {
                 alert(JSON.stringify(req.data));
                 return new Promise((res) => {
                   setTimeout(() => {

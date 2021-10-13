@@ -19,7 +19,7 @@ export function useFormMethods(): UseFormMethodsReturn {
     transform?: (value: any) => any
   ) => {
     const handleValueChange = (_value: any) => {
-      setValue(transform ? transform(_value) : value);
+      setValue(transform ? transform(_value) : _value);
     };
 
     const [value, setValue] = useState(defaultValue);

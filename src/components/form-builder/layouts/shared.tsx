@@ -1,13 +1,20 @@
 import { useFormContext, UseFormReturn, ValidateResult } from "react-hook-form";
-import { FormChildren, FormField, FormFieldType, ValidateWithMethods } from "../types";
+import {
+  FormChildren,
+  FormField,
+  FormFieldType,
+  ValidateWithMethods,
+} from "../types";
 import { EditorMap } from "../editor-map";
 import React from "react";
 import WithEditorWrap from "../editors/shared/editor-wrap";
 
-export const renderChildren = (
-  children: FormChildren,
-  methods: UseFormReturn
-) => (typeof children === "function" ? children(methods) : children);
+export function renderChildren<TModel>(
+  children: FormChildren<TModel>,
+  methods: UseFormReturn<TModel>
+) {
+  return typeof children === "function" ? children(methods) : children;
+}
 
 const getValidateFuncWithMethods = (
   validateFunc: ValidateWithMethods<any>,

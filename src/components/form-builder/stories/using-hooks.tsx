@@ -1,7 +1,7 @@
 import { Story, Meta } from "@storybook/react/types-6-0";
 import { FormBuilder } from "../form-builder";
 import { FormBuilderProps, FormFieldType } from "../types";
-import { Box, Button } from "grommet";
+import { Box, Button, Grommet } from "grommet";
 import { useFormBuilder } from "../use-form-builder";
 import { FormField } from "components";
 import { useFormMethods } from "components/hooks";
@@ -47,24 +47,26 @@ const Template: Story<FormBuilderProps> = () => {
   const {
     Form,
     fieldViews: { textInput3 },
-  } = useFormBuilder<Model>({ fields });
+  } = useFormBuilder<Model>({ fields  });
 
   const { ref, methods, watchValue } = useFormMethods();
 
   return (
-    <div>
-     
-      {watchValue("textInput3", 464654)}
-      {methods && <DevTool control={methods.control} placement="top-right" />}
-
+    <Grommet>
+      {watchValue("textInput3","sdfsdf")}
+      {
+        methods && (
+          <DevTool control={methods.control} placement="top-right" />
+        )
+      }
       <Form
         onSubmit={(data) => {
           alert(JSON.stringify(data));
         }}
         ref={ref}
       >
-        <Box fill> 
-          {textInput3}
+        {textInput3}
+        <Box fill>  
           <Button
             gridArea="foot"
             type="submit"
@@ -75,7 +77,7 @@ const Template: Story<FormBuilderProps> = () => {
           />
         </Box>
       </Form>
-    </div>
+    </Grommet>
   );
 };
 

@@ -32,7 +32,7 @@ const renderCustomLayout = function <TModel>({
   model,
 }: {
   fields: FormField[];
-  methods: UseFormReturn;
+  methods: UseFormReturn<TModel>;
   layout: React.ReactElement;
   children: PropType<FormBuilderProps<TModel>, "children">;
   editorWrapComponent: PropType<FormBuilderProps<TModel>, "editorWrapComponent">;

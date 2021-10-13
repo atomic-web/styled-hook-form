@@ -1,6 +1,8 @@
 import { FormMethodsRef, FormOptions } from "./../form/types";
 import { HiddenEditorProps } from "./editors/hidden-editor/types";
-import React, { ForwardedRef } from "react";
+import React, {
+  ForwardedRef,
+} from "react";
 import { FileEditorProps } from "./editors/file-editor/types";
 import { BoolEditorProps } from "./editors/bool-editor/types";
 import {
@@ -8,7 +10,6 @@ import {
   FieldPathValue,
   FieldValues,
   RegisterOptions,
-  UseFormProps,
   UseFormReturn,
   ValidateResult,
 } from "react-hook-form";
@@ -132,9 +133,9 @@ export type FormField = FormFieldBase &
 
 export type FormEditorPropsBase = Pick<FormFieldBase, "validationRules"> & {};
 
-export type FormChildren =
+export type FormChildren<TModel extends FieldValues = FieldValues> =
   | React.ReactNode
-  | ((methods: UseFormReturn) => React.ReactNode);
+  | ((methods: UseFormReturn<TModel>) => React.ReactNode);
 
 export type FormBuilderOptions<TModel extends FieldValues = FieldValues> = {
   model?: TModel;
@@ -149,7 +150,7 @@ export type FormBuilderOptions<TModel extends FieldValues = FieldValues> = {
   areas?: PropType<GridProps, "areas">;
   editorWrapComponent?: React.ReactElement;
   devMode?: boolean;
-  ref?: ForwardedRef<FormMethodsRef>;
+  ref?: ForwardedRef<FormMethodsRef<TModel>>;
 };
 
 export type FormFieldMap<
@@ -176,18 +177,19 @@ export type UseFormBuilderInternalOptions<
 > = FormBuilderOptions<TModel> & {
   autoRender: boolean;
   fields: FormField[];
-  methods?:UseFormReturn<TModel>
+  methods?: UseFormReturn<TModel>;
+  defaultValues?: any;
 };
 
 export type FormBuilderProps<
   TModel extends FieldValues = FieldValues
-> = Partial<Omit<HTMLDivElement, "children">> &
+> = Partial<Omit<HTMLFormElement, "children">> &
   FormBuilderOptions<TModel> & {
     children?: FormChildren;
     fields: FormField[];
   };
 
 export type UseFormBuilderReturn<TModel> = {
-  Form: React.ComponentType<Partial<FormBuilderProps>>;
+  Form: React.ForwardRefExoticComponent<Partial<FormBuilderProps>>;
   fieldViews: FormFieldViews<TModel>;
 };

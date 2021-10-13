@@ -60,7 +60,7 @@ const gridLayout = function <TModel>({
   model,
 }: {
   fields: FormField[];
-  methods: UseFormReturn;
+  methods: UseFormReturn<TModel>;
   rows: PropType<GridProps, "rows">;
   columns: PropType<GridProps, "columns">;
   areas: PropType<GridProps, "areas">;

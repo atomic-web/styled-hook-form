@@ -3,7 +3,7 @@ import { useInternalForm } from "components/form/use-internal-form";
 import React, { useEffect, useState } from "react";
 import { FieldValues } from "react-hook-form";
 import { renderField } from "./layouts/shared";
-import { FormFieldViews, UseFormBuilderOptions } from "./types";
+import { FormBuilderProps, FormFieldViews, UseFormBuilderOptions } from "./types";
 import { useFormBuilderInternal } from "./use-form-builder-internal";
 
 const useFormBuilder = function <TModel extends FieldValues = FieldValues>(
@@ -28,7 +28,11 @@ const useFormBuilder = function <TModel extends FieldValues = FieldValues>(
 
   const plainFields = Object.values<FormField>(fieldsProp);
 
-  const methods = useInternalForm(fieldsProp,model,formOptions);
+  const { methods, defaultValues } = useInternalForm(
+    fieldsProp,
+    model,
+    formOptions
+  );
 
   const createFieldViews = (
     viewFactory: (fieldName: keyof TModel) => React.ReactNode
@@ -69,9 +73,10 @@ const useFormBuilder = function <TModel extends FieldValues = FieldValues>(
     editorWrapComponent,
     autoSubmitTreshould,
     fields: plainFields,
-    autoRender,
+    defaultValues,
     beforeSubmit,
     partialForm,
+    autoRender,
     onSubmit,
     columns,
     methods,
@@ -82,7 +87,12 @@ const useFormBuilder = function <TModel extends FieldValues = FieldValues>(
     ref,
   });
 
-  return { ...formResult, fieldViews };
+  return {
+    Form: formResult.Form as React.ForwardRefExoticComponent<
+      Partial<FormBuilderProps>
+    >,
+    fieldViews,
+  };
 };
 
 export { useFormBuilder };

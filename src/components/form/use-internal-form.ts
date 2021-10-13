@@ -1,19 +1,23 @@
 import { isEmptyObject } from "components/utils/comp";
-import { useEffect, useRef } from "react";
-import { set, useForm } from "react-hook-form";
+import { useEffect, useMemo, useRef } from "react";
+import { FieldValues, set, useForm, UseFormReturn } from "react-hook-form";
 import { FormOptions } from "./types";
 import equals from "fast-deep-equal/es6";
 import { FormField, FormFieldType, SubFormEditorProps } from "components";
 import { useState } from "react";
 
-export const useInternalForm = function <TModel>(
-  fields : FormField[],  
-  model : TModel,
-  options: FormOptions<TModel> & { defaultValues: any }
-) {
+export const useInternalForm = function <
+  TModel extends FieldValues = FieldValues
+>(
+  fields: FormField[],
+  model?: TModel,
+  options?: FormOptions<TModel>
+): {
+  methods: UseFormReturn<TModel>;
+  defaultValues: any;
+} {
   const valuesRef = useRef<any | null>(null);
-  const methods = useForm({ mode: "onTouched", ...options });
-  
+
   const getAggValues = () => ({
     ...fields
       .reduce(
@@ -31,28 +35,29 @@ export const useInternalForm = function <TModel>(
         }
         return p;
       }, {}),
-    ...model,
+    ...(model ?? {}),
   });
 
-  let [defaultValues, setDefautValues] = useState(getAggValues());
+  let defaultValues = useMemo(() => getAggValues(), [fields, model]);
 
-  useEffect(() => {
-    if (fields) {
-      setDefautValues(getAggValues());
-    }
-  }, [model]);
+  const methods = useForm({
+    mode: "onTouched",
+    ...(options ?? {}),
+    defaultValues,
+  });
 
   useEffect(() => {
     if (
-      !methods.formState.isDirty &&
-      ((isEmptyObject(valuesRef.current) && !isEmptyObject(defaultValues)) ||
-        (Object.keys(valuesRef.current ?? {}).length ===
-          Object.keys(defaultValues ?? {}).length &&
-          !equals(valuesRef.current, defaultValues)))
+      /* !methods.formState.isDirty &&*/
+      (isEmptyObject(valuesRef.current) && !isEmptyObject(defaultValues)) ||
+      (Object.keys(valuesRef.current ?? {}).length ===
+        Object.keys(defaultValues ?? {}).length &&
+        !equals(valuesRef.current, defaultValues))
     ) {
       valuesRef.current = defaultValues;
       methods.reset(defaultValues);
     }
-  }, [defaultValues]);
-  return methods;
+  }, [defaultValues, fields]);
+
+  return { methods, defaultValues };
 };
