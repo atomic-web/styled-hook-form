@@ -22,4 +22,10 @@ export interface FormProps {
   children?: (props: FormChildProps) => React.ReactNode;
   options: UseFormProps<any, any>;
   methodsRef?: React.ForwardedRef<FormMethodsRef|null>;
+  methods? : UseFormReturn<any>
 }
+
+export type FormOptions<TModel> = Omit<
+  UseFormProps<TModel, any>,
+  "defaultValues"
+>;

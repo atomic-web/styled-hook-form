@@ -37,7 +37,6 @@ export const renderField = (
   model?: Record<string, any>,
   shouldUnregister?: boolean | undefined
 ) => {
-  debugger
   const _methods = methods ?? useFormContext();
   field.methods = _methods;
   let component = React.createElement(EditorMap[field.type], {

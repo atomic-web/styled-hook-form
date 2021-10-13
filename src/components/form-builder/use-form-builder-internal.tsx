@@ -35,6 +35,7 @@ const useFormBuilderInternal = function <TModel>(
       autoRender,
       onSubmit,
       columns,
+      methods,
       model,
       areas,
       rows,
@@ -50,25 +51,7 @@ const useFormBuilderInternal = function <TModel>(
       [fieldsProp]
     );
 
-    const getAggValues = () => ({
-      ...fields
-        .reduce(
-          (p: FormField[], c: FormField) => [
-            ...p,
-            ...(c.type === FormFieldType.SubForm
-              ? (c as SubFormEditorProps).formProps.fields
-              : [c]),
-          ],
-          []
-        )
-        .reduce((p: any, c: FormField) => {
-          if (c.name) {
-            set(p, c.name, c.defaultValue);
-          }
-          return p;
-        }, {}),
-      ...model,
-    });
+
 
     const items = fieldsProp.map((item, index) => ({
       ...item,
@@ -100,13 +83,7 @@ const useFormBuilderInternal = function <TModel>(
             methods,
           });
 
-    let [defaultValues, setDefautValues] = useState(getAggValues());
-
-    useEffect(() => {
-      if (fields) {
-        setDefautValues(getAggValues());
-      }
-    }, [model]);
+   
 
     let submitTriggers = fields
       .filter((f) => f.submitTrigger)
@@ -156,6 +133,7 @@ const useFormBuilderInternal = function <TModel>(
               ...(formOptions ?? {}),
               defaultValues,
             },
+            methods,
             submitTreshould: autoSubmitTreshould,
             methodsRef: ref,
             onSubmit: handleSubmit,

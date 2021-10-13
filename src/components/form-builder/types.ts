@@ -1,4 +1,4 @@
-import { FormMethodsRef } from "./../form/types";
+import { FormMethodsRef, FormOptions } from "./../form/types";
 import { HiddenEditorProps } from "./editors/hidden-editor/types";
 import React, { ForwardedRef } from "react";
 import { FileEditorProps } from "./editors/file-editor/types";
@@ -142,7 +142,7 @@ export type FormBuilderOptions<TModel extends FieldValues = FieldValues> = {
   beforeSubmit?: (values: TModel) => boolean | Promise<boolean>;
   autoSubmitTreshould?: number;
   partialForm?: boolean;
-  options?: Omit<UseFormProps<TModel, any>, "defaultValues">;
+  options?: FormOptions<TModel>;
   layout?: "GRID" | React.ReactElement | undefined;
   rows?: PropType<GridProps, "rows">;
   columns?: PropType<GridProps, "columns">;
@@ -176,6 +176,7 @@ export type UseFormBuilderInternalOptions<
 > = FormBuilderOptions<TModel> & {
   autoRender: boolean;
   fields: FormField[];
+  methods?:UseFormReturn<TModel>
 };
 
 export type FormBuilderProps<

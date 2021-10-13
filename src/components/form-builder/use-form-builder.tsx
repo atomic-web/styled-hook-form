@@ -1,22 +1,10 @@
 import { FormField, UseFormBuilderReturn } from "components";
+import { useInternalForm } from "components/form/use-internal-form";
 import React, { useEffect, useState } from "react";
 import { FieldValues } from "react-hook-form";
 import { renderField } from "./layouts/shared";
 import { FormFieldViews, UseFormBuilderOptions } from "./types";
 import { useFormBuilderInternal } from "./use-form-builder-internal";
-
-const LAZY = ({children})=>{
-
-  const [show,setShow] = useState(false);
-
-  useEffect(()=>{
-    setShow(true);
-  },[]);
-
-  return<>
-   {show && children}
-  </>
-}
 
 const useFormBuilder = function <TModel extends FieldValues = FieldValues>(
   options: UseFormBuilderOptions<TModel>
@@ -39,6 +27,8 @@ const useFormBuilder = function <TModel extends FieldValues = FieldValues>(
   } = options;
 
   const plainFields = Object.values<FormField>(fieldsProp);
+
+  const methods = useInternalForm(fieldsProp,model,formOptions);
 
   const createFieldViews = (
     viewFactory: (fieldName: keyof TModel) => React.ReactNode
@@ -64,12 +54,12 @@ const useFormBuilder = function <TModel extends FieldValues = FieldValues>(
     if (field) {
       const fieldView = renderField(
         field,
-        null,
+        methods,
         editorWrapComponent,
         model,
         formOptions?.shouldUnregister
       );
-      return <LAZY> {fieldView} </LAZY> ;
+      return fieldView;
     }
     return React.Fragment;
   });
@@ -84,6 +74,7 @@ const useFormBuilder = function <TModel extends FieldValues = FieldValues>(
     partialForm,
     onSubmit,
     columns,
+    methods,
     layout,
     areas,
     model,

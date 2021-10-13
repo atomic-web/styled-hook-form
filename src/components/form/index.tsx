@@ -1,29 +1,26 @@
-import React, { FormEvent, useEffect, useRef } from "react";
-import { FormProvider, useForm } from "react-hook-form";
+import React, { FormEvent, useEffect } from "react";
+import { FormProvider } from "react-hook-form";
 import { useDebouncedCallback } from "use-debounce";
-import equals from "fast-deep-equal/es6";
 import { FormMethodsRef, FormProps } from "./types";
-import { isEmptyObject } from "../../components/utils/comp";
 import { ChangeEventStore } from "./change-event-store";
+import { useInternalForm } from "./use-internal-form";
 
 const Form: React.FC<FormProps> = (props) => {
-  
   const {
+    autoSubmitFields,
+    submitTreshould,
+    changeHandlers,
     methodsRef,
+    autoSubmit,
     onSubmit,
     children,
-    changeHandlers,
-    submitTreshould,
-    autoSubmit,
-    autoSubmitFields,
+    methods: methodsProp,
     options,
     ...rest
   } = props;
+  debugger
 
-  const methods = useForm({
-    mode: "onTouched",
-    ...options,
-  });  
+  const methods = methodsProp ?? useInternalForm(options);
 
   let refObj: FormMethodsRef = {
     methods,
@@ -38,31 +35,11 @@ const Form: React.FC<FormProps> = (props) => {
     }
   }
 
-  const {
-    handleSubmit,
-    reset,
-    control,
-  } = methods;
+  const { handleSubmit, reset, control } = methods;
 
-  const valuesRef = useRef<any | null>(null);
-  let defaultValues = props.options.defaultValues;
 
-  useEffect(() => {
-
-    if (
-      !methods.formState.isDirty &&
-      ((isEmptyObject(valuesRef.current) && ! isEmptyObject(defaultValues)) ||
-        (Object.keys(valuesRef.current ?? {}).length ===
-          Object.keys(defaultValues ?? {}).length &&
-          !equals(valuesRef.current, defaultValues)))
-    ) {
-      reset(defaultValues);
-      valuesRef.current = defaultValues;
-    }
-  }, [defaultValues]);
 
   const onFormSubmit = (values: any) => {
-    debugger
     onSubmit && onSubmit(values);
     return true;
   };
@@ -107,7 +84,7 @@ const Form: React.FC<FormProps> = (props) => {
 
     return () => watchSubscriptions.unsubscribe();
   }, []);
-  
+
   const handleFormSubmit = (e: FormEvent) => {
     e.stopPropagation();
     handleSubmit(onFormSubmit)(e);
