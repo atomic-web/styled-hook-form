@@ -1,8 +1,10 @@
 import "styled-components";
 import styledImport, { CSSProp, css as cssImport } from "styled-components";
 import { DirectionType } from "../context";
-import { ThemeType } from "grommet";
+import { ThemeType } from "../themes";
 import React from "react";
+
+
 
 // extend them!
 declare module "styled-components" {

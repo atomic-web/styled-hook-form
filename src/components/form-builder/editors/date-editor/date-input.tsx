@@ -4,11 +4,13 @@ import {
   ControllerRenderProps,
   FieldValues,
 } from "react-hook-form";
-import { Box, Button, DateInput as DatePicker } from "grommet";
+import { Box, Button, DateInput as DatePicker, ThemeContext } from "grommet";
 import { SubtractCircle } from "grommet-icons";
 import { FormField } from "../../types";
 import { DateEditorProps } from "./types";
 import { useSHFContext } from "../../../../context";
+import { useContext } from "react";
+import { ThemeType } from "../../../../themes/base-theme";
 
 const DateEditor: React.FC<FormField<DateEditorProps>> = (props) => {
   let vrules = props.validationRules || {};
@@ -25,6 +27,7 @@ const DateEditor: React.FC<FormField<DateEditorProps>> = (props) => {
   } = props;
 
   const { translate: T } = useSHFContext();
+  const theme = useContext(ThemeContext) as ThemeType;
 
   let control = methods?.control;
 
@@ -55,7 +58,7 @@ const DateEditor: React.FC<FormField<DateEditorProps>> = (props) => {
     },
     []
   );
-  const dateFormat = dateInputProps?.format || "yyyy/mm/dd";
+  const dateFormat = theme.dateInput?.dateFormat || dateInputProps?.format || "yyyy/mm/dd";
   const normalValue = !initialValue
     ? initialValue
     : typeof initialValue === "string"

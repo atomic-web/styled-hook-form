@@ -2,6 +2,7 @@
 
 import { Dispatch } from "react";
 import { DeepMap } from "react-hook-form";
+import { ThemType } from "../themes/base-theme";
 import { SHFContextReducerAction } from "./actions/types";
 
 export type SHFContextModel = SHFOptions & DeepMap<any, any> & {
@@ -20,11 +21,14 @@ export interface SHFContextReducer {
 export interface SHFContextProviderValue {
   config: SHFContextModel;
   translate: TranslatorFunc;
+  theme?: ThemType
   dispatch: Dispatch<SHFContextReducerAction>;
 }
 
 export interface SHFOptions {
-  translator?: TranslatorFunc;
+  translator?: TranslatorFunc; 
+  theme?: ThemType,
+  renderGrommet : boolean
 }
 
 export interface SHFContextProviderProps {

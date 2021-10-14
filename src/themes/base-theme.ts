@@ -1,6 +1,15 @@
 import { DefaultTheme } from 'styled-components'
+import { ThemeType as GrommetThemeType } from "grommet";
 
-const FormTheme: DefaultTheme = {
+export interface ThemType extends GrommetThemeType {}
+
+export interface ThemeType {
+    dateInput? : {
+        dateFormat? : string
+    }
 }
 
-export { FormTheme }
+const FormBuilderTheme: DefaultTheme = {
+}
+
+export { FormBuilderTheme }
