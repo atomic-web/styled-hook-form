@@ -163,16 +163,26 @@ const DropDown = forwardRef<HTMLButtonElement, FormField<DropDownProps>>(
 
     const liveValueRef = useRef(null);
 
+    const updateLocalValue = () => {
+      setLocalValue(getOptionsByValue(actualOptions, liveValue));
+      liveValueRef.current = liveValue;
+    };
+
     useEffect(() => {
       if (
         actualOptions &&
         (!liveValueRef.current ||
           JSON.stringify(liveValueRef.current) != JSON.stringify(liveValue))
       ) {
-        setLocalValue(getOptionsByValue(actualOptions, liveValue));
-        liveValueRef.current = liveValue;
+        updateLocalValue();
       }
-    }, [liveValue, actualOptions]);
+    }, [liveValue]);
+
+    useEffect(() => {
+      if (actualOptions) {
+        updateLocalValue();
+      }
+    }, [actualOptions]);
 
     useEffect(() => {
       if (actualOptions && initialValue) {
