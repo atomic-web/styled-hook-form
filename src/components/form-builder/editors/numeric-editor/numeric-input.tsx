@@ -5,6 +5,8 @@ import { FormField } from "../../types";
 import { NumericBox } from "../../../../components/extension";
 import { useSHFContext } from "../../../../context";
 
+const endsWithFractionZero = (rawValue:string)=>/.*\.0+$/g.test(rawValue);
+
 const NumericEditor = forwardRef<
   HTMLInputElement,
   FormField<NumericEditorProps>
@@ -60,7 +62,7 @@ const NumericEditor = forwardRef<
           ref={ref}
           onChange={(rawValue: any) => {
             var transformedValue = rawValue
-              ? rawValue.endsWith(".") || rawValue === "-"
+              ? rawValue.endsWith(".") || rawValue === "-" || endsWithFractionZero(rawValue)
                 ? rawValue
                 : parseFloat(rawValue)
               : "";
