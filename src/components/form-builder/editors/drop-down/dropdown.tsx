@@ -17,6 +17,7 @@ import styled from "styled-components";
 import { inputStyle } from "grommet/utils/styles";
 import { useDebouncedCallback } from "use-debounce";
 import { Close } from "grommet-icons";
+import { omit } from "remeda";
 
 const MultipleOption = memo((props: OptionProps) => {
   let { label, selected } = props;
@@ -57,8 +58,8 @@ const DefaultOptionLabel = ({ content }: { content: string }) => (
   <span> {content} </span>
 );
 
-const DropDown = forwardRef<HTMLButtonElement, FormField<DropDownProps>>(
-  (props, ref) => {
+const DropDown = React.memo(
+  forwardRef<HTMLButtonElement, FormField<DropDownProps>>((props, ref) => {
     let vrules = props.validationRules || {};
     const { translate: T } = useSHFContext();
 
@@ -94,6 +95,15 @@ const DropDown = forwardRef<HTMLButtonElement, FormField<DropDownProps>>(
         : null;
     }, [options]);
 
+    const params = useMemo(() => {
+      return {
+        ...(typeof dataSourceOptions?.request !== "string"
+          ? dataSourceOptions?.request?.params
+          : {}),
+        ...dataSourceOptions?.extraParams,
+      };
+    }, [dataSourceOptions?.request]);
+
     let { loading = false, nextPage = null, hasMore = null } = usePagedData({
       request: dataSourceOptions?.request ?? null,
       pageParamName: dataSourceOptions?.pageKey,
@@ -103,7 +113,7 @@ const DropDown = forwardRef<HTMLButtonElement, FormField<DropDownProps>>(
       searchParam: remoteSearchKey,
       listPropName: dataSourceOptions?.listKey,
       totalPropName: dataSourceOptions?.totalKey,
-      params: dataSourceOptions?.extraParams,
+      params: params,
       mockResponse: dataSourceOptions?.mockResponse,
       onRequest: (data: any, headers: any) => {
         if (dataSourceOptions?.onRequest) {
@@ -376,6 +386,14 @@ const DropDown = forwardRef<HTMLButtonElement, FormField<DropDownProps>>(
         )}
       ></Controller>
     );
+  }),
+  (prev, next) => {
+    const equals = (
+      JSON.stringify(omit(prev as any, ["methods", "children"])) ===
+      JSON.stringify(omit(next as any, ["methods", "children"]))
+    );
+
+    return equals;
   }
 );
 
