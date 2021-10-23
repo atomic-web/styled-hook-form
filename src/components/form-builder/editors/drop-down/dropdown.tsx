@@ -17,7 +17,7 @@ import styled from "styled-components";
 import { inputStyle } from "grommet/utils/styles";
 import { useDebouncedCallback } from "use-debounce";
 import { Close } from "grommet-icons";
-import { omit } from "remeda";
+import { omit, equals } from "remeda";
 
 const MultipleOption = memo((props: OptionProps) => {
   let { label, selected } = props;
@@ -388,25 +388,28 @@ const DropDown = React.memo(
     );
   }),
   (prev, next) => {
-    const eq =
-      JSON.stringify(
-        omit(prev as any, [
-          "methods",
-          "children,onChange",
-          "onSearch",
-          "renderItem",
-          "renderItemLabel",
-        ])
-      ) ===
-      JSON.stringify(
-        omit(next as any, [
-          "methods",
-          "children,onChange",
-          "onSearch",
-          "renderItem",
-          "renderItemLabel",
-        ])
-      );
+    const eq = equals(
+      omit(prev as any, [
+        "methods",
+        "children",
+        "onChange",
+        "onSearch",
+        "renderItem",
+        "renderItemLabel",
+        "model",
+        "render",
+      ]),
+      omit(next as any, [
+        "methods",
+        "children",
+        "onChange",
+        "onSearch",
+        "renderItem",
+        "renderItemLabel",
+        "model",
+        "render",
+      ])
+    );
 
     return eq;
   }
