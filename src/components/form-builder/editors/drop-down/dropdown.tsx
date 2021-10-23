@@ -388,12 +388,27 @@ const DropDown = React.memo(
     );
   }),
   (prev, next) => {
-    const equals = (
-      JSON.stringify(omit(prev as any, ["methods", "children"])) ===
-      JSON.stringify(omit(next as any, ["methods", "children"]))
-    );
+    const eq =
+      JSON.stringify(
+        omit(prev as any, [
+          "methods",
+          "children,onChange",
+          "onSearch",
+          "renderItem",
+          "renderItemLabel",
+        ])
+      ) ===
+      JSON.stringify(
+        omit(next as any, [
+          "methods",
+          "children,onChange",
+          "onSearch",
+          "renderItem",
+          "renderItemLabel",
+        ])
+      );
 
-    return equals;
+    return eq;
   }
 );
 
