@@ -16,7 +16,7 @@ const NumericBox: React.FC<NumericBoxProps> = (props) => {
   const validValueRef = useRef("");
 
   const handleKeyup = function (e: KeyboardEvent) {
-    const numericRegex = /^\-?\d*(?<=\d)\.?(?=\d)?\d*$/g;
+    const numericRegex = /^\-?\d*\.?\d*$/g;
     const nextValue = e.target && (e.target as any).value;
     
     if (nextValue && nextValue !== "-" && !numericRegex.test(nextValue)) {
