@@ -41,17 +41,18 @@ export const renderField = (
   model?: Record<string, any>,
   shouldUnregister?: boolean | undefined
 ) => {
+  
   field.methods = methods;
+  if (field.renderLabel === undefined) {
+    field.renderLabel = true;
+  }
+
   let component = React.createElement(EditorMap[field.type], {
     ...((field as unknown) as any),
     model,
     shouldUnregister: field.shouldUnregister ?? shouldUnregister,
     key: field.name,
   });
-
-  if (field.renderLabel === undefined) {
-    field.renderLabel = true;
-  }
 
   if (field.validationRules && field.validationRules.validate) {
     if (typeof field.validationRules.validate === "function") {
