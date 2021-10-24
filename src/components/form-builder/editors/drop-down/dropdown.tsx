@@ -396,7 +396,6 @@ const DropDown = React.memo(
         "onSearch",
         "renderItem",
         "renderItemLabel",
-        "model",
         "render",
       ]),
       omit(next as any, [
@@ -406,7 +405,6 @@ const DropDown = React.memo(
         "onSearch",
         "renderItem",
         "renderItemLabel",
-        "model",
         "render",
       ])
     );

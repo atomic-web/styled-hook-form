@@ -23,7 +23,6 @@ const renderFieldEditors = ({
         field,
         methods,
         editorWrapComponent,
-        model,
         shouldUnregister
     )
   );

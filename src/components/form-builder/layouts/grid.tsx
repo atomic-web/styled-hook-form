@@ -24,7 +24,6 @@ const renderFieldEditors = ({
       field,
       methods,
       editorWrapComponent,
-      model,
       shouldUnregister
     );
     if (field.gridArea) {

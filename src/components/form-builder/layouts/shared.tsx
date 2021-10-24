@@ -38,7 +38,6 @@ export const renderField = (
   field: FormField,
   methods: UseFormReturn<any>,
   editorWrapComponent: React.ReactElement | undefined,
-  model?: Record<string, any>,
   shouldUnregister?: boolean | undefined
 ) => {
   
@@ -49,7 +48,6 @@ export const renderField = (
 
   let component = React.createElement(EditorMap[field.type], {
     ...((field as unknown) as any),
-    model,
     shouldUnregister: field.shouldUnregister ?? shouldUnregister,
     key: field.name,
   });
