@@ -6,6 +6,9 @@ import { FormBuilderProps, FormField, FormFieldType } from "./types";
 import { useFormContext, UseFormReturn, set } from "react-hook-form";
 import { customLayout, gridLayout } from "./layouts";
 import { SubFormEditorProps } from "./editors";
+import { InternalContextProvider } from "./internal-context";
+import { renderChildren } from "./layouts/shared";
+import { PropType } from "types/utils";
 
 const StyledFormBuilder = styled.div``;
 
@@ -14,7 +17,7 @@ export type FormChildProps = UseFormReturn;
 const FormBuilder = forwardRef<FormMethodsRef | null, FormBuilderProps>(
   (props, ref) => {
     let {
-      fields: fieldsProp,
+      fields: originalFields,
       children,
       onSubmit,
       className,
@@ -31,6 +34,8 @@ const FormBuilder = forwardRef<FormMethodsRef | null, FormBuilderProps>(
       ...rest
     } = props;
 
+    const fieldsProp: FormField[] = originalFields ?? [];
+
     let fields = useMemo(
       () =>
         fieldsProp.filter(
@@ -46,7 +51,7 @@ const FormBuilder = forwardRef<FormMethodsRef | null, FormBuilderProps>(
           (p: FormField[], c: FormField) => [
             ...p,
             ...(c.type === FormFieldType.SubForm
-              ? (c as SubFormEditorProps).formProps.fields
+              ? (c as SubFormEditorProps).formProps.fields ?? []
               : [c]),
           ],
           []
@@ -64,7 +69,7 @@ const FormBuilder = forwardRef<FormMethodsRef | null, FormBuilderProps>(
 
     useEffect(() => {
       setDefautValues(getAggValues());
-    }, [model, fields]);
+    }, [model, originalFields]);
 
     const handleSubmit = async (values: any) => {
       let shoudlSubmit: boolean | Promise<boolean> = beforeSubmit
@@ -104,6 +109,11 @@ const FormBuilder = forwardRef<FormMethodsRef | null, FormBuilderProps>(
 
     const isPartialForm = partialForm === true;
 
+    const nullLayout = (
+      methods: UseFormReturn,
+      children: PropType<FormBuilderProps, "children">
+    ) => <>{renderChildren(children as any, methods)}</>;
+
     const renderLayout = (methods: UseFormReturn) =>
       layout === "GRID"
         ? gridLayout({
@@ -128,7 +138,13 @@ const FormBuilder = forwardRef<FormMethodsRef | null, FormBuilderProps>(
           });
 
     const formBody = isPartialForm
-      ? React.createElement(React.Fragment, {}, renderLayout(useFormContext()))
+      ? React.createElement(
+          React.Fragment,
+          {},
+          items.length
+            ? renderLayout(useFormContext())
+            : nullLayout(useFormContext(), children)
+        )
       : React.createElement(
           Form,
           {
@@ -144,11 +160,21 @@ const FormBuilder = forwardRef<FormMethodsRef | null, FormBuilderProps>(
             autoSubmitFields: submitTriggers || [],
             changeHandlers: changeHandlers,
           },
-          ({ ...methods }: UseFormReturn) => renderLayout(methods)
+          ({ ...methods }: UseFormReturn) =>
+            items.length
+              ? renderLayout(methods)
+              : nullLayout(useFormContext(), children)
         );
 
     return (
-      <StyledFormBuilder className={className}>{formBody}</StyledFormBuilder>
+      <StyledFormBuilder className={className}>
+        <InternalContextProvider
+          formOptions={options}
+          wrapComponent={editorWrapComponent}
+        >
+          {formBody}
+        </InternalContextProvider>
+      </StyledFormBuilder>
     );
   }
 );

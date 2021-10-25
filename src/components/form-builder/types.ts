@@ -133,7 +133,7 @@ export type FormField<TProps extends {} = {}> = FormFieldBase &
 export type FormBuilderProps<TModel = any> = Partial<
   Omit<HTMLDivElement, "children">
 > & {
-  fields: FormField[];
+  fields?: FormField[];
   children?: React.ReactNode | ((methods: UseFormReturn) => React.ReactNode);
   model?: TModel;
   devMode?: boolean;
@@ -150,3 +150,5 @@ export type FormBuilderProps<TModel = any> = Partial<
 };
 
 export type FormEditorPropsBase = Pick<FormFieldBase, "validationRules"> & {};
+
+export type FieldViewProps = FormField &{};
