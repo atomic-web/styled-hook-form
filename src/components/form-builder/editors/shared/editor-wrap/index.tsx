@@ -1,7 +1,7 @@
 import React from "react";
 import { ErrorMessage } from "@hookform/error-message";
 import { Box, Button, Tip, FormField, ThemeContext } from "grommet";
-import { useFormState } from "react-hook-form";
+import { get, useFormState } from "react-hook-form";
 import styled from "styled-components";
 import { EditorWrapProps } from "./types";
 import { CircleInformation } from "grommet-icons";
@@ -46,13 +46,13 @@ const WidthEditorWrap: React.FC<EditorWrapProps> = (props) => {
     <ThemeContext.Extend value={theme}>
       <FormField
         error={
-          <>
+         get(errors,name) ? <>
             <ErrorMessage
               errors={errors}
               name={name}
               as={<ValidationMessage />}
             ></ErrorMessage>
-          </>
+          </> : undefined
         }
         contentProps={{
           focusIndicator: false,
