@@ -8,7 +8,6 @@ const renderFieldEditors = ({
     items,
     methods,
     editorWrapComponent,
-    model,
     shouldUnregister,
   }: {
     items: FormField[];
