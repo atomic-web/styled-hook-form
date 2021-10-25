@@ -1,4 +1,4 @@
-import { FieldViewProps } from "components";
+import { FieldViewProps } from "./types";
 import { useFormContext } from "react-hook-form";
 import { renderField } from "./layouts/shared";
 import { FC } from "react";

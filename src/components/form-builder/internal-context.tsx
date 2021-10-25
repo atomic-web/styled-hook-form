@@ -1,4 +1,4 @@
-import { FormBuilderProps } from "components";
+import { FormBuilderProps } from "./types";
 import {
   createContext,
   PropsWithChildren,

@@ -12,9 +12,10 @@ import { Box, Button, Spinner } from "grommet";
 import { useSHFContext } from "../../context";
 import staticAxios, { AxiosRequestConfig } from "axios";
 import MockAdapter from "axios-mock-adapter";
-import { FormMethodsRef } from "components/form/types";
+import { FormMethodsRef } from "../form/types";
 import { FieldValues, UseFormReturn } from "react-hook-form";
 import { isPrimitive } from "../utils/types";
+import {FormField} from "../form-builder/types"
 
 const successCodes = [200, 201, 202];
 
@@ -25,7 +26,7 @@ const HttpForm = React.forwardRef<FormMethodsRef, HttpFormProps>(
       onSaveResponse,
       onLoadRequest,
       onLoadResponse,
-      fields,
+      fields : fieldsProp,
       saveRequest: saveReqProp,
       loadRequest: loadRequestProp,
       onSaveSuccess,
@@ -41,6 +42,8 @@ const HttpForm = React.forwardRef<FormMethodsRef, HttpFormProps>(
       children,
       ...rest
     } = props;
+
+    const fields : FormField[] = fieldsProp ?? [];
 
     let { translate: T } = useSHFContext();
 

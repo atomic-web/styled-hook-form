@@ -1,4 +1,4 @@
-import { FormMethodsRef } from "components/form/types";
+import { FormMethodsRef } from "../form/types";
 import { useLayoutEffect } from "react";
 import { MutableRefObject, useRef, useState } from "react";
 import { UseFormReturn } from "react-hook-form";
