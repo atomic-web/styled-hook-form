@@ -46,53 +46,51 @@ const WidthEditorWrap: React.FC<EditorWrapProps> = (props) => {
     <ThemeContext.Extend value={theme}>
       <FormField
         error={
-         get(errors,name) ? <>
-            <ErrorMessage
-              errors={errors}
-              name={name}
-              as={<ValidationMessage />}
-            ></ErrorMessage>
-          </> : undefined
+          get(errors, name) ? (
+            <>
+              <ErrorMessage
+                errors={errors}
+                name={name}
+                as={<ValidationMessage />}
+              ></ErrorMessage>
+            </>
+          ) : undefined
         }
         contentProps={{
           focusIndicator: false,
         }}
         label={
-          <>
-            {renderLabel && isInlineControl && (
-              <Label>
-                {label}
-                {tip && (
-                  <Tip
-                    plain
-                    content={
-                      <Box
-                        focusIndicator={false}
-                        background="light-3"
-                        pad="small"
-                        round="small"
-                        border={{
-                          color: "dark-4",
-                          size: "small",
-                        }}
-                      >
-                        {tip}
-                      </Box>
-                    }
-                    dropProps={{ align: { left: "right" } }}
-                  >
-                    <Button
+          label && renderLabel && isInlineControl ? (
+            <Label>
+              {label}
+              {tip && (
+                <Tip
+                  plain
+                  content={
+                    <Box
                       focusIndicator={false}
-                      tabIndex={-1}
-                      icon={
-                        <CircleInformation size="medium" color="neutral-3" />
-                      }
-                    />
-                  </Tip>
-                )}
-              </Label>
-            )}
-          </>
+                      background="light-3"
+                      pad="small"
+                      round="small"
+                      border={{
+                        color: "dark-4",
+                        size: "small",
+                      }}
+                    >
+                      {tip}
+                    </Box>
+                  }
+                  dropProps={{ align: { left: "right" } }}
+                >
+                  <Button
+                    focusIndicator={false}
+                    tabIndex={-1}
+                    icon={<CircleInformation size="medium" color="neutral-3" />}
+                  />
+                </Tip>
+              )}
+            </Label>
+          ) : undefined
         }
       >
         {children}

@@ -14,7 +14,6 @@ export const Default = () => {
       type: FormFieldType.Text,
     },
     {
-      label: "Sub Info",
       type: FormFieldType.SubForm,
       formProps: {
         fields: [

@@ -24,7 +24,7 @@ const CustomEditor: React.FC<FormField<CustomEditorProps>> = (props) => {
   if (required) {
     vrules.required = {
       value: required,
-      message: T("required-msg", { name: label }),
+      message: T("required-msg", { name: label ?? name }),
     };
   }
 

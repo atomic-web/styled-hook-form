@@ -91,7 +91,6 @@ export interface FieldValidationRules
 export interface FormFieldBase {
   tip?: React.ReactNode;
   defaultValue?: any;
-  label: string;
   labelPosition?: "top" | "side";
   renderLabel?: boolean;
   render?: (
@@ -119,14 +118,17 @@ export type FormField<TProps extends {} = {}> = FormFieldBase &
   } & (
     | {
         name: FieldPath<FieldValues>;
+        label?: string;
       }
     | {
         type: FormFieldType.SubForm;
         name?: FieldPath<FieldValues>;
+        label?: never;
       }
     | {
         type: FormFieldType.Custom;
         name?: FieldPath<FieldValues>;
+        label?: string;
       }
   );
 
