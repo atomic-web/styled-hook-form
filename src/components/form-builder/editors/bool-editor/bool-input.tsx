@@ -32,7 +32,7 @@ const BoolEditor = forwardRef<HTMLInputElement, FormField<BoolEditorProps>>(
     return (
       <Controller
         name={name!}
-        defaultValue={initialValue}
+        defaultValue={initialValue ?? false}
         rules={vrules as any}
         control={control}
         shouldUnregister={shouldUnregister}
