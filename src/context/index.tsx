@@ -18,6 +18,7 @@ const defaults: SHFContextProviderValue = {
   config: {
     ssr: true,
   },
+  locale : "en",
   translate: FallbackTranslate,
   dispatch: () => {},
 };
@@ -44,13 +45,13 @@ const SHFContextProvider: React.FC<SHFContextProviderProps> = (props) => {
   const theme = options?.theme ?? FormBuilderTheme;
 
   const renderGrommet = !options?.renderGrommet ? true : options!.renderGrommet;
-
   return (
     <SHFContext.Provider
       value={{
         config,
         translate: options?.translator ?? FallbackTranslate,
         dispatch,
+        locale : options?.locale || "en"
       }}
     >
       {renderGrommet ? (

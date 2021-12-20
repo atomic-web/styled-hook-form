@@ -26,7 +26,7 @@ const DateEditor: React.FC<FormField<DateEditorProps>> = (props) => {
     methods,
   } = props;
 
-  const { translate: T } = useSHFContext();
+  const { translate: T, locale } = useSHFContext();
   const theme = useContext(ThemeContext) as ThemeType;
 
   let control = methods?.control;
@@ -58,7 +58,8 @@ const DateEditor: React.FC<FormField<DateEditorProps>> = (props) => {
     },
     []
   );
-  const dateFormat = theme.dateInput?.dateFormat || dateInputProps?.format || "yyyy/mm/dd";
+  const dateFormat =
+    theme.dateInput?.dateFormat || dateInputProps?.format || "yyyy/mm/dd";
   const normalValue = !initialValue
     ? initialValue
     : typeof initialValue === "string"
@@ -80,6 +81,9 @@ const DateEditor: React.FC<FormField<DateEditorProps>> = (props) => {
               <Box direction="row">
                 <DatePicker
                   {...dateInputProps}
+                  calendarProps={{
+                    locale,
+                  }}
                   defaultValue={field.value}
                   value={field.value}
                   format={dateFormat}
@@ -98,9 +102,9 @@ const DateEditor: React.FC<FormField<DateEditorProps>> = (props) => {
             </Box>
           </Box>
         );
-      }} 
+      }}
     ></Controller>
   );
 };
 
-export {DateEditor};
+export { DateEditor };

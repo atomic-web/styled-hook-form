@@ -21,14 +21,16 @@ export interface SHFContextReducer {
 export interface SHFContextProviderValue {
   config: SHFContextModel;
   translate: TranslatorFunc;
-  theme?: ThemType
+  theme?: ThemType,
+  locale : string,
   dispatch: Dispatch<SHFContextReducerAction>;
 }
 
 export interface SHFOptions {
   translator?: TranslatorFunc; 
   theme?: ThemType,
-  renderGrommet : boolean
+  renderGrommet : boolean,
+  locale? : string
 }
 
 export interface SHFContextProviderProps {
