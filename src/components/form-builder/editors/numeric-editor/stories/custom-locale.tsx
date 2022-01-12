@@ -4,7 +4,7 @@ import { FormField, FormFieldType } from "components/form-builder/types";
 import { Save } from "grommet-icons";
 import { SHFContextProvider } from "context";
 
-export const Default = () => {
+export const CustomLocale = () => {
   const handleSubmit = (values: any) => {
     alert(JSON.stringify(values));
   };
@@ -14,20 +14,13 @@ export const Default = () => {
       name: "numeric_value",
       label: "Numeric Value",
       type: FormFieldType.Number,
+      tip:"This is a numeric input with german locale",
       required: true,
-    },
-    {
-      name: "with_range",
-      label: "With Range (between 10-50)",
-      type: FormFieldType.Number,
-      min: 10,
-      max: 50,
-      defaultValue: 9,
-    },
+    }
   ];
 
   return (
-    <SHFContextProvider>
+    <SHFContextProvider options={{ locale: "de", renderGrommet: true }}>
       <Box width="medium" pad="small" background="light-2">
         <FormBuilder fields={playersFormFields} onSubmit={handleSubmit}>
           <Button
@@ -44,5 +37,5 @@ export const Default = () => {
 };
 
 export default {
-  title: "Form Builder/Editors/NumericInput/Default",
+  title: "Form Builder/Editors/NumericInput/Custom Locale",
 };
