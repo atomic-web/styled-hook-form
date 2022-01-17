@@ -1,6 +1,8 @@
 import { DataTableContextModel, DataTableContextReducerAction } from "../types";
 import { Map } from "immutable";
 
+const DEFAULT_ORDER_DIR = "desc";
+
 export const getSyncKey = () => new Date().getTime();
 
 const findOrderedIndex = (
@@ -170,6 +172,12 @@ const setOrder = (state: DataTableContextModel, payload: {
   orderDir  : payload.dir
 });
 
+const resetOrder = (state: DataTableContextModel) => ({
+  ...state,
+  orderParam : state.primaryKey,
+  orderDir  : DEFAULT_ORDER_DIR
+});
+
 const setPage = (state: DataTableContextModel, payload: number) => ({
   ...state,
   currentPage : payload,
@@ -182,6 +190,7 @@ const setPageSize = (state: DataTableContextModel, payload: number) => ({
 
 const actionsMap: Record<any, any> = {
   "set-order": setOrder,
+  "reset-order" : resetOrder,
   "remove-data": removeData,
   "update-data": updateData,
   "add-data": addData,
