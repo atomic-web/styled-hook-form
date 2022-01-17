@@ -14,6 +14,9 @@ import { DataTableContextProvider, useDataTableContext } from "./data-context";
 import { usePagedData } from "../../utils/paged-data-source";
 import DataTableWrap from "./data-table-wrap";
 
+const DEFAULT_PAGE = 1;
+const DEFAULT_PAGE_SIZE = 50;
+
 const DataTable: React.FC<DataTableProps> = (props) => {
   let { data, paginate, primaryKey, wrap } = props;
   let tableContext = useDataTableContext();
@@ -67,7 +70,7 @@ const DataTableImpl: React.FC<DataTableProps> = (props) => {
 
   let {
     state: {
-      currentPage,
+      currentPage = paginate?.currentPage ?? DEFAULT_PAGE,
       pageSize,
       totalRecords: globalTotalRecords,
       data: globalData,
@@ -80,8 +83,8 @@ const DataTableImpl: React.FC<DataTableProps> = (props) => {
 
   let defaultPaging = {
     enabled: false,
-    pageSize: 50,
-    currentPage: 0,
+    pageSize: DEFAULT_PAGE_SIZE,
+    currentPage,
   };
 
   let requestParamsConfig = {
@@ -108,7 +111,7 @@ const DataTableImpl: React.FC<DataTableProps> = (props) => {
     nextPage,
     hasMore,
   } = request
-    ? usePagedData({
+      ? usePagedData({
         request,
         params: internalReqParams,
         orderDir: orderDir,
@@ -119,6 +122,7 @@ const DataTableImpl: React.FC<DataTableProps> = (props) => {
         pageParamName: requestParamsConfig.pageNumParamName,
         pageSizeParamName: requestParamsConfig.pageSizeParamName,
         pageSize,
+        page: currentPage,
         totalPropName: requestParamsConfig.totalPropName,
         onRequest: (data: any, headers: any) => {
           return onRequest ? onRequest(data, headers) : data;
@@ -149,9 +153,8 @@ const DataTableImpl: React.FC<DataTableProps> = (props) => {
           return cdata;
         },
         mockResponse,
-        page: currentPage,
       })
-    : useMemo(
+      : useMemo(
         () => ({
           error: null,
           data: [],
@@ -193,7 +196,7 @@ const DataTableImpl: React.FC<DataTableProps> = (props) => {
     });
   };
 
-  let [totalRecords, setTotalRecords] = useState(50);
+  let [totalRecords, setTotalRecords] = useState(defaultPaging.pageSize);
 
   useEffect(() => {
     setTotalRecords(globalTotalRecords);

@@ -1,39 +1,28 @@
-import { renderHook, act } from "@testing-library/react-hooks";
+import { waitFor } from "@testing-library/dom";
+import { renderHook } from "@testing-library/react-hooks";
 import "jest-fix-undefined";
 import { usePagedData } from "../paged-data";
 
 describe("remote data source", () => {
-  it("paging works currectly", async () => {
-    let res: any;
-    await act(async () => {
-      let { result, waitFor } = renderHook(() =>
-        usePagedData<string>({
-          request: { url: "/api/test" },
-          page: 1,
-          pageSize: 5,
-          lazy:true,
-          onResponse: (d) => {
-            return d;
-          },
-          mockResponse: (mock) => {
-            mock.onGet("/api/test").reply(() => {
-              return [200, { list: ["1", "2", "3", "4", "5"] }];
-            });
-          },
-        })
-      );
+ 
+  it("initial page other than 1" , async()=>{
+      const initialPage = 5;
+      const {result} = renderHook(()=>usePagedData({
+        request: { url: "/api/test" },
+        page: initialPage,
+        pageSize: 5,
+        lazy:true,
+        mockResponse: (mock) => {
+          mock.onGet("/api/test").reply(() => {
+            return [200, { list: new Array(50).fill(0) }];
+          });
+        },
+      }));
 
-      result.current.nextPage();
-      await waitFor(() => result.current.page === 1, { timeout: 100 });
-      result.current.nextPage();
-      await waitFor(() => result.current.page === 2, { timeout: 100 });
-      result.current.nextPage();
-      await waitFor(() => result.current.page === 3, { timeout: 100 });
-      res = result;
-    });
+      await waitFor(() => result.current.page === initialPage, { timeout: 200 });
 
-    expect(res.current.page).toBe(3);
-  });
+      await expect(result.current.page).toBe(initialPage);
+  })
 });
 
 export {};

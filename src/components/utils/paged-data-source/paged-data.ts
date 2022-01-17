@@ -30,7 +30,7 @@ const usePagedData = <
     totalPropName = "total",
     searchParam,
     searchParamName = "searchKey",
-    page: _page,
+    page: _page = 1,
     pageSize = 20,
     pageParamName = "page",
     pageSizeParamName = "pageSize",
@@ -50,7 +50,7 @@ const usePagedData = <
     };
   }
 
-  let [page, setPage] = useState<number>(0);
+  let [page, setPage] = useState<number>(_page);
   let [total, setTotal] = useState<number>(0);
   let [hasMore, setHasMore] = useState<boolean>(false);
   let [isFirstLoad, setIsFirstLoad] = useState(true);
@@ -254,7 +254,7 @@ const usePagedData = <
 
   useEffect(() => {
     if (isFirstLoad && request != null && !lazy) {
-      loadPage(1);
+      loadPage(page);
       reqRef.current = request;
     }
   }, []);

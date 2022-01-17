@@ -170,12 +170,24 @@ const setOrder = (state: DataTableContextModel, payload: {
   orderDir  : payload.dir
 });
 
+const setPage = (state: DataTableContextModel, payload: number) => ({
+  ...state,
+  currentPage : payload,
+});
+
+const setPageSize = (state: DataTableContextModel, payload: number) => ({
+  ...state,
+  pageSize : payload,
+});
+
 const actionsMap: Record<any, any> = {
   "set-order": setOrder,
   "remove-data": removeData,
   "update-data": updateData,
   "add-data": addData,
   "set-data": setData,
+  "set-page" : setPage,
+  "set-page-size" : setPageSize,
   "merge-value": mergeValue,
   "update-data-in-path": updateDataInPath,
 };
