@@ -65,7 +65,7 @@ export type DataTableContextReducerAction =
   }
   | {
     type: "reset-order",
-    payload: undefined
+    payload?: undefined
   }
   | {
     type: "set-page",
