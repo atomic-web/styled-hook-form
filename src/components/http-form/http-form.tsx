@@ -273,9 +273,7 @@ const HttpForm = React.forwardRef<FormMethodsRef, HttpFormProps>(
             icon={
               (loading || loadLoading) && !loadingIndicator ? (
                 <Spinner />
-              ) : (
-                <div />
-              )
+              ) : undefined
             }
             label={
               <Box>
