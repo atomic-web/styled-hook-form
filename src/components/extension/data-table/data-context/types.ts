@@ -5,6 +5,7 @@ export interface DataTableContextModel {
   primaryKey: string;
   orderParam: string;
   orderDir: "asc" | "desc";
+  hasOrder : boolean,
   currentPage?: number;
   pageSize?: number;
   totalRecords: number;
