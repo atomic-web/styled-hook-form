@@ -62,7 +62,6 @@ const NumericEditor = forwardRef<
       rules={vrules as any}
       control={control}
       render={({ field }) => {
-        debugger;
         return (
           <NumericBox
             {...inputProps}

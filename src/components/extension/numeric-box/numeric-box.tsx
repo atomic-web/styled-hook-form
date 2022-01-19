@@ -32,7 +32,6 @@ const NumericBox: React.FC<NumericBoxProps> = (props) => {
 
   const handleKeyup = function (e: KeyboardEvent) {
     const numericRegex = eval(`/^\\-?\\d*\\${fractionSep}?\\d*$/g`);
-    debugger;
     const nextValue = e.target && (e.target as any).value;
 
     if (nextValue && nextValue !== "-" && !numericRegex.test(nextValue)) {
