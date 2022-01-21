@@ -11,13 +11,14 @@ import { useSHFContext } from "../../../../context";
 
 const FileEditor = forwardRef<HTMLInputElement, FormField<FileEditorProps>>(
   (props, ref) => {
-    const {translate : T } = useSHFContext();
+    const { translate: T } = useSHFContext();
     let vrules = props.validationRules || {};
 
     let {
       name,
       defaultValue: initialValue,
       shouldUnregister,
+      onRemove,
       required,
       methods,
       multiple,
@@ -45,43 +46,47 @@ const FileEditor = forwardRef<HTMLInputElement, FormField<FileEditorProps>>(
 
     const handleChange = useCallback(
       (field: ControllerRenderProps<FieldValues>) => (
-        _: ChangeEvent<HTMLInputElement>,
-        nextFiles:any
+        e: ChangeEvent<HTMLInputElement>,
+        nextFiles: any
       ) => {
-        field.onChange(nextFiles.files);
+        if (e.target.files) {
+          field.onChange(nextFiles.files);
+        }else{
+          onRemove?.(nextFiles.files);
+        }
       },
       []
     );
 
-    useEffect(()=>{
-      if (ref && typeof(ref) !== "function"){
-          if(ref.current){
-            ref.current.setCustomValidity(T("file-input-msg-file-required"));
-          }
-      }     
-    },[ref]);
+    useEffect(() => {
+      if (ref && typeof (ref) !== "function") {
+        if (ref.current) {
+          ref.current.setCustomValidity(T("file-input-msg-file-required"));
+        }
+      }
+    }, [ref]);
 
     return (
-        <Controller
-          name={name!}
-          defaultValue={initialValue}
-          shouldUnregister={shouldUnregister}
-          control={control}
-          rules={vrules as any}
-          render={({ field }) => (
-            <GrommetFileInput
-              {...fileInputProps}
-              name={name}
-              ref={ref}
-              multiple={multiple}
-              //@ts-ignore
-              onChange={handleChange(field)}
-              messages={localizedMessages}
-            />
-          )}
-        />
+      <Controller
+        name={name!}
+        defaultValue={initialValue}
+        shouldUnregister={shouldUnregister}
+        control={control}
+        rules={vrules as any}
+        render={({ field }) => (
+          <GrommetFileInput
+            {...fileInputProps}
+            name={name}
+            ref={ref}
+            multiple={multiple}
+            //@ts-ignore
+            onChange={handleChange(field)}
+            messages={localizedMessages}
+          />
+        )}
+      />
     );
   }
 );
 
-export {FileEditor};
+export { FileEditor };

@@ -5,25 +5,6 @@ import { FormBuilder } from "../form-builder";
 import { FormFieldType } from "../types";
 
 describe("FormBuilder", () => {
-  it("renders default value", () => {
-    const Form = () => {
-      return (
-        <FormBuilder
-          fields={[
-            {
-              type: FormFieldType.Text,
-              defaultValue: "value1",
-              name: "test",
-              label: "test",
-            },
-          ]}
-        />
-      );
-    };
-
-    let { container } = render(<Form />);
-    expect(container.firstElementChild).toMatchSnapshot();
-  });
 
   it("model overrides default value", () => {
     const DropDownField = () => {

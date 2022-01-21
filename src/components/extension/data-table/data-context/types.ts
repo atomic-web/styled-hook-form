@@ -5,6 +5,7 @@ export interface DataTableContextModel {
   primaryKey: string;
   orderParam: string;
   orderDir: "asc" | "desc";
+  hasOrder : boolean,
   currentPage?: number;
   pageSize?: number;
   totalRecords: number;
@@ -20,6 +21,7 @@ export interface DataTableContextProviderProps {
     | "orderDir"
     | "orderParam"
     | "pageSize"
+    | "currentPage"
     | "contextData"
   >;
   children?: React.ReactNode;
@@ -27,40 +29,53 @@ export interface DataTableContextProviderProps {
 
 export type DataTableContextReducerAction =
   | {
-      type: "set-data";
-      payload: any | any[];
-    }
+    type: "set-data";
+    payload: any | any[];
+  }
   | {
-      type: "add-data";
-      payload: any | any[];
-    }
+    type: "add-data";
+    payload: any | any[];
+  }
   | {
-      type: "remove-data";
-      payload: string | number | ((data: any) => boolean);
-    }
+    type: "remove-data";
+    payload: string | number | ((data: any) => boolean);
+  }
   | {
-      type: "update-data";
-      payload: any | any[];
-    }
+    type: "update-data";
+    payload: any | any[];
+  }
   | {
-      type: "uptda-data-in-path";
-      payload: {
-        id: string | number;
-        path: string[];
-        value: any;
-        updaterFunc?: (props: any, value: any) => any;
-      };
-    }
+    type: "uptda-data-in-path";
+    payload: {
+      id: string | number;
+      path: string[];
+      value: any;
+      updaterFunc?: (props: any, value: any) => any;
+    };
+  }
   | {
-      type: "merge-value";
-      payload: Partial<DataTableContextModel>;
-    }
+    type: "merge-value";
+    payload: Partial<DataTableContextModel>;
+  }
   | {
-    type :"set-order",
-    payload : {
-      param : string ,
-      dir : "asc" | "desc"
+    type: "set-order",
+    payload: {
+      param: string,
+      dir: "asc" | "desc"
     }
+  }
+  | {
+    type: "reset-order",
+    payload?: undefined
+  }
+  | {
+    type: "set-page",
+    payload: number
+  }
+  |
+  {
+    type: "set-page-size",
+    payload: number
   }
 
 export interface DataTableContextProviderValue {

@@ -1,6 +1,8 @@
 import { DataTableContextModel, DataTableContextReducerAction } from "../types";
 import { Map } from "immutable";
 
+const DEFAULT_ORDER_DIR = "desc";
+
 export const getSyncKey = () => new Date().getTime();
 
 const findOrderedIndex = (
@@ -16,8 +18,8 @@ const findOrderedIndex = (
     return typeof a[id_prop] === "number"
       ? a - b
       : orderDir === "asc"
-      ? ("" + a[id_prop]).localeCompare(b[id_prop])
-      : ("" + b.attr).localeCompare(a.attr);
+        ? ("" + a[id_prop]).localeCompare(b[id_prop])
+        : ("" + b.attr).localeCompare(a.attr);
   }) as any;
   for (let i = 0; i < sortedList.length; i++) {
     let match =
@@ -146,36 +148,57 @@ const updateDataInPath = (
 ) =>
   state.data
     ? state.data.map((item) =>
-        item[state.primaryKey] === id
-          ? updateInPath(
-              item,
-              path,
-              value,
-              updaterFunc ??
-                ((props, v) => {
-                  props = {};
-                  Object.assign(props, v);
-                })
-            )
-          : item
-      )
+      item[state.primaryKey] === id
+        ? updateInPath(
+          item,
+          path,
+          value,
+          updaterFunc ??
+          ((props, v) => {
+            props = {};
+            Object.assign(props, v);
+          })
+        )
+        : item
+    )
     : [];
 
 const setOrder = (state: DataTableContextModel, payload: {
-  param : string,
-  dir : "asc" | "desc"
+  param: string,
+  dir: "asc" | "desc"
 }) => ({
   ...state,
-  orderParam : payload.param,
-  orderDir  : payload.dir
+  hasOrder: (payload.param != state.orderParam || payload.dir != state.orderDir),
+  orderParam: payload.param,
+  orderDir: payload.dir
+});
+
+const resetOrder = (state: DataTableContextModel) => ({
+  ...state,
+  hasOrder: false,
+  orderParam: state.primaryKey,
+  orderDir: DEFAULT_ORDER_DIR
+});
+
+const setPage = (state: DataTableContextModel, payload: number) => ({
+  ...state,
+  currentPage: payload,
+});
+
+const setPageSize = (state: DataTableContextModel, payload: number) => ({
+  ...state,
+  pageSize: payload,
 });
 
 const actionsMap: Record<any, any> = {
   "set-order": setOrder,
+  "reset-order": resetOrder,
   "remove-data": removeData,
   "update-data": updateData,
   "add-data": addData,
   "set-data": setData,
+  "set-page": setPage,
+  "set-page-size": setPageSize,
   "merge-value": mergeValue,
   "update-data-in-path": updateDataInPath,
 };

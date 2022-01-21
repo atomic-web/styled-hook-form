@@ -13,7 +13,8 @@ const defaults: DataTableContextModel = {
   totalRecords: 0,
   syncKey: 0,
   orderDir : "desc",
-  orderParam :"id"
+  orderParam :"id",
+  hasOrder:false
 };
 
 const DataTableContext = createContext<DataTableContextProviderValue>({

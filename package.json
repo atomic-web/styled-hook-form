@@ -1,6 +1,6 @@
 {
   "name": "styled-hook-form",
-  "version": "1.0.0-rc.31",
+  "version": "1.0.0-rc.36",
   "description": "React form library for styled-components based on grommet and react-hook-form",
   "main": "lib/index.js",
   "sideEffects": false,
@@ -54,7 +54,7 @@
     "@testing-library/dom": "^7.30.4",
     "@testing-library/react": "^11.2.6",
     "@testing-library/react-hooks": "^5.1.2",
-    "@types/jest": "^26.0.23",
+    "@types/jest": "^27.4.0",
     "@types/node": "15.0.1",
     "@types/react": "17.0.4",
     "@types/styled-components": "5.1.9",
