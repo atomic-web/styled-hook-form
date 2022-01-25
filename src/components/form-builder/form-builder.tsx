@@ -1,4 +1,4 @@
-import React, { forwardRef, useEffect, useMemo, useState } from "react";
+import React, { forwardRef, useEffect, useMemo, useRef, useState } from "react";
 import { FormMethodsRef, WatchField } from "../form/types";
 import Form from "../form";
 import styled from "styled-components";
@@ -9,6 +9,8 @@ import { SubFormEditorProps } from "./editors";
 import { InternalContextProvider } from "./internal-context";
 import { renderChildren } from "./layouts/shared";
 import { PropType } from "types/utils";
+import { equals } from "remeda";
+import { filterProps } from "../utils/comp";
 
 const StyledFormBuilder = styled.div``;
 
@@ -65,10 +67,28 @@ const FormBuilder = forwardRef<FormMethodsRef | null, FormBuilderProps>(
       ...model,
     });
 
-    let [defaultValues, setDefautValues] = useState(getAggValues());
+    let [defaultValues, setDefautValues] = useState(null);
+
+    const defaultValueRef = useRef(null);
 
     useEffect(() => {
-      setDefautValues(getAggValues());
+      const _aggValues = getAggValues();
+      if (
+        !defaultValueRef.current ||
+        !equals(
+          filterProps(
+            defaultValueRef.current!,
+            (key: string) => defaultValueRef.current![key] !== undefined
+          ),
+          filterProps(
+            _aggValues,
+            (key: string) => _aggValues[key] !== undefined
+          )
+        )
+      ) {
+        setDefautValues(_aggValues);
+        defaultValueRef.current = _aggValues;
+      }
     }, [model, originalFields]);
 
     const handleSubmit = async (values: any) => {
