@@ -105,7 +105,7 @@ const Form: React.FC<FormProps> = (props) => {
     });
 
     return () => watchSubscriptions.unsubscribe();
-  }, []);
+  }, [props.options.defaultValues,changeHandlers]);
   
   const handleFormSubmit = (e: FormEvent) => {
     e.stopPropagation();
