@@ -87,7 +87,7 @@ const Form: React.FC<FormProps> = (props) => {
 
           const _value = getLiveValue(
             changingName,
-            props.options.defaultValues[changingName]
+            props.options.defaultValues ? props.options.defaultValues[changingName] : undefined
           );
 
           if (methodsRef) {
