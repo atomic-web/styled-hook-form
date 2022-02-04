@@ -1,7 +1,7 @@
 import React, { ChangeEvent, useEffect, useRef, useState } from "react";
 import { TextInput } from "grommet";
 import { NumericBoxProps } from "./types";
-import { useSHFContext } from "../../../context";
+import { useFormBuilderContext } from "../../../context";
 import { getLocaleFractionSeparator } from "../../utils/locale";
 
 export function parseNumericValue(value: string, fractionSep: string): Number {
@@ -19,7 +19,7 @@ const NumericBox: React.FC<NumericBoxProps> = (props) => {
   const { onChange, value } = props;
   const ref = useRef<HTMLInputElement>(null);
   const [localValue, updateLocalValue] = useState(value);
-  const { locale } = useSHFContext();
+  const { locale } = useFormBuilderContext();
 
   useEffect(() => {
     if (value !== null && value !== undefined) {

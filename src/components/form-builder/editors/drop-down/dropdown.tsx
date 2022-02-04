@@ -11,7 +11,7 @@ import { Box, BoxProps, Button, CheckBox, Select, Text } from "grommet";
 import { FormField } from "../../types";
 import { Spinner } from "grommet";
 import { usePagedData } from "../../../utils/paged-data-source";
-import { useSHFContext } from "../../../../context";
+import { useFormBuilderContext } from "../../../../context";
 import styled from "styled-components";
 // @ts-ignore
 import { inputStyle } from "grommet/utils/styles";
@@ -61,7 +61,7 @@ const DefaultOptionLabel = ({ content }: { content: string }) => (
 const DropDown = React.memo(
   forwardRef<HTMLButtonElement, FormField<DropDownProps>>((props, ref) => {
     let vrules = props.validationRules || {};
-    const { translate: T } = useSHFContext();
+    const { translate: T } = useFormBuilderContext();
 
     let {
       name,

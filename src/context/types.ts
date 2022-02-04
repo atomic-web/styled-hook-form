@@ -3,9 +3,9 @@
 import { Dispatch } from "react";
 import { DeepMap } from "react-hook-form";
 import { ThemType } from "../themes/base-theme";
-import { SHFContextReducerAction } from "./actions/types";
+import { FormBuilderContextReducerAction } from "./actions/types";
 
-export type SHFContextModel = SHFOptions & DeepMap<any, any> & {
+export type FormBuilderContextModel = FormBuilderOptions & DeepMap<any, any> & {
   ssr:boolean
 };
 
@@ -14,27 +14,27 @@ export type TranslatorFunc = (
   values?: object & Record<any, any>
 ) => string;
 
-export interface SHFContextReducer {
-  (state: SHFContextModel, action: SHFContextReducerAction): SHFContextModel;
+export interface FormBuilderContextReducer {
+  (state: FormBuilderContextModel, action: FormBuilderContextReducerAction): FormBuilderContextModel;
 }
 
-export interface SHFContextProviderValue {
-  config: SHFContextModel;
+export interface FormBuilderContextProviderValue {
+  config: FormBuilderContextModel;
   translate: TranslatorFunc;
   theme?: ThemType,
   locale : string,
-  dispatch: Dispatch<SHFContextReducerAction>;
+  dispatch: Dispatch<FormBuilderContextReducerAction>;
 }
 
-export interface SHFOptions {
+export interface FormBuilderOptions {
   translator?: TranslatorFunc; 
   theme?: ThemType,
   renderGrommet : boolean,
   locale? : string
 }
 
-export interface SHFContextProviderProps {
+export interface FormBuilderContextProviderProps {
   children: React.ReactChild;
-  options?: SHFOptions;
+  options?: FormBuilderOptions;
 }
  

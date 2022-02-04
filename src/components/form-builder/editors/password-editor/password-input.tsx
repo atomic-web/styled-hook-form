@@ -5,7 +5,7 @@ import { Box, Button, TextInput as GrommetTextInput } from "grommet";
 import { FormField } from "../../types";
 import styled from "styled-components";
 import PasswordStrength from "./password-strength";
-import { useSHFContext } from "../../../../context";
+import { useFormBuilderContext } from "../../../../context";
 import { View, Hide } from "grommet-icons";
 //@ts-ignore
 import { inputStyle ,disabledStyle} from "grommet/utils/styles";
@@ -33,7 +33,7 @@ export const PasswordEditor = forwardRef<
   FormField<PasswordEditorProps>
 >((props, ref) => {
   let vrules = props.validationRules || {};
-  const { translate: T } = useSHFContext();
+  const { translate: T } = useFormBuilderContext();
 
   const [passStrength, setPassStrength] = useState<number>(0);
 

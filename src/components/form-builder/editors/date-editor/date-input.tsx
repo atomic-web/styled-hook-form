@@ -8,7 +8,7 @@ import { Box, Button, DateInput as DatePicker, ThemeContext } from "grommet";
 import { SubtractCircle } from "grommet-icons";
 import { FormField } from "../../types";
 import { DateEditorProps } from "./types";
-import { useSHFContext } from "../../../../context";
+import { useFormBuilderContext } from "../../../../context";
 import { useContext } from "react";
 import { ThemeType } from "../../../../themes/base-theme";
 
@@ -26,7 +26,7 @@ const DateEditor: React.FC<FormField<DateEditorProps>> = (props) => {
     methods,
   } = props;
 
-  const { translate: T, locale } = useSHFContext();
+  const { translate: T, locale } = useFormBuilderContext();
   const theme = useContext(ThemeContext) as ThemeType;
 
   let control = methods?.control;

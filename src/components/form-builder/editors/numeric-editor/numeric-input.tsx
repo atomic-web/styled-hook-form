@@ -3,7 +3,7 @@ import { Controller } from "react-hook-form";
 import { NumericEditorProps } from "./types";
 import { FormField } from "../../types";
 import { NumericBox } from "../../../../components/extension";
-import { useSHFContext } from "../../../../context";
+import { useFormBuilderContext } from "../../../../context";
 import { formatNumbericValue, parseNumericValue } from "../../../extension/numeric-box/numeric-box";
 import { getLocaleFractionSeparator } from "../../../utils/locale";
 
@@ -15,7 +15,7 @@ const NumericEditor = forwardRef<
   FormField<NumericEditorProps>
 >((props, ref) => {
   let vrules = props.validationRules || {};
-  const { translate: T , locale} = useSHFContext();
+  const { translate: T , locale} = useFormBuilderContext();
 
   let {
     name,

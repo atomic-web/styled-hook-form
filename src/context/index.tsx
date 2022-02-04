@@ -3,18 +3,18 @@ import { DefaultTheme } from "styled-components";
 import { FormBuilderTheme } from "../themes/base-theme";
 import { Grommet } from "grommet";
 import {
-  SHFContextModel,
-  SHFContextProviderProps,
-  SHFContextProviderValue,
+  FormBuilderContextModel,
+  FormBuilderContextProviderProps,
+  FormBuilderContextProviderValue,
 } from "./types";
 import { translate as FallbackTranslate } from "./actions";
-import { SHFContextReducerAction } from "./actions/types";
+import { FormBuilderContextReducerAction } from "./actions/types";
 
 export interface WPTheme extends DefaultTheme {}
 
 export type DirectionType = "rtl" | "ltr" | undefined;
 
-const defaults: SHFContextProviderValue = {
+const defaults: FormBuilderContextProviderValue = {
   config: {
     ssr: true,
   },
@@ -23,30 +23,30 @@ const defaults: SHFContextProviderValue = {
   dispatch: () => {},
 };
 
-export const SHFContext = createContext<SHFContextProviderValue>(defaults);
+export const FormBuilderContext = createContext<FormBuilderContextProviderValue>(defaults);
 
-const SHFContextProvider: React.FC<SHFContextProviderProps> = (props) => {
+const FormBuilderContextProvider: React.FC<FormBuilderContextProviderProps> = (props) => {
   const { children, options } = props;
 
-  const _model: SHFContextModel = {
+  const _model: FormBuilderContextModel = {
     ...defaults.config,
   };
 
-  const reducer: Reducer<SHFContextModel, SHFContextReducerAction> = (
-    state: SHFContextModel
+  const reducer: Reducer<FormBuilderContextModel, FormBuilderContextReducerAction> = (
+    state: FormBuilderContextModel
   ) => {
     return state;
   };
 
   const [config, dispatch] = useReducer<
-    Reducer<SHFContextModel, SHFContextReducerAction>
+    Reducer<FormBuilderContextModel, FormBuilderContextReducerAction>
   >(reducer, _model);
 
   const theme = options?.theme ?? FormBuilderTheme;
 
   const renderGrommet = !options?.renderGrommet ? true : options!.renderGrommet;
   return (
-    <SHFContext.Provider
+    <FormBuilderContext.Provider
       value={{
         config,
         translate: options?.translator ?? FallbackTranslate,
@@ -59,10 +59,10 @@ const SHFContextProvider: React.FC<SHFContextProviderProps> = (props) => {
       ) : (
         children
       )}
-    </SHFContext.Provider>
+    </FormBuilderContext.Provider>
   );
 };
 
-const useSHFContext = () => useContext<SHFContextProviderValue>(SHFContext);
+const useFormBuilderContext = () => useContext<FormBuilderContextProviderValue>(FormBuilderContext);
 
-export { SHFContextProvider, useSHFContext };
+export { FormBuilderContextProvider, useFormBuilderContext };

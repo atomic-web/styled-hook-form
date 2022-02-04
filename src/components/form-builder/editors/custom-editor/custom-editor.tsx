@@ -1,12 +1,12 @@
 import React, { useEffect, useState } from "react";
 import { FormField } from "../../../form-builder/types";
-import { useSHFContext } from "../../../../context";
+import { useFormBuilderContext } from "../../../../context";
 import { Controller } from "react-hook-form";
 import { CustomEditorProps } from "./types";
 
 const CustomEditor: React.FC<FormField<CustomEditorProps>> = (props) => {
   let vrules = props.validationRules || {};
-  const { translate: T } = useSHFContext();
+  const { translate: T } = useFormBuilderContext();
 
   let {
     name,
