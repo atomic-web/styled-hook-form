@@ -30,7 +30,7 @@ export function useFormMethods(): UseFormMethodsReturn {
           ref.current.changeHandlers.removeListener(name, handleValueChange);
         }
       };
-    }, [ref.current]);
+    }, [ref,handleValueChange]);
 
     return value;
   };

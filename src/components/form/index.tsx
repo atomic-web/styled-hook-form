@@ -7,7 +7,6 @@ import { isEmptyObject } from "../../components/utils/comp";
 import { ChangeEventStore } from "./change-event-store";
 
 const Form: React.FC<FormProps> = (props) => {
-  
   const {
     methodsRef,
     onSubmit,
@@ -23,7 +22,7 @@ const Form: React.FC<FormProps> = (props) => {
   const methods = useForm({
     mode: "onTouched",
     ...options,
-  });  
+  });
 
   let refObj: FormMethodsRef = {
     methods,
@@ -38,20 +37,15 @@ const Form: React.FC<FormProps> = (props) => {
     }
   }
 
-  const {
-    handleSubmit,
-    reset,
-    control,
-  } = methods;
+  const { handleSubmit, reset, control } = methods;
 
   const valuesRef = useRef<any | null>(null);
   let defaultValues = props.options.defaultValues;
 
   useEffect(() => {
-
     if (
       !methods.formState.isDirty &&
-      ((isEmptyObject(valuesRef.current) && ! isEmptyObject(defaultValues)) ||
+      ((isEmptyObject(valuesRef.current) && !isEmptyObject(defaultValues)) ||
         (Object.keys(valuesRef.current ?? {}).length ===
           Object.keys(defaultValues ?? {}).length &&
           !equals(valuesRef.current, defaultValues)))
@@ -72,30 +66,44 @@ const Form: React.FC<FormProps> = (props) => {
 
   useEffect(() => {
     let watchSubscriptions = control._subjects.watch.subscribe({
-      next: ({ name: changingName }: any) => {
+      next: ({ name: ChangingName }: any) => {
         const getLiveValue = (name?: string | string[], defaultValues?: any) =>
           control._getWatch(name, defaultValues, false);
-        if (changingName) {
-          if (
-            autoSubmit &&
-            (!autoSubmitFields ||
-              !autoSubmitFields?.length ||
-              autoSubmitFields.some((f) => f.name === changingName))
-          ) {
+
+        if (autoSubmit) {
+          let shouldSubmit = ChangingName
+            ? !autoSubmitFields?.length ||
+              (autoSubmitFields &&
+                autoSubmitFields.some((f) => f.name === ChangingName))
+            : true;
+          if (shouldSubmit) {
             debuncedSubmit(getLiveValue());
           }
+        }
 
+        const fieldsToNotify = new Set(
+          ChangingName
+            ? [ChangingName]
+            : [
+                ...(changeHandlers?.map(h=>h.name) ?? []),
+                ...(refObj.changeHandlers.getObservers().map((o) => o.name) ??
+                  []),
+              ]
+        ).values();
+
+        for (const fieldName of fieldsToNotify) {
           const _value = getLiveValue(
-            changingName,
-            props.options.defaultValues ? props.options.defaultValues[changingName] : undefined
+            fieldName,
+            props.options.defaultValues
+              ? props.options.defaultValues[fieldName]
+              : undefined
           );
 
           if (methodsRef) {
-            refObj.changeHandlers?.emitChange(changingName, _value);
+            refObj.changeHandlers?.emitChange(fieldName, _value);
           }
 
-          let listener =
-            changeHandlers?.find((f) => f.name === changingName) ?? null;
+          let listener = changeHandlers?.find((f) => f.name === fieldName);
 
           if (listener) {
             listener.handler(_value);
@@ -105,8 +113,8 @@ const Form: React.FC<FormProps> = (props) => {
     });
 
     return () => watchSubscriptions.unsubscribe();
-  }, [props.options.defaultValues,changeHandlers]);
-  
+  }, [props.options.defaultValues, changeHandlers]);
+
   const handleFormSubmit = (e: FormEvent) => {
     e.stopPropagation();
     handleSubmit(onFormSubmit)(e);

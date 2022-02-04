@@ -5,6 +5,7 @@ export type ChangeHandlerFunc = {
 
 export class ChangeEventStore {
   private observers: ChangeHandlerFunc[] = [];
+  
 
   public addListener = (name: string, func: (value: any) => void) => {
     if (!name) {
@@ -43,4 +44,8 @@ export class ChangeEventStore {
       .filter((f) => f.name === name || f.name === "")
       .forEach((f) => f.func(value));
   };
+
+  public getObservers (){
+    return this.observers;
+  }
 }
