@@ -143,7 +143,9 @@ const HttpForm = React.forwardRef<FormMethodsRef, HttpFormProps>(
           data = onLoadResponse(data, headers);
         }
         if (methodsRef?.current) {
-          methodsRef.current.reset(data);
+          methodsRef.current.reset(data,{
+            keepValues : true
+          });
         }
 
         return data;
@@ -278,7 +280,7 @@ const HttpForm = React.forwardRef<FormMethodsRef, HttpFormProps>(
             label={
               <Box>
                 {typeof submitButton === "boolean"
-                  ? T("form.submit.label")
+                  ? T("form-submit-label")
                   : submitButton}
               </Box>
             }
