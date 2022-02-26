@@ -143,9 +143,7 @@ const HttpForm = React.forwardRef<FormMethodsRef, HttpFormProps>(
           data = onLoadResponse(data, headers);
         }
         if (methodsRef?.current) {
-          methodsRef.current.reset(data,{
-            keepValues : true
-          });
+          methodsRef.current.reset(data);
         }
 
         return data;
