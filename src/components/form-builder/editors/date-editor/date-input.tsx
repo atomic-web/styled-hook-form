@@ -82,6 +82,7 @@ const DateEditor: React.FC<FormField<DateEditorProps>> = (props) => {
                 <DatePicker
                   {...dateInputProps}
                   calendarProps={{
+                    ...dateInputProps?.calendarProps,
                     locale,
                   }}
                   defaultValue={field.value}
