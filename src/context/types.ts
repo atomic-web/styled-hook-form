@@ -19,7 +19,7 @@ export interface FormBuilderContextReducer {
 }
 
 export interface FormBuilderContextProviderValue {
-  config: FormBuilderContextModel;
+  config?: FormBuilderContextModel;
   translate: TranslatorFunc;
   theme?: ThemType,
   locale : string,
