@@ -7,8 +7,10 @@ import { Box } from "grommet";
 const SubFormEditor: React.FC<FormField<SubFormEditorProps>> = (props) => {
   let { formProps, content, plain, shouldUnregister } = props;
 
-  if (formProps.fields) {
-    formProps.fields.forEach((prop) => {
+  const fields = formProps?.fields ?? [];
+
+  if (fields) {
+    fields.forEach((prop) => {
       if (prop.shouldUnregister === undefined) {
         prop.shouldUnregister = shouldUnregister;
       }

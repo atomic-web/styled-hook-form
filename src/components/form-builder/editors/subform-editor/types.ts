@@ -4,7 +4,7 @@ import {
 import React from "react";
 
 export interface SubFormEditorProps extends FormEditorPropsBase {
-  formProps: FormBuilderProps;
+  formProps?: FormBuilderProps;
   content?: React.ReactNode;
   plain?: boolean;
 }

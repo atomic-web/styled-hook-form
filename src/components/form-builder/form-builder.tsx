@@ -53,7 +53,7 @@ const FormBuilder = forwardRef<FormMethodsRef | null, FormBuilderProps>(
           (p: FormField[], c: FormField) => [
             ...p,
             ...(c.type === FormFieldType.SubForm
-              ? (c as SubFormEditorProps).formProps.fields ?? []
+              ? (c as SubFormEditorProps).formProps?.fields ?? []
               : [c]),
           ],
           []
