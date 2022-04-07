@@ -1,6 +1,6 @@
 import { Story, Meta } from "@storybook/react/types-6-0";
 import { FormBuilder } from "../form-builder";
-import { FormBuilderContextProvider } from "../../../index";
+import { FormBuilderContextProvider } from "../../../context";
 import { FormBuilderProps, FormField, FormFieldType } from "../types";
 import styled from "styled-components";
 import { Box, Button, Layer } from "grommet";
@@ -65,9 +65,9 @@ const fields: FormField[] = [
     tip: "Choose as passsword",
     showPasswordStrength: true,
     minPasswordStrength: 50,
-    visibilityToggle:true,
+    visibilityToggle: true,
     required: true,
-    gridArea: "left" 
+    gridArea: "left",
   },
   {
     name: "boolCheckbox",

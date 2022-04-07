@@ -1,4 +1,11 @@
-import React, { forwardRef, useEffect, useMemo, useRef, useState } from "react";
+import React, {
+  forwardRef,
+  useContext,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
 import { FormMethodsRef, WatchField } from "../form/types";
 import Form from "../form";
 import styled from "styled-components";
@@ -11,6 +18,7 @@ import { renderChildren } from "./layouts/shared";
 import { PropType } from "types/utils";
 import { equals } from "remeda";
 import { filterProps } from "../utils/comp";
+import { InternalFormContext } from "../form/internal-form-context";
 
 const StyledFormBuilder = styled.div``;
 
@@ -37,6 +45,8 @@ const FormBuilder = forwardRef<FormMethodsRef | null, FormBuilderProps>(
     } = props;
 
     const fieldsProp: FormField[] = originalFields ?? [];
+
+    const internalFormContext = useContext(InternalFormContext);
 
     let fields = useMemo(
       () =>
@@ -67,6 +77,7 @@ const FormBuilder = forwardRef<FormMethodsRef | null, FormBuilderProps>(
       ...model,
     });
 
+    const isPartialForm = partialForm === true;
     let [defaultValues, setDefautValues] = useState(null);
 
     const defaultValueRef = useRef(null);
@@ -91,17 +102,19 @@ const FormBuilder = forwardRef<FormMethodsRef | null, FormBuilderProps>(
       }
     }, [model, originalFields]);
 
-    const handleSubmit = async (values: any) => {
-      let shoudlSubmit: boolean | Promise<boolean> = beforeSubmit
-        ? beforeSubmit(values)
-        : true;
-      if ((shoudlSubmit as any) instanceof Promise) {
-        shoudlSubmit = await shoudlSubmit;
-      }
-      if (shoudlSubmit) {
-        onSubmit?.call(null, values);
-      }
-    };
+    const handleSubmit = isPartialForm
+      ? () => 0
+      : async (values: any) => {
+          let shoudlSubmit: boolean | Promise<boolean> = beforeSubmit
+            ? beforeSubmit(values)
+            : true;
+          if ((shoudlSubmit as any) instanceof Promise) {
+            shoudlSubmit = await shoudlSubmit;
+          }
+          if (shoudlSubmit) {
+            onSubmit?.call(null, values);
+          }
+        };
 
     let submitTriggers = fields
       .filter((f) => f.submitTrigger)
@@ -120,14 +133,15 @@ const FormBuilder = forwardRef<FormMethodsRef | null, FormBuilderProps>(
           } as WatchField)
       );
 
-    const items = fields.map((item, index) => ({
-      ...item,
-      order: item.order ?? index,
-    }));
+    const items = useMemo(() => {
+      const _items = fields.map((item, index) => ({
+        ...item,
+        order: item.order ?? index,
+      }));
 
-    items.sort((a, b) => a.order! - b.order!);
-
-    const isPartialForm = partialForm === true;
+      _items.sort((a, b) => a.order! - b.order!);
+      return _items;
+    }, [fields]);
 
     const nullLayout = (
       methods: UseFormReturn,
@@ -185,6 +199,18 @@ const FormBuilder = forwardRef<FormMethodsRef | null, FormBuilderProps>(
               ? renderLayout(methods)
               : nullLayout(useFormContext(), children)
         );
+
+    useEffect(() => {
+      // this would be true if this is a partial form
+      if (internalFormContext) {
+        if (isPartialForm && submitTriggers) {
+           internalFormContext.registerAutoSubmitField(submitTriggers);
+        }
+        if (changeHandlers) {
+          internalFormContext.registerChangeHandler(changeHandlers);
+        }
+      }
+    }, [internalFormContext, submitTriggers, changeHandlers]);
 
     return (
       <StyledFormBuilder className={className}>

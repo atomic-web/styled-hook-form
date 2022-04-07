@@ -1,20 +1,22 @@
-import React, { FormEvent, useEffect, useRef } from "react";
+import React, { useState, FormEvent, useEffect, useRef } from "react";
 import { FormProvider, useForm } from "react-hook-form";
 import { useDebouncedCallback } from "use-debounce";
 import equals from "fast-deep-equal/es6";
-import { FormMethodsRef, FormProps } from "./types";
+import { FormMethodsRef, FormProps, WatchField } from "./types";
 import { isEmptyObject } from "../../components/utils/comp";
 import { ChangeEventStore } from "./change-event-store";
+import { InternalFormContextProvider } from "./internal-form-context";
+import { makeArray } from "../../components/utils/types";
 
 const Form: React.FC<FormProps> = (props) => {
   const {
     methodsRef,
     onSubmit,
     children,
-    changeHandlers,
+    changeHandlers: changeHandlersProp,
     submitTreshould,
-    autoSubmit,
-    autoSubmitFields,
+    autoSubmit: autoSubmitProp,
+    autoSubmitFields: autoSubmitFieldsProp,
     options,
     ...rest
   } = props;
@@ -23,6 +25,31 @@ const Form: React.FC<FormProps> = (props) => {
     mode: "onTouched",
     ...options,
   });
+
+  const [changeHandlers, updateChangeHandlers] = useState(
+    changeHandlersProp ?? []
+  );
+  const [autoSubmitFields, updateAutoSubmitFields] = useState(
+    autoSubmitFieldsProp ?? []
+  );
+
+  const [autoSubmit, updateAutoSubmit] = useState(autoSubmitProp);
+
+  useEffect(() => {
+    if (changeHandlersProp) {
+      updateChangeHandlers(changeHandlersProp);
+    }
+  }, [changeHandlersProp]);
+
+  useEffect(() => {
+    if (autoSubmitFieldsProp) {
+      updateAutoSubmitFields(autoSubmitFieldsProp);
+    }
+  }, [autoSubmitFieldsProp]);
+
+  useEffect(() => {
+    updateAutoSubmit(autoSubmitProp);
+  }, [autoSubmitProp]);
 
   let refObj: FormMethodsRef = {
     methods,
@@ -85,7 +112,7 @@ const Form: React.FC<FormProps> = (props) => {
           ChangingName
             ? [ChangingName]
             : [
-                ...(changeHandlers?.map(h=>h.name) ?? []),
+                ...(changeHandlers?.map((h) => h.name) ?? []),
                 ...(refObj.changeHandlers.getObservers().map((o) => o.name) ??
                   []),
               ]
@@ -113,17 +140,48 @@ const Form: React.FC<FormProps> = (props) => {
     });
 
     return () => watchSubscriptions.unsubscribe();
-  }, [props.options.defaultValues, changeHandlers]);
+  }, [
+    autoSubmit,
+    props.options.defaultValues,
+    changeHandlers,
+    autoSubmitFields,
+    changeHandlers,
+    debuncedSubmit
+  ]);
 
   const handleFormSubmit = (e: FormEvent) => {
     e.stopPropagation();
     handleSubmit(onFormSubmit)(e);
   };
 
+  const registerAutoSubmitField = (field: WatchField | WatchField[]) => {
+    const fieldValues = makeArray(field).filter(
+      (f) => autoSubmitFields.findIndex((inf) => inf.name === f.name) === -1
+    );
+    if (fieldValues.length) {
+      updateAutoSubmitFields((fields) => [...fields, ...fieldValues]);
+      updateAutoSubmit(true);
+    }
+  };
+
+  const registerChangeHandler = (handler: WatchField | WatchField[]) => {
+    const handlerValues = makeArray(handler).filter(
+      (h) => changeHandlers.findIndex((inh) => inh.name === h.name) === -1
+    );
+    if (handlerValues.length) {
+      updateChangeHandlers((handlers) => [...handlers, ...handlerValues]);
+    }
+  };
+
   return (
     <form onSubmit={handleFormSubmit} {...rest}>
       <FormProvider {...methods}>
-        {children && children({ ...methods })}
+        <InternalFormContextProvider
+          registerAutoSubmitField={registerAutoSubmitField}
+          registerChangeHandler={registerChangeHandler}
+        >
+          {children && children({ ...methods })}
+        </InternalFormContextProvider>
       </FormProvider>
     </form>
   );
