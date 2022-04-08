@@ -1,3 +1,4 @@
+/* eslint-disable */
 import useAxios, { makeUseAxios } from "axios-hooks";
 import MockAdapter from "axios-mock-adapter";
 import { useCallback, useEffect, useMemo, useState, useRef } from "react";
@@ -55,7 +56,7 @@ const usePagedData = <
   let [total, setTotal] = useState<number>(0);
   let [hasMore, setHasMore] = useState<boolean>(false);
   let [isFirstLoad, setIsFirstLoad] = useState(true);
-  const reqRef = useRef<string | AxiosRequestConfig | null>(null);
+  const reqRef = useRef<string | AxiosRequestConfig>();
 
   let [currentFetch, setCurrentFetch] = useState<DataFetchInfo<
     TServerData,
@@ -78,7 +79,6 @@ const usePagedData = <
     }
     return _params;
   }, [
-    pageParamName,
     pageSizeParamName,
     pageSize,
     searchParamName,
@@ -171,9 +171,9 @@ const usePagedData = <
 
   const [data, setData] = useState<TData | null>(null);
 
-  const reset = () => {
+  const reset = useCallback(() => {
     loadPage(1);
-  };
+  },[]);
 
   const refresh = () => {
     if (isFirstLoad) {
@@ -261,12 +261,12 @@ const usePagedData = <
     if (
       (!reqRef.current && request) ||
       (reqRef.current &&
-        JSON.stringify(reqRef.current) != JSON.stringify(request))
+        JSON.stringify(reqRef.current) !== JSON.stringify(request))
     ) {
       reqRef.current = request;
       reset();
     }
-  }, [request]);
+  }, [request, reset]);
 
   return {
     data,

@@ -12,7 +12,9 @@ export const InternalFormContext = createContext<InternalFormContextValue | null
 
 export const InternalFormContextProvider: React.FC<
   PropsWithChildren<InternalFormContextValue>
-> = (props => {
-  const {children} = props;
-  return <InternalFormContext.Provider value={props} children={children} />
-})
+> = (props) => {
+  const { children } = props;
+  return (
+    <InternalFormContext.Provider value={props}>{children}</InternalFormContext.Provider>
+  );
+};

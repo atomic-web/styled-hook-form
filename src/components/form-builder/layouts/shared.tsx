@@ -1,9 +1,5 @@
 import { UseFormReturn, ValidateResult } from "react-hook-form";
-import {
-  FormField,
-  FormFieldType,
-  ValidateWithMethods,
-} from "../types";
+import { FormField, FormFieldType, ValidateWithMethods } from "../types";
 import { EditorMap } from "../editor-map";
 import React from "react";
 import WithEditorWrap from "../editors/shared/editor-wrap";
@@ -40,7 +36,6 @@ export const renderField = (
   editorWrapComponent: React.ReactElement | undefined,
   shouldUnregister?: boolean | undefined
 ) => {
-  
   field.methods = methods;
   if (field.renderLabel === undefined) {
     field.renderLabel = true;
@@ -73,7 +68,10 @@ export const renderField = (
               methods
             ),
         ])
-        .reduce((p: any, c: any) => ((p[c[0]] = c[1]), p), {});
+        .reduce((p: any, c: any) => {
+          p[c[0]] = c[1];
+          return p;
+        }, {});
     }
   }
 
@@ -109,16 +107,17 @@ export const renderField = (
   const EditorView = isHidden(field)
     ? editorBody
     : React.cloneElement(
-    field.wrapComponent ?? editorWrapComponent ?? <React.Fragment />,
-    {},
-    <WithEditorWrap
-      key={field.name}
-      {...(field as any)}
-      editorType={field.type}
-    >
+        // eslint-disable-next-line react/jsx-no-useless-fragment
+        field.wrapComponent ?? editorWrapComponent ?? <React.Fragment />,
+        {},
+        <WithEditorWrap
+          key={field.name}
+          {...(field as any)}
+          editorType={field.type}
+        >
           {editorBody}
-    </WithEditorWrap>
-  );
+        </WithEditorWrap>
+      );
 
   return EditorView;
 };

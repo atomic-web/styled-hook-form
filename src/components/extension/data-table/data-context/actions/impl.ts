@@ -168,7 +168,7 @@ const setOrder = (state: DataTableContextModel, payload: {
   dir: "asc" | "desc"
 }) => ({
   ...state,
-  hasOrder: (payload.param != state.orderParam || payload.dir != state.orderDir),
+  hasOrder: (payload.param !== state.orderParam || payload.dir !== state.orderDir),
   orderParam: payload.param,
   orderDir: payload.dir
 });

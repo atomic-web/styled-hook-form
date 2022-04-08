@@ -47,13 +47,11 @@ const WidthEditorWrap: React.FC<EditorWrapProps> = (props) => {
       <FormField
         error={
           get(errors, name) ? (
-            <>
-              <ErrorMessage
+            <ErrorMessage
                 errors={errors}
                 name={name}
                 as={<ValidationMessage />}
               ></ErrorMessage>
-            </>
           ) : undefined
         }
         contentProps={{

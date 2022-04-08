@@ -1,15 +1,10 @@
 import { FormBuilderProps } from "./types";
-import {
-  createContext,
-  PropsWithChildren,
-  useContext,
-} from "react";
+import { createContext, PropsWithChildren, useContext } from "react";
 import { PropType } from "types/utils";
 
 export interface InternalContextOptions {
-  formOptions?: PropType<FormBuilderProps,"options">;
+  formOptions?: PropType<FormBuilderProps, "options">;
   wrapComponent?: React.ReactElement;
-
 }
 
 export interface InternalContextProviderProps
@@ -20,13 +15,14 @@ const InternalContext = createContext({});
 const InternalContextProvider: React.FC<InternalContextProviderProps> = (
   props
 ) => {
-  return <InternalContext.Provider value={props} children={props.children} />;
+  return (
+    <InternalContext.Provider value={props}>
+      {props.children}
+    </InternalContext.Provider>
+  );
 };
 
-const useInternalContext = () => useContext<InternalContextOptions>(InternalContext);
+const useInternalContext = () =>
+  useContext<InternalContextOptions>(InternalContext);
 
-export{
-    InternalContext,
-    InternalContextProvider,
-    useInternalContext
-}
+export { InternalContext, InternalContextProvider, useInternalContext };

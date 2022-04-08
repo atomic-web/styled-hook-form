@@ -6,15 +6,15 @@ import {
   DataTableContextReducerAction,
   DataTableContextProviderValue,
 } from "./types";
-import {getSyncKey} from './actions/impl'
+import { getSyncKey } from "./actions/impl";
 
 const defaults: DataTableContextModel = {
   primaryKey: "",
   totalRecords: 0,
   syncKey: 0,
-  orderDir : "desc",
-  orderParam :"id",
-  hasOrder:false
+  orderDir: "desc",
+  orderParam: "id",
+  hasOrder: false,
 };
 
 const DataTableContext = createContext<DataTableContextProviderValue>({
@@ -36,19 +36,20 @@ const DataTableContextProvider: React.FC<DataTableContextProviderProps> = (
     Reducer<DataTableContextModel, DataTableContextReducerAction>,
     DataTableContextModel
   >(reducer, { ...defaults, ...options }, (s) => s);
-  
-  if (!state.syncKey){
-     state.syncKey = getSyncKey();
+
+  if (!state.syncKey) {
+    state.syncKey = getSyncKey();
   }
 
   return (
     <DataTableContext.Provider
-      children={children}
       value={{
         state,
         dispatch,
       }}
-    />
+    >
+      {children}
+    </DataTableContext.Provider>
   );
 };
 

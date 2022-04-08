@@ -20,13 +20,13 @@ const DEFAULT_PAGE_SIZE = 50;
 const DataTable: React.FC<DataTableProps> = (props) => {
   let { data, paginate, primaryKey, wrap } = props;
   let tableContext = useDataTableContext();
-  let contextOptions: any = {
+  let contextOptions: any = useMemo(() => ({
     data,
     pageSize: paginate?.pageSize ?? Number.MAX_VALUE,
     primaryKey: primaryKey,
     orderDir: "desc",
     orderParam: primaryKey,
-  };
+  }),[paginate?.pageSize, primaryKey,data]);
 
   let alreadyContextDefined = tableContext.state.syncKey !== 0;
 
@@ -46,9 +46,10 @@ const DataTable: React.FC<DataTableProps> = (props) => {
     if (alreadyContextDefined) {
       tableContext.dispatch({ type: "merge-value", payload: contextOptions });
     }
-  }, []);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [alreadyContextDefined, contextOptions]);
 
-  return <>{children}</>;
+  return children;
 };
 
 const DataTableImpl: React.FC<DataTableProps> = (props) => {
@@ -110,8 +111,7 @@ const DataTableImpl: React.FC<DataTableProps> = (props) => {
     loading,
     nextPage,
     hasMore,
-  } = request
-      ? usePagedData({
+  } =  usePagedData({
         request,
         params: internalReqParams,
         orderDir: orderDir,
@@ -153,23 +153,13 @@ const DataTableImpl: React.FC<DataTableProps> = (props) => {
           return cdata;
         },
         mockResponse,
-      })
-      : useMemo(
-        () => ({
-          error: null,
-          data: [],
-          refresh: () => 0,
-          loading: false,
-          nextPage: () => 0,
-          hasMore: false,
-        }),
-        []
-      );
+      });      
 
   useEffect(() => {
     if (error && onRequestError) {
       onRequestError(error);
     }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [error]);
 
   useEffect(() => {
@@ -177,14 +167,14 @@ const DataTableImpl: React.FC<DataTableProps> = (props) => {
       type: "merge-value",
       payload: { currentPage: paginate?.currentPage ?? 1 },
     });
-  }, [paginate?.currentPage]);
+  }, [dispatch, paginate?.currentPage]);
 
   useEffect(() => {
     dispatch({
       type: "set-order",
       payload: { param: props.primaryKey, dir: "desc" },
     });
-  }, [props.primaryKey]);
+  }, [dispatch, props.primaryKey]);
 
   const handleSort = (_sort: {
     property: string;
@@ -204,13 +194,14 @@ const DataTableImpl: React.FC<DataTableProps> = (props) => {
 
   useEffect(() => {
     refreshCurrentPage();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [syncKey]);
 
   useEffect(() => {
     if (dataProp) {
       dispatch({ type: "set-data", payload: dataProp });
     }
-  }, [dataProp]);
+  }, [dataProp, dispatch]);
 
   const sortValue = useMemo(
     () => ({

@@ -30,7 +30,7 @@ const FieldView: FC<FieldViewProps> = (props) => {
         });
       }
     }
-  }, [internalFormContext, name, onChange, defaultValue]);
+  }, [internalFormContext, name, onChange, defaultValue, submitTrigger]);
 
   let field = renderField(
     { ...props },

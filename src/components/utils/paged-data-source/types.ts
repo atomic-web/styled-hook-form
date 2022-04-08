@@ -6,7 +6,7 @@ export interface PageDataProps<
   TServerData,
   TError = any
 > {
-  request: string | AxiosRequestConfig | null;
+  request?: string | AxiosRequestConfig;
   lazy?: boolean;
   params?: object;
   searchParam?: string;

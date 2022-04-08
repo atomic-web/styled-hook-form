@@ -15,7 +15,8 @@
     "build:sb": "build-storybook",
     "test": "jest --runInBand",
     "type-check": "npx tsc --noEmit",
-    "prepare": "husky install"
+    "prepare": "husky install",
+    "lint": "eslint --ext .js,.jsx,.ts,.tsx src"
   },
   "engines": {
     "node": ">= 12"
@@ -45,6 +46,7 @@
     "@babel/preset-react": "7.13.13",
     "@babel/preset-typescript": "7.13.0",
     "@hookform/devtools": "^4.0.1",
+    "@nrwl/eslint-plugin-nx": "^13.10.0",
     "@storybook/addon-actions": "6.2.9",
     "@storybook/addon-essentials": "6.2.9",
     "@storybook/addon-links": "6.2.9",
@@ -59,11 +61,19 @@
     "@types/node": "15.0.1",
     "@types/react": "17.0.4",
     "@types/styled-components": "5.1.9",
+    "@typescript-eslint/eslint-plugin": "^5.18.0",
+    "@typescript-eslint/parser": "^5.18.0",
     "babel-loader": "8.2.2",
     "babel-plugin-inline-json-import": "^0.3.2",
     "babel-plugin-styled-components": "1.12.0",
     "chromatic": "^5.9.2",
     "cross-env": "^7.0.3",
+    "eslint": "^8.12.0",
+    "eslint-config-google": "^0.14.0",
+    "eslint-plugin-import": "^2.26.0",
+    "eslint-plugin-jsx-a11y": "^6.5.1",
+    "eslint-plugin-react": "^7.29.4",
+    "eslint-plugin-react-hooks": "^4.4.0",
     "faker": "^5.5.3",
     "grommet": "2.17.2",
     "husky": "^6.0.0",

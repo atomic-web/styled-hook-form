@@ -18,23 +18,28 @@ const defaults: FormBuilderContextProviderValue = {
   config: {
     ssr: true,
   },
-  locale : "en",
+  locale: "en",
   translate: FallbackTranslate,
   dispatch: () => {},
 };
 
-export const FormBuilderContext = createContext<FormBuilderContextProviderValue>(defaults);
+export const FormBuilderContext = createContext<FormBuilderContextProviderValue>(
+  defaults
+);
 
-const FormBuilderContextProvider: React.FC<FormBuilderContextProviderProps> = (props) => {
+const FormBuilderContextProvider: React.FC<FormBuilderContextProviderProps> = (
+  props
+) => {
   const { children, options } = props;
 
   const _model: FormBuilderContextModel = {
     ...defaults.config,
   };
 
-  const reducer: Reducer<FormBuilderContextModel, FormBuilderContextReducerAction> = (
-    state: FormBuilderContextModel
-  ) => {
+  const reducer: Reducer<
+    FormBuilderContextModel,
+    FormBuilderContextReducerAction
+  > = (state: FormBuilderContextModel) => {
     return state;
   };
 
@@ -51,11 +56,11 @@ const FormBuilderContextProvider: React.FC<FormBuilderContextProviderProps> = (p
         config,
         translate: options?.translator ?? FallbackTranslate,
         dispatch,
-        locale : options?.locale || "en"
+        locale: options?.locale || "en",
       }}
     >
       {renderGrommet ? (
-        <Grommet theme={theme as any} children={children} />
+        <Grommet theme={theme as any}>{children}</Grommet>
       ) : (
         children
       )}
@@ -63,6 +68,7 @@ const FormBuilderContextProvider: React.FC<FormBuilderContextProviderProps> = (p
   );
 };
 
-const useFormBuilderContext = () => useContext<FormBuilderContextProviderValue>(FormBuilderContext);
+const useFormBuilderContext = () =>
+  useContext<FormBuilderContextProviderValue>(FormBuilderContext);
 
 export { FormBuilderContextProvider, useFormBuilderContext };

@@ -33,8 +33,8 @@ const to24Hour = (
   second: number,
   ampm: "AM" | "PM"
 ) => {
-  if (ampm == "PM" && hours < 12) hours = hours + 12;
-  if (ampm == "AM" && hours == 12) hours = hours - 12;
+  if (ampm === "PM" && hours < 12) hours = hours + 12;
+  if (ampm === "AM" && hours === 12) hours = hours - 12;
   return [hours, minutes, second];
 };
 
@@ -51,27 +51,25 @@ const TimePicker: React.FC<TimePickerProps> = (props) => {
   const { value: valueProp, onChange } = props;
   const inputRef = useRef(null);
 
-  const updateValue = (
-    hour: number,
-    minute: number,
-    second: number,
-    ampm: "AM" | "PM"
-  ) => {
-    setLocalValue((lv) => {
-      if (lv instanceof Date) {
-        let [_hour, _min, _second] = to24Hour(hour, minute, second, ampm);
-        lv.setHours(_hour, _min, _second);
-      } else {
-        lv!.seconds = second;
-        lv!.hours = hour;
-        lv!.minutes = min;
-        lv!.XM = ampm;
-      }
+  const updateValue = useCallback(
+    (hour: number, minute: number, second: number, ampm: "AM" | "PM") => {
+      setLocalValue((lv) => {
+        if (lv instanceof Date) {
+          let [_hour, _min, _second] = to24Hour(hour, minute, second, ampm);
+          lv.setHours(_hour, _min, _second);
+        } else {
+          lv!.seconds = second;
+          lv!.hours = hour;
+          lv!.minutes = min;
+          lv!.XM = ampm;
+        }
 
-      return lv instanceof Date ? new Date(lv) : { ...lv! };
-    });
-    onChange && onChange(localValue as any);
-  };
+        return lv instanceof Date ? new Date(lv) : { ...lv! };
+      });
+      onChange && onChange(localValue as any);
+    },
+    [localValue, min, onChange]
+  );
 
   useEffect(() => {
     let value = valueProp ?? new Date();
@@ -95,7 +93,7 @@ const TimePicker: React.FC<TimePickerProps> = (props) => {
     if (localValue) {
       updateValue(hour, min, second, AMPM!);
     }
-  }, [min, hour, second, AMPM]);
+  }, [min, hour, second, AMPM, localValue, updateValue]);
 
   const handleHourChange = (h: number) => {
     if (h > 0 && h < 12) {
@@ -104,13 +102,13 @@ const TimePicker: React.FC<TimePickerProps> = (props) => {
   };
 
   const handleMinChange = (m: number) => {
-    if(m >=0 && m < 60){
+    if (m >= 0 && m < 60) {
       setMin(m);
     }
   };
 
   const handleSecondChange = (s: number) => {
-    if(s >=0 && s < 60){
+    if (s >= 0 && s < 60) {
       setSecond(s);
     }
   };
@@ -158,7 +156,7 @@ const TimePicker: React.FC<TimePickerProps> = (props) => {
           stretch={false}
           align={{
             top: "bottom",
-            ...(themeContext.dir == "rtl"
+            ...(themeContext.dir === "rtl"
               ? {
                   right: "right",
                 }

@@ -26,6 +26,7 @@ export const LoginForm = () => {
       validationRules: {
         pattern: {
           //from https://stackoverflow.com/questions/46155/how-to-validate-an-email-address-in-javascript
+          // eslint-disable-next-line no-useless-escape
           value: /^(([^<>()[\]\.,;:\s@\"]+(\.[^<>()[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i,
           message: "Please Enter a valid email!",
         },

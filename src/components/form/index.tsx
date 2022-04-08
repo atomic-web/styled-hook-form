@@ -37,23 +37,29 @@ const Form: React.FC<FormProps> = (props) => {
 
   const [autoSubmit, updateAutoSubmit] = useState(autoSubmitProp);
 
-  const updateChangeHandlers = (newHandlers: WatchField[]) =>
-    (changeHandlers.current = [...changeHandlers.current, ...newHandlers]);
+  const updateChangeHandlers = useCallback(
+    (newHandlers: WatchField[]) =>
+      (changeHandlers.current = [...changeHandlers.current, ...newHandlers]),
+    []
+  );
 
-  const updateAutoSubmitFields = (newFields: WatchField[]) =>
-    (autoSubmitFields.current = [...autoSubmitFields.current, ...newFields]);
+  const updateAutoSubmitFields = useCallback(
+    (newFields: WatchField[]) =>
+      (autoSubmitFields.current = [...autoSubmitFields.current, ...newFields]),
+    []
+  );
 
   useEffect(() => {
     if (changeHandlersProp) {
       updateChangeHandlers(changeHandlersProp);
     }
-  }, [changeHandlersProp]);
+  }, [changeHandlersProp, updateChangeHandlers]);
 
   useEffect(() => {
     if (autoSubmitFieldsProp) {
       updateAutoSubmitFields(autoSubmitFieldsProp);
     }
-  }, [autoSubmitFieldsProp]);
+  }, [autoSubmitFieldsProp, updateAutoSubmitFields]);
 
   useEffect(() => {
     updateAutoSubmit(autoSubmitProp);
@@ -88,7 +94,7 @@ const Form: React.FC<FormProps> = (props) => {
       reset(defaultValues);
       valuesRef.current = defaultValues;
     }
-  }, [defaultValues]);
+  }, [defaultValues, methods.formState.isDirty, reset]);
 
   const onFormSubmit = (values: any) => {
     onSubmit && onSubmit(values);
@@ -139,7 +145,9 @@ const Form: React.FC<FormProps> = (props) => {
               refObj.changeHandlers?.emitChange(fieldName, _value);
             }
 
-            let listener = changeHandlers.current.find((f) => f.name === fieldName);
+            let listener = changeHandlers.current.find(
+              (f) => f.name === fieldName
+            );
 
             if (listener) {
               listener.handler(_value);
@@ -158,8 +166,10 @@ const Form: React.FC<FormProps> = (props) => {
     props.options.defaultValues,
     changeHandlers,
     autoSubmitFields,
-    changeHandlers,
     debuncedSubmit,
+    control,
+    refObj.changeHandlers,
+    methodsRef,
   ]);
 
   const handleFormSubmit = (e: FormEvent) => {
@@ -177,7 +187,7 @@ const Form: React.FC<FormProps> = (props) => {
         updateAutoSubmitFields(fieldValues);
       }
     },
-    [updateAutoSubmit, updateAutoSubmitFields, autoSubmitFields]
+    [updateAutoSubmitFields, autoSubmitFields]
   );
 
   const registerChangeHandler = useCallback(

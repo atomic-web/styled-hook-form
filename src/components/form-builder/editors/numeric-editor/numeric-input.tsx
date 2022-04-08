@@ -8,6 +8,7 @@ import { formatNumbericValue, parseNumericValue } from "../../../extension/numer
 import { getLocaleFractionSeparator } from "../../../utils/locale";
 
 const endsWithFractionZero = (rawValue: string, fractionSep: string) =>
+  // eslint-disable-next-line no-eval
   eval(`/.*${fractionSep}0+$/g`).test(rawValue);
 
 const NumericEditor = forwardRef<
@@ -75,7 +76,7 @@ const NumericEditor = forwardRef<
                   : parseNumericValue(rawValue, fractionSep)
                 : "";
               field.onChange(
-                transformedValue === NaN ? null : transformedValue
+                isNaN(transformedValue) ? null : transformedValue
               );
             }}
             value={formatNumbericValue(field.value, fractionSep)}

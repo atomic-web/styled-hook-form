@@ -10,7 +10,7 @@ export const translate = (str: string, values?: object & Record<any, any>) => {
      return nativeStr;
   }
 
-  let exp = /\{\{([^\{\}]+)\}\}/g;
+  let exp = /\{\{([^{}]+)\}\}/g;
   let interpolated = nativeStr.replace(exp, (_: any, item: string) =>
     values[item].toString()
   );

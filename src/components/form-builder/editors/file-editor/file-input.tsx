@@ -55,6 +55,7 @@ const FileEditor = forwardRef<HTMLInputElement, FormField<FileEditorProps>>(
           onRemove?.(nextFiles.files);
         }
       },
+      // eslint-disable-next-line react-hooks/exhaustive-deps
       []
     );
 
@@ -64,7 +65,7 @@ const FileEditor = forwardRef<HTMLInputElement, FormField<FileEditorProps>>(
           ref.current.setCustomValidity(T("file-input-msg-file-required"));
         }
       }
-    }, [ref]);
+    }, [T, ref]);
 
     return (
       <Controller

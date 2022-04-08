@@ -1,6 +1,5 @@
 import "styled-components";
-import styledImport, { CSSProp, css as cssImport } from "styled-components";
-import { DirectionType } from "../context";
+import { CSSProp } from "styled-components";
 import { ThemeType } from "../themes";
 import React from "react";
 
@@ -36,7 +35,7 @@ declare module "react" {
     css?: CSSProp | Interpolation;
   }
   // The inline svg css prop
-  interface SVGProps<T> extends SVGProps<SVGSVGElement> {
+  interface SVGProps extends SVGProps<SVGSVGElement> {
     css?: CSSProp | Interpolation;
   }
 }

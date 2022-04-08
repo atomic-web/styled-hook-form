@@ -43,7 +43,7 @@ const BoolEditor = forwardRef<HTMLInputElement, FormField<BoolEditorProps>>(
             checked={field.value}
             onChange={(e) => field.onChange(e)}
             value={field.value}
-            toggle={controlType == "switch"}
+            toggle={controlType === "switch"}
           />
         )}
       />

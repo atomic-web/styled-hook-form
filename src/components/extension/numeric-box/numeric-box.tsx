@@ -1,4 +1,10 @@
-import React, { ChangeEvent, useEffect, useRef, useState } from "react";
+import React, {
+  ChangeEvent,
+  useCallback,
+  useEffect,
+  useRef,
+  useState,
+} from "react";
 import { TextInput } from "grommet";
 import { NumericBoxProps } from "./types";
 import { useFormBuilderContext } from "../../../context";
@@ -8,7 +14,10 @@ export function parseNumericValue(value: string, fractionSep: string): Number {
   return parseFloat(value.replace(fractionSep, "."));
 }
 
-export function formatNumbericValue(value: number | undefined, fractionSep: string) {
+export function formatNumbericValue(
+  value: number | undefined,
+  fractionSep: string
+) {
   if (!value) {
     return "";
   }
@@ -30,7 +39,8 @@ const NumericBox: React.FC<NumericBoxProps> = (props) => {
   const fractionSep = getLocaleFractionSeparator(locale);
   const validValueRef = useRef("");
 
-  const handleKeyup = function (e: KeyboardEvent) {
+  const handleKeyup = useCallback(function (e: KeyboardEvent) {
+    // eslint-disable-next-line no-eval
     const numericRegex = eval(`/^\\-?\\d*\\${fractionSep}?\\d*$/g`);
     const nextValue = e.target && (e.target as any).value;
 
@@ -41,29 +51,31 @@ const NumericBox: React.FC<NumericBoxProps> = (props) => {
     } else {
       validValueRef.current = nextValue;
     }
-  };
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  },[fractionSep]);
 
-  const handleBlur = () => {
+  const handleBlur = useCallback(() => {
     if (ref.current) {
       let value = ref.current.value;
       if (value.endsWith(fractionSep)) {
         onChange(value.slice(0, -1));
       }
     }
-  };
+  }, [fractionSep, onChange]);
 
   useEffect(() => {
-    if (ref.current) {
-      ref.current.addEventListener("keyup", handleKeyup, false);
-      ref.current.addEventListener("blur", handleBlur, false);
+    const box = ref.current;
+    if (box) {
+      box.addEventListener("keyup", handleKeyup, false);
+      box.addEventListener("blur", handleBlur, false);
     }
     return () => {
-      if (ref.current) {
-        ref.current.removeEventListener("keyup", handleKeyup, false);
-        ref.current.removeEventListener("blur", handleBlur, false);
+      if (box) {
+        box.removeEventListener("keyup", handleKeyup, false);
+        box.removeEventListener("blur", handleBlur, false);
       }
     };
-  }, []);
+  }, [handleBlur, handleKeyup, ref]);
 
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;

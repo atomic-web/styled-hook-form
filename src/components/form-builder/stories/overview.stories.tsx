@@ -141,6 +141,7 @@ const fields: FormField[] = [
     render: (
       base: (children: React.ReactNode, props?: any) => React.ReactNode
     ) => {
+      // eslint-disable-next-line react-hooks/rules-of-hooks
       let [showSub, setShowSub] = useState(false);
 
       return (

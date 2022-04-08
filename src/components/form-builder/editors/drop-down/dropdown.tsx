@@ -102,10 +102,10 @@ const DropDown = React.memo(
           : {}),
         ...dataSourceOptions?.extraParams,
       };
-    }, [dataSourceOptions?.request]);
+    }, [dataSourceOptions?.extraParams, dataSourceOptions?.request]);
 
     let { loading = false, nextPage = null, hasMore = null } = usePagedData({
-      request: dataSourceOptions?.request ?? null,
+      request: dataSourceOptions?.request,
       pageParamName: dataSourceOptions?.pageKey,
       pageSizeParamName: dataSourceOptions?.pageSizeKey,
       pageSize: dataSourceOptions?.pageSize,
@@ -160,7 +160,7 @@ const DropDown = React.memo(
       [dataSourceOptions, remoteOptions, localOptions]
     );
 
-    const getOptionsByValue = (options: any[], value: any[] | any): any[] => {
+    const getOptionsByValue = useCallback((options: any[], value: any[] | any): any[] => {
       return options.filter((o) =>
         Array.isArray(value)
           ? value.some(
@@ -169,36 +169,36 @@ const DropDown = React.memo(
             )
           : value === o[itemValueKey] || value === o
       );
-    };
+    },[itemValueKey]);
 
     const liveValueRef = useRef(null);
 
-    const updateLocalValue = () => {
+    const updateLocalValue = useCallback(() => {
       setLocalValue(getOptionsByValue(actualOptions, liveValue));
       liveValueRef.current = liveValue;
-    };
+    },[actualOptions, getOptionsByValue, liveValue]);
 
     useEffect(() => {
       if (
         actualOptions &&
         (!liveValueRef.current ||
-          JSON.stringify(liveValueRef.current) != JSON.stringify(liveValue))
+          JSON.stringify(liveValueRef.current) !== JSON.stringify(liveValue))
       ) {
         updateLocalValue();
       }
-    }, [liveValue]);
+    }, [actualOptions, liveValue, updateLocalValue]);
 
     useEffect(() => {
       if (actualOptions) {
         updateLocalValue();
       }
-    }, [actualOptions]);
+    }, [actualOptions, updateLocalValue]);
 
     useEffect(() => {
       if (actualOptions && initialValue) {
         setLocalValue(getOptionsByValue(actualOptions, initialValue));
       }
-    }, [actualOptions]);
+    }, [actualOptions, getOptionsByValue, initialValue]);
 
     const handleSearch = useDebouncedCallback((text: string) => {
       if (!dataSourceOptions && text.length === 0) {
@@ -245,7 +245,7 @@ const DropDown = React.memo(
             : e.value[itemValueKey]
         );
       },
-      []
+      [itemValueKey, multiple]
     );
 
     let selectContent = (option: any) => {
@@ -319,7 +319,7 @@ const DropDown = React.memo(
                     )
                   ) : (
                     <>
-                      <Text children={val[itemLabelKey]} />
+                      <Text>{val[itemLabelKey]}</Text>
                       {localValue!.length - 1 > idx && <span>,</span>}
                     </>
                   )}
@@ -362,8 +362,7 @@ const DropDown = React.memo(
         rules={vrules as any}
         control={control}
         render={({ field }) => (
-          <>
-            <Select
+          <Select
               {...selectProps}
               closeOnChange={!multiple}
               ref={ref as any}
@@ -380,9 +379,7 @@ const DropDown = React.memo(
               emptySearchMessage={T("drop-down-search-empty-msg")}
               clear={false}
               {...selectDynamicProps}
-              children={selectContent}
-            />
-          </>
+            >{selectContent}</Select>
         )}
       ></Controller>
     );

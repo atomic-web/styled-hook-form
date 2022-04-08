@@ -35,11 +35,12 @@ const HiddenEditor = forwardRef<HTMLInputElement, FormField<HiddenEditorProps>>(
         control={control}
         shouldUnregister={shouldUnregister}
         render={({ field }) => {
+          // eslint-disable-next-line react-hooks/rules-of-hooks
           const handleChange = useCallback(
             (e: ChangeEvent<HTMLInputElement>) => {
               field.onChange(e.target.value);
             },
-            []
+            [field]
           );
 
           return (

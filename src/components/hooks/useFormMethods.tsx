@@ -1,5 +1,5 @@
 import { FormMethodsRef } from "../form/types";
-import { useLayoutEffect } from "react";
+import { useLayoutEffect, useCallback } from "react";
 import { MutableRefObject, useRef, useState } from "react";
 import { UseFormReturn } from "react-hook-form";
 
@@ -13,10 +13,10 @@ export function useFormMethods(): UseFormMethodsReturn {
   const ref = useRef<FormMethodsRef>(null);
   const [methods, setMethods] = useState<UseFormReturn>();
 
-  const watchValue = (name: string, defaultValue?: any) => {
-    const handleValueChange = (_value: any) => {
+  const useWatchValue = (name: string, defaultValue?: any) => {
+    const handleValueChange = useCallback((_value: any) => {
       setValue(_value);
-    };
+    }, []);
 
     const [value, setValue] = useState(defaultValue);
 
@@ -30,7 +30,7 @@ export function useFormMethods(): UseFormMethodsReturn {
           ref.current.changeHandlers.removeListener(name, handleValueChange);
         }
       };
-    }, [ref,handleValueChange]);
+    }, [handleValueChange, name]);
 
     return value;
   };
@@ -43,7 +43,7 @@ export function useFormMethods(): UseFormMethodsReturn {
 
   return {
     methods,
-    watchValue,
+    watchValue: useWatchValue,
     ref,
   };
 }

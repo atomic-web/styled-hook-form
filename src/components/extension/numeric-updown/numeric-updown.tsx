@@ -46,8 +46,7 @@ const NumericUpDown: React.FC<NumericUpDownProps> = (props) => {
         return v;
       }
       v++;
-      notifyValue(v);
-      v;
+      notifyValue(v);      
       return v;
     });
   };

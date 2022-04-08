@@ -5,6 +5,7 @@ import React, {
   useMemo,
   useRef,
   useState,
+  useCallback
 } from "react";
 import { FormMethodsRef, WatchField } from "../form/types";
 import Form from "../form";
@@ -44,9 +45,11 @@ const FormBuilder = forwardRef<FormMethodsRef | null, FormBuilderProps>(
       ...rest
     } = props;
 
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     const fieldsProp: FormField[] = originalFields ?? [];
 
     const internalFormContext = useContext(InternalFormContext);
+    const formContext = useFormContext();
 
     let fields = useMemo(
       () =>
@@ -57,25 +60,28 @@ const FormBuilder = forwardRef<FormMethodsRef | null, FormBuilderProps>(
       [fieldsProp]
     );
 
-    const getAggValues = () => ({
-      ...fields
-        .reduce(
-          (p: FormField[], c: FormField) => [
-            ...p,
-            ...(c.type === FormFieldType.SubForm
-              ? (c as SubFormEditorProps).formProps?.fields ?? []
-              : [c]),
-          ],
-          []
-        )
-        .reduce((p: any, c: FormField) => {
-          if (c.name) {
-            set(p, c.name, c.defaultValue);
-          }
-          return p;
-        }, {}),
-      ...model,
-    });
+    const getAggValues = useCallback(
+      () => ({
+        ...fields
+          .reduce(
+            (p: FormField[], c: FormField) => [
+              ...p,
+              ...(c.type === FormFieldType.SubForm
+                ? (c as SubFormEditorProps).formProps?.fields ?? []
+                : [c]),
+            ],
+            []
+          )
+          .reduce((p: any, c: FormField) => {
+            if (c.name) {
+              set(p, c.name, c.defaultValue);
+            }
+            return p;
+          }, {}),
+        ...model,
+      }),
+      [fields, model]
+    );
 
     const isPartialForm = partialForm === true;
     let [defaultValues, setDefautValues] = useState(null);
@@ -100,7 +106,7 @@ const FormBuilder = forwardRef<FormMethodsRef | null, FormBuilderProps>(
         setDefautValues(_aggValues);
         defaultValueRef.current = _aggValues;
       }
-    }, [model, originalFields]);
+    }, [getAggValues, model, originalFields]);
 
     const handleSubmit = isPartialForm
       ? () => 0
@@ -176,8 +182,8 @@ const FormBuilder = forwardRef<FormMethodsRef | null, FormBuilderProps>(
           React.Fragment,
           {},
           items.length
-            ? renderLayout(useFormContext())
-            : nullLayout(useFormContext(), children)
+            ? renderLayout(formContext)
+            : nullLayout(formContext, children)
         )
       : React.createElement(
           Form,
@@ -197,7 +203,7 @@ const FormBuilder = forwardRef<FormMethodsRef | null, FormBuilderProps>(
           ({ ...methods }: UseFormReturn) =>
             items.length
               ? renderLayout(methods)
-              : nullLayout(useFormContext(), children)
+              : nullLayout(formContext, children)
         );
 
     useEffect(() => {
@@ -210,7 +216,7 @@ const FormBuilder = forwardRef<FormMethodsRef | null, FormBuilderProps>(
           internalFormContext.registerChangeHandler(changeHandlers);
         }
       }
-    }, [internalFormContext, submitTriggers, changeHandlers]);
+    }, [internalFormContext, submitTriggers, changeHandlers, isPartialForm]);
 
     return (
       <StyledFormBuilder className={className}>

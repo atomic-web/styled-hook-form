@@ -1,5 +1,5 @@
 import { useFormBuilderContext } from "../../../../context";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import styled from "styled-components";
 import { PasswordStrengthProps } from "./types";
 
@@ -37,7 +37,7 @@ const scorePassword = (pass: string) => {
 
   let variationCount = 0;
   for (var check in variations) {
-    variationCount += variations[check] == true ? 1 : 0;
+    variationCount += variations[check] === true ? 1 : 0;
   }
   score += (variationCount - 1) * 10;
 
@@ -45,15 +45,15 @@ const scorePassword = (pass: string) => {
 };
 
 const usePasswordStrength = (password: string) => {
-  const {translate : T } = useFormBuilderContext();
+  const { translate: T } = useFormBuilderContext();
 
-  const getStrengthText = (s:number) => {
+  const getStrengthText = useCallback((s: number) => {
     if (s > 80) return T("password-input-strength-strong");
     if (s > 60) return T("password-input-strength-good");
     if (s >= 30) return T("password-input-strength-medium");
 
     return T("password-input-strength-weak");
-  };
+  }, [T]);
 
   const getStrengthColor = (s: number) => {
     if (s > 80) return "#52980D";
@@ -86,7 +86,7 @@ const usePasswordStrength = (password: string) => {
     setStrengthText(getStrengthText(score));
     setStrengthColor(getStrengthColor(score));
     setStrengthPer(getStrengthPercent(score));
-  }, [score]);
+  }, [getStrengthText, score]);
 
   return [strengthText, strengthColor, strengthPer];
 };
@@ -95,7 +95,7 @@ const PasswordStrength: React.FC<PasswordStrengthProps> = (
   props: PasswordStrengthProps
 ) => {
   let { password, onChange } = props;
-  const {translate : T } = useFormBuilderContext();
+  const { translate: T } = useFormBuilderContext();
 
   let [
     passStrengthText,
@@ -107,32 +107,30 @@ const PasswordStrength: React.FC<PasswordStrengthProps> = (
     if (passStrengthPer) {
       onChange && onChange((passStrengthPer as unknown) as number);
     }
-  }, [passStrengthPer]);
+  }, [onChange, passStrengthPer]);
 
   return (
-    <>
-      <Wrap>
-        {" "}
-        <PasswordMeter
-          style={{
-            width: `${passStrengthPer}%`,
-            background: passStrengthColor,
-            height: "7px",
-            marginBottom: "5px",
-          }}
-        ></PasswordMeter>
-        <span
-          style={{
-            display: "inline",
-            fontWeight: "bold",
-            margin: "0px 0px 20px 0px",
-          }}
-        >
-          {T("password-input-strength-label")} :
-          <span style={{ fontWeight: "normal" }}> {passStrengthText} </span>
-        </span>
-      </Wrap>
-    </>
+    <Wrap>
+      {" "}
+      <PasswordMeter
+        style={{
+          width: `${passStrengthPer}%`,
+          background: passStrengthColor,
+          height: "7px",
+          marginBottom: "5px",
+        }}
+      ></PasswordMeter>
+      <span
+        style={{
+          display: "inline",
+          fontWeight: "bold",
+          margin: "0px 0px 20px 0px",
+        }}
+      >
+        {T("password-input-strength-label")} :
+        <span style={{ fontWeight: "normal" }}> {passStrengthText} </span>
+      </span>
+    </Wrap>
   );
 };
 
