@@ -32,14 +32,16 @@ const Form: React.FC<FormProps> = (props) => {
     ...options,
   });
 
-  const [changeHandlers, updateChangeHandlers] = useState(
-    changeHandlersProp ?? []
-  );
-  const [autoSubmitFields, updateAutoSubmitFields] = useState(
-    autoSubmitFieldsProp ?? []
-  );
+  const changeHandlers = useRef<WatchField[]>([]);
+  const autoSubmitFields = useRef<WatchField[]>([]);
 
   const [autoSubmit, updateAutoSubmit] = useState(autoSubmitProp);
+
+  const updateChangeHandlers = (newHandlers: WatchField[]) =>
+    (changeHandlers.current = [...changeHandlers.current, ...newHandlers]);
+
+  const updateAutoSubmitFields = (newFields: WatchField[]) =>
+    (autoSubmitFields.current = [...autoSubmitFields.current, ...newFields]);
 
   useEffect(() => {
     if (changeHandlersProp) {
@@ -106,9 +108,9 @@ const Form: React.FC<FormProps> = (props) => {
         if (!control._avoidNotify) {
           if (autoSubmit) {
             let shouldSubmit = ChangingName
-              ? !autoSubmitFields?.length ||
+              ? !autoSubmitFields.current.length ||
                 (autoSubmitFields &&
-                  autoSubmitFields.some((f) => f.name === ChangingName))
+                  autoSubmitFields.current.some((f) => f.name === ChangingName))
               : true;
             if (shouldSubmit) {
               debuncedSubmit(getLiveValue());
@@ -119,7 +121,7 @@ const Form: React.FC<FormProps> = (props) => {
             ChangingName
               ? [ChangingName]
               : [
-                  ...(changeHandlers?.map((h) => h.name) ?? []),
+                  ...(changeHandlers.current.map((h) => h.name) ?? []),
                   ...(refObj.changeHandlers.getObservers().map((o) => o.name) ??
                     []),
                 ]
@@ -137,7 +139,7 @@ const Form: React.FC<FormProps> = (props) => {
               refObj.changeHandlers?.emitChange(fieldName, _value);
             }
 
-            let listener = changeHandlers?.find((f) => f.name === fieldName);
+            let listener = changeHandlers.current.find((f) => f.name === fieldName);
 
             if (listener) {
               listener.handler(_value);
@@ -167,12 +169,12 @@ const Form: React.FC<FormProps> = (props) => {
 
   const registerAutoSubmitField = useCallback(
     (field: WatchField | WatchField[]) => {
+      const _autoSubmitFields = autoSubmitFields.current;
       const fieldValues = makeArray(field).filter(
-        (f) => autoSubmitFields.findIndex((inf) => inf.name === f.name) === -1
+        (f) => _autoSubmitFields.findIndex((inf) => inf.name === f.name) === -1
       );
       if (fieldValues.length) {
-        updateAutoSubmitFields((fields) => [...fields, ...fieldValues]);
-        updateAutoSubmit(true);
+        updateAutoSubmitFields(fieldValues);
       }
     },
     [updateAutoSubmit, updateAutoSubmitFields, autoSubmitFields]
@@ -180,15 +182,13 @@ const Form: React.FC<FormProps> = (props) => {
 
   const registerChangeHandler = useCallback(
     (handler: WatchField | WatchField[]) => {
+      const _changeHandlers = changeHandlers.current;
       const handlerValues = makeArray(handler).filter(
-        (h) => changeHandlers.findIndex((inh) => inh.name === h.name) === -1
+        (h) => _changeHandlers.findIndex((inh) => inh.name === h.name) === -1
       );
+
       if (handlerValues.length) {
-        updateChangeHandlers((handlers) => {
-          const next = [...handlers, ...handlerValues];
-          debugger;
-          return next;
-        });
+        updateChangeHandlers(handlerValues);
       }
     },
     [changeHandlers, updateChangeHandlers]

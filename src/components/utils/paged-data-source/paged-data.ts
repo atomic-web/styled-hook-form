@@ -10,6 +10,7 @@ import {
   PageDataProps,
   PageDataResult,
 } from "./types";
+import { isAxiosCancel } from "../http";
 
 const usePagedData = <
   TListItem = any,
@@ -200,9 +201,6 @@ const usePagedData = <
     loadPage(_page);
   }, [_page]);
 
-  const isCancel = (value :any) => {
-    return !!(value && value.__CANCEL__);
-  };
 
   useEffect(() => {
     if (currentFetch) {
@@ -217,7 +215,7 @@ const usePagedData = <
             [pageParamName]: currentFetch.page,
           },
         }).catch((err) => {
-          if (isCancel(err)) {
+          if (isAxiosCancel(err)) {
             setCurrentFetch((cf) => ({
               ...(cf as any),
               status: DataFecthStatus.Pending,

@@ -16,6 +16,7 @@ import { FormMethodsRef } from "../form/types";
 import { FieldValues, UseFormReturn } from "react-hook-form";
 import { isPrimitive } from "../utils/types";
 import { FormField } from "../form-builder/types";
+import { isAxiosCancel } from "../utils/http";
 
 const successCodes = [200, 201, 202];
 
@@ -258,11 +259,17 @@ const HttpForm = React.forwardRef<FormMethodsRef, HttpFormProps>(
           completed: false,
         };
 
-        getServerData(request).then(() => {
-          if (requestRef.current) {
-            requestRef.current.completed = true;
-          }
-        });
+        getServerData(request)
+          .then(() => {
+            if (requestRef.current) {
+              requestRef.current.completed = true;
+            }
+          })
+          .catch((e) => {
+            if (requestRef.current && !isAxiosCancel(e)) {
+              requestRef.current.completed = true;
+            }
+          });
       }
     }, [loadRequest]);
 
