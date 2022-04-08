@@ -15,7 +15,7 @@ import MockAdapter from "axios-mock-adapter";
 import { FormMethodsRef } from "../form/types";
 import { FieldValues, UseFormReturn } from "react-hook-form";
 import { isPrimitive } from "../utils/types";
-import {FormField} from "../form-builder/types"
+import { FormField } from "../form-builder/types";
 
 const successCodes = [200, 201, 202];
 
@@ -26,7 +26,7 @@ const HttpForm = React.forwardRef<FormMethodsRef, HttpFormProps>(
       onSaveResponse,
       onLoadRequest,
       onLoadResponse,
-      fields : fieldsProp,
+      fields: fieldsProp,
       saveRequest: saveReqProp,
       loadRequest: loadRequestProp,
       onSaveSuccess,
@@ -43,7 +43,7 @@ const HttpForm = React.forwardRef<FormMethodsRef, HttpFormProps>(
       ...rest
     } = props;
 
-    const fields : FormField[] = fieldsProp ?? [];
+    const fields: FormField[] = fieldsProp ?? [];
 
     let { translate: T } = useFormBuilderContext();
 
@@ -139,8 +139,12 @@ const HttpForm = React.forwardRef<FormMethodsRef, HttpFormProps>(
           data = JSON.parse(data);
         }
 
-        if (onLoadResponse) {
-          data = onLoadResponse(data, headers);
+        try {
+          if (onLoadResponse) {
+            data = onLoadResponse(data, headers);
+          }
+        } catch (e) {
+          console.error(e);
         }
         if (methodsRef?.current) {
           //@ts-ignore
@@ -152,7 +156,11 @@ const HttpForm = React.forwardRef<FormMethodsRef, HttpFormProps>(
       }, []),
       transformRequest: useCallback((data, headers) => {
         if (onLoadRequest) {
-          data = onLoadRequest(data, headers);
+          try {
+            data = onLoadRequest(data, headers);
+          } catch (e) {
+            console.log(e);
+          }
         }
         return data;
       }, []),
