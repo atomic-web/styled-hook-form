@@ -202,9 +202,9 @@ const FormBuilder = forwardRef<FormMethodsRef | null, FormBuilderProps>(
 
     useEffect(() => {
       // this would be true if this is a partial form
-      if (internalFormContext) {
-        if (isPartialForm && submitTriggers) {
-           internalFormContext.registerAutoSubmitField(submitTriggers);
+      if (internalFormContext && isPartialForm) {
+        if (submitTriggers) {
+          internalFormContext.registerAutoSubmitField(submitTriggers);
         }
         if (changeHandlers) {
           internalFormContext.registerChangeHandler(changeHandlers);

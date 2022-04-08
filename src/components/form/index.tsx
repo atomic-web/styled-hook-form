@@ -1,4 +1,10 @@
-import React, { useState, FormEvent, useEffect, useRef } from "react";
+import React, {
+  useCallback,
+  useState,
+  FormEvent,
+  useEffect,
+  useRef,
+} from "react";
 import { FormProvider, useForm } from "react-hook-form";
 import { useDebouncedCallback } from "use-debounce";
 import equals from "fast-deep-equal/es6";
@@ -96,45 +102,50 @@ const Form: React.FC<FormProps> = (props) => {
       next: ({ name: ChangingName }: any) => {
         const getLiveValue = (name?: string | string[], defaultValues?: any) =>
           control._getWatch(name, defaultValues, false);
-
-        if (autoSubmit) {
-          let shouldSubmit = ChangingName
-            ? !autoSubmitFields?.length ||
-              (autoSubmitFields &&
-                autoSubmitFields.some((f) => f.name === ChangingName))
-            : true;
-          if (shouldSubmit) {
-            debuncedSubmit(getLiveValue());
-          }
-        }
-
-        const fieldsToNotify = new Set(
-          ChangingName
-            ? [ChangingName]
-            : [
-                ...(changeHandlers?.map((h) => h.name) ?? []),
-                ...(refObj.changeHandlers.getObservers().map((o) => o.name) ??
-                  []),
-              ]
-        ).values();
-
-        for (const fieldName of fieldsToNotify) {
-          const _value = getLiveValue(
-            fieldName,
-            props.options.defaultValues
-              ? props.options.defaultValues[fieldName]
-              : undefined
-          );
-
-          if (methodsRef) {
-            refObj.changeHandlers?.emitChange(fieldName, _value);
+        //@ts-ignore
+        if (!control._avoidNotify) {
+          if (autoSubmit) {
+            let shouldSubmit = ChangingName
+              ? !autoSubmitFields?.length ||
+                (autoSubmitFields &&
+                  autoSubmitFields.some((f) => f.name === ChangingName))
+              : true;
+            if (shouldSubmit) {
+              debuncedSubmit(getLiveValue());
+            }
           }
 
-          let listener = changeHandlers?.find((f) => f.name === fieldName);
+          const fieldsToNotify = new Set(
+            ChangingName
+              ? [ChangingName]
+              : [
+                  ...(changeHandlers?.map((h) => h.name) ?? []),
+                  ...(refObj.changeHandlers.getObservers().map((o) => o.name) ??
+                    []),
+                ]
+          ).values();
 
-          if (listener) {
-            listener.handler(_value);
+          for (const fieldName of fieldsToNotify) {
+            const _value = getLiveValue(
+              fieldName,
+              props.options.defaultValues
+                ? props.options.defaultValues[fieldName]
+                : undefined
+            );
+
+            if (methodsRef) {
+              refObj.changeHandlers?.emitChange(fieldName, _value);
+            }
+
+            let listener = changeHandlers?.find((f) => f.name === fieldName);
+
+            if (listener) {
+              listener.handler(_value);
+            }
           }
+        } else {
+          //@ts-ignore
+          control._avoidNotify = null;
         }
       },
     });
@@ -146,7 +157,7 @@ const Form: React.FC<FormProps> = (props) => {
     changeHandlers,
     autoSubmitFields,
     changeHandlers,
-    debuncedSubmit
+    debuncedSubmit,
   ]);
 
   const handleFormSubmit = (e: FormEvent) => {
@@ -154,24 +165,34 @@ const Form: React.FC<FormProps> = (props) => {
     handleSubmit(onFormSubmit)(e);
   };
 
-  const registerAutoSubmitField = (field: WatchField | WatchField[]) => {
-    const fieldValues = makeArray(field).filter(
-      (f) => autoSubmitFields.findIndex((inf) => inf.name === f.name) === -1
-    );
-    if (fieldValues.length) {
-      updateAutoSubmitFields((fields) => [...fields, ...fieldValues]);
-      updateAutoSubmit(true);
-    }
-  };
+  const registerAutoSubmitField = useCallback(
+    (field: WatchField | WatchField[]) => {
+      const fieldValues = makeArray(field).filter(
+        (f) => autoSubmitFields.findIndex((inf) => inf.name === f.name) === -1
+      );
+      if (fieldValues.length) {
+        updateAutoSubmitFields((fields) => [...fields, ...fieldValues]);
+        updateAutoSubmit(true);
+      }
+    },
+    [updateAutoSubmit, updateAutoSubmitFields, autoSubmitFields]
+  );
 
-  const registerChangeHandler = (handler: WatchField | WatchField[]) => {
-    const handlerValues = makeArray(handler).filter(
-      (h) => changeHandlers.findIndex((inh) => inh.name === h.name) === -1
-    );
-    if (handlerValues.length) {
-      updateChangeHandlers((handlers) => [...handlers, ...handlerValues]);
-    }
-  };
+  const registerChangeHandler = useCallback(
+    (handler: WatchField | WatchField[]) => {
+      const handlerValues = makeArray(handler).filter(
+        (h) => changeHandlers.findIndex((inh) => inh.name === h.name) === -1
+      );
+      if (handlerValues.length) {
+        updateChangeHandlers((handlers) => {
+          const next = [...handlers, ...handlerValues];
+          debugger;
+          return next;
+        });
+      }
+    },
+    [changeHandlers, updateChangeHandlers]
+  );
 
   return (
     <form onSubmit={handleFormSubmit} {...rest}>

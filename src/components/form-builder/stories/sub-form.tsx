@@ -12,8 +12,6 @@ export const SubForm = () => {
       name: "subField1",
       label: "Sub Field 1",
       type: FormFieldType.Text,
-      submitTrigger:true,
-      onChange:()=>alert('s')
     },
     {
       name: "subField2",
@@ -24,7 +22,7 @@ export const SubForm = () => {
 
   return (
     <FormBuilderContextProvider>
-      <FormBuilder onSubmit={(values)=>alert(JSON.stringify(values))}>
+      <FormBuilder>
         <FieldView
           name="topLevel1"
           label="Top level Field 1"

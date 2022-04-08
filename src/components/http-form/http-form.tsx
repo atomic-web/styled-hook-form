@@ -143,6 +143,8 @@ const HttpForm = React.forwardRef<FormMethodsRef, HttpFormProps>(
           data = onLoadResponse(data, headers);
         }
         if (methodsRef?.current) {
+          //@ts-ignore
+          methodsRef.current.control._avoidNotify = true;
           methodsRef.current.reset(data);
         }
 
