@@ -70,6 +70,8 @@ const Form: React.FC<FormProps> = (props) => {
     changeHandlers: new ChangeEventStore(),
   };
 
+  const internalMethodsRef = useRef<FormMethodsRef>(refObj);
+
   if (methodsRef && methods) {
     if (typeof methodsRef === "function") {
       methodsRef(refObj);
@@ -128,7 +130,7 @@ const Form: React.FC<FormProps> = (props) => {
               ? [ChangingName]
               : [
                   ...(changeHandlers.current.map((h) => h.name) ?? []),
-                  ...(refObj.changeHandlers.getObservers().map((o) => o.name) ??
+                  ...(internalMethodsRef.current.changeHandlers.getObservers().map((o) => o.name) ??
                     []),
                 ]
           ).values();
@@ -142,7 +144,7 @@ const Form: React.FC<FormProps> = (props) => {
             );
 
             if (methodsRef) {
-              refObj.changeHandlers?.emitChange(fieldName, _value);
+              internalMethodsRef.current.changeHandlers?.emitChange(fieldName, _value);
             }
 
             let listener = changeHandlers.current.find(
