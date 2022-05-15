@@ -23,9 +23,8 @@ const defaults: FormBuilderContextProviderValue = {
   dispatch: () => {},
 };
 
-export const FormBuilderContext = createContext<FormBuilderContextProviderValue>(
-  defaults
-);
+export const FormBuilderContext =
+  createContext<FormBuilderContextProviderValue>(defaults);
 
 const FormBuilderContextProvider: React.FC<FormBuilderContextProviderProps> = (
   props
@@ -49,7 +48,8 @@ const FormBuilderContextProvider: React.FC<FormBuilderContextProviderProps> = (
 
   const theme = options?.theme ?? FormBuilderTheme;
 
-  const renderGrommet = !options?.renderGrommet ? true : options!.renderGrommet;
+  const renderGrommet =
+    options?.renderGrommet === undefined ? true : options!.renderGrommet;
   return (
     <FormBuilderContext.Provider
       value={{
