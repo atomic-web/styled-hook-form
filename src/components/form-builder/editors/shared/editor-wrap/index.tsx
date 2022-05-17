@@ -28,7 +28,7 @@ const inlineLabelControlTypes: PropType<FormFieldOptions, "type">[] = [
   FormFieldType.Boolean,
 ];
 
-const WidthEditorWrap: React.FC<EditorWrapProps> = (props) => {
+const WithEditorWrap: React.FC<EditorWrapProps> = (props) => {
   const { children, name, label, tip, renderLabel, editorType } = props;
   const { errors } = useFormState();
   let baseTheme = useContext(ThemeContext);
@@ -97,4 +97,4 @@ const WidthEditorWrap: React.FC<EditorWrapProps> = (props) => {
   );
 };
 
-export default WidthEditorWrap;
+export default WithEditorWrap;
