@@ -109,6 +109,7 @@ export interface FormFieldBase {
   visible?: boolean;
   shouldUnregister?: boolean;
   wrapComponent?: React.ReactElement;
+  plain?:boolean
 }
 
 export type FormField<TProps extends {} = {}> = FormFieldBase &

@@ -10,5 +10,6 @@ export interface EditorWrapProps {
   label: string;
   renderLabel:boolean,
   editorType : PropType<FormFieldOptions,'type'>,
-  tip?: React.ReactNode
+  tip?: React.ReactNode,
+  plain?:boolean
 }

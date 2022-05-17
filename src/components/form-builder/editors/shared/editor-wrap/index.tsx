@@ -29,7 +29,7 @@ const inlineLabelControlTypes: PropType<FormFieldOptions, "type">[] = [
 ];
 
 const WithEditorWrap: React.FC<EditorWrapProps> = (props) => {
-  const { children, name, label, tip, renderLabel, editorType } = props;
+  const { children, name, label, tip, renderLabel, editorType ,plain } = props;
   const { errors } = useFormState();
   let baseTheme = useContext(ThemeContext);
 
@@ -45,6 +45,7 @@ const WithEditorWrap: React.FC<EditorWrapProps> = (props) => {
   return (
     <ThemeContext.Extend value={theme}>
       <FormField
+        margin={plain ? "0" : undefined}
         error={
           get(errors, name) ? (
             <ErrorMessage
