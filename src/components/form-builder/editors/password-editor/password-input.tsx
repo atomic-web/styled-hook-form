@@ -93,7 +93,7 @@ export const PasswordEditor = forwardRef<
               ref={ref}
               type={reveal ? "text" : "password"}
               onChange={(e) => field.onChange(e)}
-              defaultValue={field.value}
+              defaultValue={field.value ?? ""}
               focusIndicator={false}
               plain="full"
             />

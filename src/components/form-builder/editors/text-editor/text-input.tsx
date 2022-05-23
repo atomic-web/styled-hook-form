@@ -61,7 +61,7 @@ const TextEditor = forwardRef<HTMLInputElement, FormField<TextEditorProps>>(
             {...inputProps}
             ref={ref}            
             onChange={(e) => field.onChange(e)}
-            value={field.value}
+            value={field.value ?? ""}
           />
         )}
       />
