@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { ChangeEvent, useEffect, useState } from "react";
 import { FormField } from "../../../form-builder/types";
 import { useFormBuilderContext } from "../../../../context";
 import { Controller } from "react-hook-form";
@@ -16,7 +16,7 @@ const CustomEditor: React.FC<FormField<CustomEditorProps>> = (props) => {
     editorComponent,
     label,
     props: componentProps,
-    shouldUnregister
+    shouldUnregister,
   } = props;
 
   let control = methods?.control;
@@ -54,7 +54,8 @@ const CustomEditor: React.FC<FormField<CustomEditorProps>> = (props) => {
             let editorElement = React.cloneElement(editorComponent, {
               ...customProps,
               value: field.value,
-              onChange: (e: any) => field.onChange(e),
+              onChange: (e: any) =>
+                e.target === e.currentTarget && field.onChange(e),
               methods,
             });
             return editorElement;
