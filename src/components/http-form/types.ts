@@ -3,13 +3,17 @@ import MockAdapter from 'axios-mock-adapter';
 import React from 'react';
 import { FormBuilderProps } from './../form-builder/types';
 
+export type HttpFormCallBack = (data:any,headers:any)=> void;
+
+export type HttpCallBackWithOptionalDeps = HttpFormCallBack | [HttpFormCallBack,unknown []]
+
 export type HttpFormProps<TModel=any,TServerResult=any,TResult=TServerResult,TError=any> =
  Partial<FormBuilderProps> &
  Pick<FormBuilderProps,'fields'> & {
-   onSaveRequest?: (data:any,headers:any)=>void,
-   onSaveResponse?: (data:any,headers:any)=>void,
-   onLoadRequest?: (data:any,headers:any)=>void,
-   onLoadResponse?: (data:any,headers:any)=>void,
+   onSaveRequest?: HttpCallBackWithOptionalDeps,
+   onSaveResponse?: HttpCallBackWithOptionalDeps,
+   onLoadRequest?: HttpCallBackWithOptionalDeps,
+   onLoadResponse?: HttpCallBackWithOptionalDeps,
    onSaveError? : (error:TError)=>void,
    onLoadError? : (error:TError)=>void,
    onSaveSuccess? : (data:TResult)=>void,

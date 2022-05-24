@@ -2,11 +2,12 @@ import useAxios from "axios-hooks";
 import { FormBuilder, FormFieldType } from "../form-builder";
 import React, {
   ForwardedRef,
+  useCallback,
   useEffect,
   useMemo,
   useRef,
 } from "react";
-import { HttpFormProps } from "./types";
+import { HttpCallBackWithOptionalDeps, HttpFormCallBack, HttpFormProps } from "./types";
 import { Box, Button, Spinner } from "grommet";
 import { useFormBuilderContext } from "../../context";
 import staticAxios, { AxiosRequestConfig } from "axios";
@@ -18,6 +19,14 @@ import { FormField } from "../form-builder/types";
 import { isAxiosCancel } from "../utils/http";
 
 const successCodes = [200, 201, 202];
+
+const extractCallbackFunc = (obj : HttpCallBackWithOptionalDeps) : HttpFormCallBack=>{
+  return Array.isArray(obj) ? obj[0] : obj;
+}
+
+const extractCallbackDeps = (obj : HttpCallBackWithOptionalDeps | undefined) : unknown[]=>{  
+  return !obj || !Array.isArray(obj) ? [] : obj[1];
+}
 
 const HttpForm = React.forwardRef<FormMethodsRef, HttpFormProps>(
   (props, ref) => {
@@ -94,7 +103,7 @@ const HttpForm = React.forwardRef<FormMethodsRef, HttpFormProps>(
     ] = useAxios(
       {
         ...saveRequest,
-        transformResponse: (data, headers) => {
+        transformResponse: useCallback((data, headers) => {
           if (!data) {
             return data;
           }
@@ -104,15 +113,15 @@ const HttpForm = React.forwardRef<FormMethodsRef, HttpFormProps>(
           }
 
           if (onSaveResponse) {
-            data = onSaveResponse(data, headers);
+            data = extractCallbackFunc(onSaveResponse)(data, headers);
           }
 
           return data;
           // eslint-disable-next-line react-hooks/exhaustive-deps
-        },
-        transformRequest: (data, headers) => {
+        },[...extractCallbackDeps(onSaveResponse)]),
+        transformRequest: useCallback((data, headers) => {
           if (onSaveRequest) {
-            data = onSaveRequest(data, headers);
+            data = extractCallbackFunc(onSaveRequest)(data, headers);
           }
 
           if (
@@ -124,7 +133,7 @@ const HttpForm = React.forwardRef<FormMethodsRef, HttpFormProps>(
 
           return data;
           // eslint-disable-next-line react-hooks/exhaustive-deps
-        },
+        },[...extractCallbackDeps(onSaveRequest)]),
       },
       {
         manual: true,
@@ -132,7 +141,7 @@ const HttpForm = React.forwardRef<FormMethodsRef, HttpFormProps>(
     );
 
     const loadRequestOptions = {
-      transformResponse: (data : any, headers:any) => {
+      transformResponse: useCallback((data : any, headers:any) => {
         if (!data) {
           return data;
         }
@@ -143,7 +152,7 @@ const HttpForm = React.forwardRef<FormMethodsRef, HttpFormProps>(
 
         try {
           if (onLoadResponse) {
-            data = onLoadResponse(data, headers);
+            data = extractCallbackFunc(onLoadResponse)(data, headers);
           }
         } catch (e) {
           console.error(e);
@@ -156,18 +165,18 @@ const HttpForm = React.forwardRef<FormMethodsRef, HttpFormProps>(
 
         return data;
         // eslint-disable-next-line react-hooks/exhaustive-deps
-      },
-      transformRequest: (data:any, headers:any) => {
+      },[...extractCallbackDeps(onLoadResponse)]),
+      transformRequest: useCallback((data:any, headers:any) => {
         if (onLoadRequest) {
           try {
-            data = onLoadRequest(data, headers);
+            data = extractCallbackFunc(onLoadRequest)(data, headers);
           } catch (e) {
             console.log(e);
           }
         }
         return data;
         // eslint-disable-next-line react-hooks/exhaustive-deps
-      },
+      },[...extractCallbackDeps(onLoadRequest)]),
     };
 
     const [
