@@ -2,7 +2,6 @@ import useAxios from "axios-hooks";
 import { FormBuilder, FormFieldType } from "../form-builder";
 import React, {
   ForwardedRef,
-  useCallback,
   useEffect,
   useMemo,
   useRef,
@@ -95,7 +94,7 @@ const HttpForm = React.forwardRef<FormMethodsRef, HttpFormProps>(
     ] = useAxios(
       {
         ...saveRequest,
-        transformResponse: useCallback((data, headers) => {
+        transformResponse: (data, headers) => {
           if (!data) {
             return data;
           }
@@ -109,9 +108,9 @@ const HttpForm = React.forwardRef<FormMethodsRef, HttpFormProps>(
           }
 
           return data;
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-        }, []),
-        transformRequest: useCallback((data, headers) => {
+          // eslint-disable-next-line react-hooks/exhaustive-deps
+        },
+        transformRequest: (data, headers) => {
           if (onSaveRequest) {
             data = onSaveRequest(data, headers);
           }
@@ -124,8 +123,8 @@ const HttpForm = React.forwardRef<FormMethodsRef, HttpFormProps>(
           }
 
           return data;
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-        }, []),
+          // eslint-disable-next-line react-hooks/exhaustive-deps
+        },
       },
       {
         manual: true,
@@ -133,7 +132,7 @@ const HttpForm = React.forwardRef<FormMethodsRef, HttpFormProps>(
     );
 
     const loadRequestOptions = {
-      transformResponse: useCallback((data, headers) => {
+      transformResponse: (data : any, headers:any) => {
         if (!data) {
           return data;
         }
@@ -156,9 +155,9 @@ const HttpForm = React.forwardRef<FormMethodsRef, HttpFormProps>(
         }
 
         return data;
-      // eslint-disable-next-line react-hooks/exhaustive-deps
-      }, []),
-      transformRequest: useCallback((data, headers) => {
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+      },
+      transformRequest: (data:any, headers:any) => {
         if (onLoadRequest) {
           try {
             data = onLoadRequest(data, headers);
@@ -167,8 +166,8 @@ const HttpForm = React.forwardRef<FormMethodsRef, HttpFormProps>(
           }
         }
         return data;
-      // eslint-disable-next-line react-hooks/exhaustive-deps
-      }, []),
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+      },
     };
 
     const [
@@ -191,12 +190,12 @@ const HttpForm = React.forwardRef<FormMethodsRef, HttpFormProps>(
       ) {
         onSaveSuccess && onSaveSuccess(data);
       }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+      // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [data]);
 
     useEffect(() => {
       onSaveError && saveError && onSaveError(saveError);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+      // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [saveError]);
 
     useEffect(() => {
@@ -207,12 +206,12 @@ const HttpForm = React.forwardRef<FormMethodsRef, HttpFormProps>(
       ) {
         onLoadSuccess && onLoadSuccess(data);
       }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+      // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [data, loadResponse, serverData]);
 
     useEffect(() => {
       onSaveError && loadError && onSaveError(loadError);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+      // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [loadError]);
 
     const handleSubmit = (data: any) => {

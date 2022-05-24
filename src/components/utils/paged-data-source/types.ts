@@ -34,7 +34,7 @@ export interface PageDataResult<
   data: TData | null;
   loading: boolean;
   page: number;
-  error: AxiosError<TError> | undefined;
+  error: AxiosError<TError> | undefined | null;
   total: number,
   hasMore:boolean,
   reset: ()=>void,
