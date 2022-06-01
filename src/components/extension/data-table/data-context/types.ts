@@ -45,7 +45,7 @@ export type DataTableContextReducerAction =
     payload: any | any[];
   }
   | {
-    type: "uptda-data-in-path";
+    type: "update-data-in-path";
     payload: {
       id: string | number;
       path: string[];
