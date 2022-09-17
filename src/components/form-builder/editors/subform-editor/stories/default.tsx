@@ -1,11 +1,12 @@
 import { DevTool } from "@hookform/devtools";
 import { FormBuilder } from "components/form-builder/form-builder";
 import { FormField, FormFieldType } from "components/form-builder/types";
-import { useFormMethods } from "components/hooks";
 import { Box, Button } from "grommet";
+import { useForm } from "react-hook-form";
 
 export const Default = () => {
-  const { ref, methods } = useFormMethods();
+
+  const methods = useForm();
 
   let fields: FormField[] = [
     {
@@ -57,7 +58,7 @@ export const Default = () => {
   return (
     <Box width="medium">
       <FormBuilder
-        ref={ref}
+        formMethods={methods}
         fields={fields}
         onSubmit={(values) => {
           alert(JSON.stringify(values));
