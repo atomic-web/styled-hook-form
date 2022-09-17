@@ -22,4 +22,5 @@ export interface FormProps {
   children?: (props: FormChildProps) => React.ReactNode;
   options: UseFormProps<any, any>;
   methodsRef?: React.ForwardedRef<FormMethodsRef|null>;
+  formMethods?:UseFormReturn
 }

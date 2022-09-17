@@ -41,6 +41,7 @@ const FormBuilder = forwardRef<FormMethodsRef | null, FormBuilderProps>(
       layout = "GRID",
       editorWrapComponent,
       autoSubmitTreshould = 500,
+      formMethods,
       partialForm,
       ...rest
     } = props;
@@ -193,6 +194,7 @@ const FormBuilder = forwardRef<FormMethodsRef | null, FormBuilderProps>(
               ...(options ?? {}),
               defaultValues,
             },
+            formMethods,
             submitTreshould: autoSubmitTreshould,
             methodsRef: ref,
             onSubmit: handleSubmit,

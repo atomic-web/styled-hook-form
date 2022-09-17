@@ -23,14 +23,20 @@ const Form: React.FC<FormProps> = (props) => {
     submitTreshould,
     autoSubmit: autoSubmitProp,
     autoSubmitFields: autoSubmitFieldsProp,
+    formMethods,
     options,
     ...rest
   } = props;
 
-  const methods = useForm({
+  //call useForm regardless of formMethods being none null, cause conditionaly calling hook would violate react hook rules 
+  let methods =  useForm({
     mode: "onTouched",
     ...options,
   });
+
+  if (formMethods){
+    methods = formMethods;    
+  }
 
   const changeHandlers = useRef<WatchField[]>([]);
   const autoSubmitFields = useRef<WatchField[]>([]);
@@ -86,17 +92,18 @@ const Form: React.FC<FormProps> = (props) => {
   let defaultValues = props.options.defaultValues;
 
   useEffect(() => {
+
     if (
       !methods.formState.isDirty &&
       ((isEmptyObject(valuesRef.current) && !isEmptyObject(defaultValues)) ||
         (Object.keys(valuesRef.current ?? {}).length ===
           Object.keys(defaultValues ?? {}).length &&
           !equals(valuesRef.current, defaultValues)))
-    ) {
+    ) {      
       reset(defaultValues);
       valuesRef.current = defaultValues;
     }
-  }, [defaultValues, methods.formState.isDirty, reset]);
+  }, [defaultValues, formMethods, methods.formState.isDirty, reset]);
 
   const onFormSubmit = (values: any) => {
     onSubmit && onSubmit(values);

@@ -150,6 +150,7 @@ export type FormBuilderProps<TModel = any> = Partial<
   editorWrapComponent?: React.ReactElement;
   autoSubmitTreshould?: number;
   partialForm?: boolean;
+  formMethods? : UseFormReturn<any>
 };
 
 export type FormEditorPropsBase = Pick<FormFieldBase, "validationRules"> & {};

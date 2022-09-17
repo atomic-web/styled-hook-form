@@ -47,6 +47,7 @@ const HttpForm = React.forwardRef<FormMethodsRef, HttpFormProps>(
       submitButton,
       resetButton,
       mockResponse,
+      formMethods,
       encodingMode = "AUTO",
       children,
       ...rest
@@ -301,6 +302,7 @@ const HttpForm = React.forwardRef<FormMethodsRef, HttpFormProps>(
         ref={formRef}
         fields={fields}
         onSubmit={handleSubmit}
+        formMethods={formMethods}
         model={model}
       >
         {children}
