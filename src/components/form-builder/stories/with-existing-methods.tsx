@@ -1,7 +1,6 @@
 import { DevTool } from "@hookform/devtools";
 import { FormBuilderContextProvider } from "context";
 import { Box, Button } from "grommet";
-import { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { FieldView } from "../field-view";
 import { FormBuilder } from "../form-builder";
