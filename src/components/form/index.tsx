@@ -93,17 +93,20 @@ const Form: React.FC<FormProps> = (props) => {
 
   useEffect(() => {
 
+    const values = methods.getValues();
+    const newValues = formMethods ? !isEmptyObject(values) ? values:defaultValues : defaultValues;
+
     if (
       !methods.formState.isDirty &&
-      ((isEmptyObject(valuesRef.current) && !isEmptyObject(defaultValues)) ||
+      ((isEmptyObject(valuesRef.current) && !isEmptyObject(newValues)) ||
         (Object.keys(valuesRef.current ?? {}).length ===
-          Object.keys(defaultValues ?? {}).length &&
-          !equals(valuesRef.current, defaultValues)))
+          Object.keys(newValues ?? {}).length &&
+          !equals(valuesRef.current, newValues)))
     ) {      
-      reset(defaultValues);
-      valuesRef.current = defaultValues;
+      reset(newValues);
+      valuesRef.current = newValues;
     }
-  }, [defaultValues, formMethods, methods.formState.isDirty, reset]);
+  }, [defaultValues, formMethods, methods, methods.formState.isDirty, reset]);
 
   const onFormSubmit = (values: any) => {
     onSubmit && onSubmit(values);
