@@ -55,7 +55,9 @@ const CustomEditor: React.FC<FormField<CustomEditorProps>> = (props) => {
               ...customProps,
               value: field.value,
               onChange: (e: any) =>
-                e.target === e.currentTarget && field.onChange(e),
+                Boolean(e) &&
+                (!e.target || e.target === e.currentTarget) &&
+                field.onChange(e),
               methods,
             });
             return editorElement;
